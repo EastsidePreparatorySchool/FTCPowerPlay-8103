@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package nullrobotics;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="Basic: Linear OpMode.v1.5.2", group="Linear Opmode")
-public class BasicOpMode extends LinearOpMode {
+@TeleOp(name="null robotics teleop", group="Linear 8103")
+public class TeleOpNull extends LinearOpMode {
     // initialize telemetry
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -15,13 +14,13 @@ public class BasicOpMode extends LinearOpMode {
     public void runOpMode() {
 
         // initialize the hardware map
-        RobotHardware robot = new RobotHardware();
-        robot.init(hardwareMap);
+        NullHardware robot = new NullHardware();
+        robot.init(hardwareMap, telemetry);
         //Magic piece of code does something important
-        robot.LFDrive.setDirection(DcMotor.Direction.FORWARD);
-        robot.RFDrive.setDirection(DcMotor.Direction.REVERSE);
-        robot.LBDrive.setDirection(DcMotor.Direction.FORWARD);
-        robot.RBDrive.setDirection(DcMotor.Direction.REVERSE);
+        robot.DriveMotorFL.setDirection(DcMotor.Direction.FORWARD);
+        robot.DriveMotorFR.setDirection(DcMotor.Direction.REVERSE);
+        robot.DriveMotorBL.setDirection(DcMotor.Direction.FORWARD);
+        robot.DriveMotorBR.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for start
         waitForStart();
@@ -45,10 +44,10 @@ public class BasicOpMode extends LinearOpMode {
             if(gamepad1.right_bumper) multiplier = 0.5;
 
             // set power
-            robot.LFDrive.setPower((leftPower - strafePower)*multiplier);
-            robot.RFDrive.setPower((rightPower + strafePower)*multiplier);
-            robot.LBDrive.setPower((leftPower + strafePower)*multiplier);
-            robot.RBDrive.setPower((rightPower - strafePower)*multiplier);
+            robot.DriveMotorFL.setPower((leftPower - strafePower)*multiplier);
+            robot.DriveMotorFR.setPower((rightPower + strafePower)*multiplier);
+            robot.DriveMotorBL.setPower((leftPower + strafePower)*multiplier);
+            robot.DriveMotorBR.setPower((rightPower - strafePower)*multiplier);
 
             // Show the elapsed game time and wheel power. Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());

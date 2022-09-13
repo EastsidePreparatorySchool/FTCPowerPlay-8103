@@ -1,4 +1,4 @@
-package dev.benor;
+package nullrobotics;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="TeleOp Null", group="8103")
+@TeleOp(name="null robotics teleop (Mein)", group="8103")
 
-public class TeleOpNull extends LinearOpMode {
+public class TeleOpMein extends LinearOpMode {
     //Declare opmode members.
 
-    Hardware robot = new Hardware();
+    NullHardware robot = new NullHardware();
 
     //Code to run once at init
     @Override

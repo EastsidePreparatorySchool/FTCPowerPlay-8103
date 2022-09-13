@@ -1,6 +1,6 @@
-package dev.benor;
+package nullrobotics;
 
-public class Owl {
+public class NM {
     //    Ticks per centimeter
 
     private static final double TicksPerCm = 17;
