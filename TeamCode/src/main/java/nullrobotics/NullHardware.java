@@ -1,4 +1,4 @@
-package dev.benor;
+package nullrobotics;
 
 //This is the Hardware.java file for Robotics 2020-21 Ultimate Goal.
 //The robot's name is Sketchy Boi.
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Hardware {
+public class NullHardware {
     public DcMotor DriveMotorFL = null;
     public DcMotor DriveMotorFR = null;
     public DcMotor DriveMotorBL = null;
@@ -26,7 +26,7 @@ public class Hardware {
 
 
     //Constructor
-    public Hardware() {
+    public NullHardware() {
         //Nothing :)
     }
 
