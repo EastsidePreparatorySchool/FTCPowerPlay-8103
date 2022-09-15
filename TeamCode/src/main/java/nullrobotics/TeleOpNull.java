@@ -37,6 +37,14 @@ public class TeleOpNull extends LinearOpMode {
             double drive = -gamepad1.left_stick_y;
             double strafe = -gamepad1.left_stick_x;
             double turn  =  gamepad1.right_stick_x;
+
+            if (gamepad1.dpad_right == true) strafe = -1;
+            if (gamepad1.dpad_left == true) strafe = 1;
+            if (gamepad1.dpad_up == true) drive = 1;
+            if (gamepad1.dpad_down == true) drive = -1;
+
+            double slidepos = gamepad1.right_trigger;
+            double slideneg = gamepad1.left_trigger;
             // process inputs
             leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
             strafePower = Range.clip(strafe, -1.0, 1.0);
@@ -51,7 +59,7 @@ public class TeleOpNull extends LinearOpMode {
 
             // Show the elapsed game time and wheel power. Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f), strafe (%.2f), b-button (%.2b)", leftPower, rightPower, strafePower, gamepad1.b);
+            telemetry.addData("Motors", "left (%.2f), \n right (%.2f), strafe (%.2f), b-button (%.2b)", leftPower, rightPower, strafePower, gamepad1.b);
             telemetry.update();
         }
     }
