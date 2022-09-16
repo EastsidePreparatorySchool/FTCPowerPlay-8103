@@ -19,8 +19,9 @@
  * SOFTWARE.
  */
 
-package nullrobotics;
+package nullrobotics.vision;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -37,13 +38,15 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-class AprilTagDetectionPipeline extends OpenCvPipeline {
+public class AprilTagDetectionPipeline extends OpenCvPipeline {
     private long nativeApriltagPtr;
     private Mat grey = new Mat();
     private ArrayList<AprilTagDetection> detections = new ArrayList<>();
 
     private ArrayList<AprilTagDetection> detectionsUpdate = new ArrayList<>();
     private final Object detectionsUpdateSync = new Object();
+
+    public String webcamName = "CameraF";
 
     Mat cameraMatrix;
 

@@ -1,6 +1,6 @@
 package nullrobotics;
 
-//This is the Hardware.java file for Robotics 2020-21 Ultimate Goal.
+//This is the Hardware.java file for Robotics 2022-23 Power Play.
 //The robot's name is Sketchy Boi.
 
 import com.qualcomm.robotcore.hardware.DcMotor;

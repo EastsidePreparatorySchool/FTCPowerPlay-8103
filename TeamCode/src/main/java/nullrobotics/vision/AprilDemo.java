@@ -20,7 +20,7 @@
          * SOFTWARE.
          */
 
-        package nullrobotics;
+        package nullrobotics.vision;
 
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -30,17 +30,13 @@
         import org.openftc.easyopencv.OpenCvCamera;
         import org.openftc.easyopencv.OpenCvCameraFactory;
         import org.openftc.easyopencv.OpenCvCameraRotation;
-        import org.openftc.easyopencv.OpenCvInternalCamera;
-        import org.openftc.easyopencv.OpenCvInternalCamera2;
 
         import java.util.ArrayList;
 
-        @TeleOp
+        @TeleOp(name = "April Tags (Demo)", group = "8103")
         public class AprilDemo extends LinearOpMode {
             OpenCvCamera camera;
             AprilTagDetectionPipeline aprilTagDetectionPipeline;
-
-            static final double FEET_PER_METER = 3.28084;
 
             // Lens intrinsics
             // UNITS ARE PIXELS
@@ -52,7 +48,7 @@
             double cy = 221.506;
 
             // UNITS ARE METERS
-            double tagsize = 0.166;
+            double tagsize = 0.05;
 
             int numFramesWithoutDetection = 0;
 
@@ -64,7 +60,7 @@
             @Override
             public void runOpMode() {
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-                camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+                camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CameraF"), cameraMonitorViewId);
                 aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
                 camera.setPipeline(aprilTagDetectionPipeline);
@@ -119,9 +115,9 @@
 
                             for (AprilTagDetection detection : detections) {
                                 telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                                telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x * FEET_PER_METER));
-                                telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y * FEET_PER_METER));
-                                telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z * FEET_PER_METER));
+                                telemetry.addLine(String.format("Translation X: %.2f m", detection.pose.x ));
+                                telemetry.addLine(String.format("Translation Y: %.2f m", detection.pose.y ));
+                                telemetry.addLine(String.format("Translation Z: %.2f m", detection.pose.z ));
                                 telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
                                 telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                                 telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));

@@ -1,9 +1,11 @@
-package nullrobotics;
+package nullrobotics.depr;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import nullrobotics.NullHardware;
 
 
 @TeleOp(name="null robotics teleop (Mein)", group="8103")
