@@ -21,11 +21,11 @@ public class FourBarTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.FourBarLift.rise(20, 0.05);
+        robot.FourBarLift.rise(60, 1);
 
-        robot.FourBarLift.reach(45);
-        robot.tsleep(5000);
-        robot.FourBarLift.reach(-45);
+//        robot.FourBarLift.reach(45);
+//        robot.tsleep(5000);
+//        robot.FourBarLift.reach(-45);
 
     }
 
