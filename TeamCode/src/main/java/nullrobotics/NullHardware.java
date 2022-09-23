@@ -6,15 +6,27 @@ package nullrobotics;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import nullrobotics.lib.FourBarLift;
 
 public class NullHardware {
     public DcMotor DriveMotorFL = null;
     public DcMotor DriveMotorFR = null;
     public DcMotor DriveMotorBL = null;
     public DcMotor DriveMotorBR = null;
+
+//    public DcMotor LiftMotorL = null;
+//    public DcMotor LiftMotorR = null;
+
+//    public Servo FourBarServoL = null;
+//    public Servo FourBarServoR = null;
+//    public Servo ClawServo = null;
+
+    public FourBarLift FourBarLift = new FourBarLift();
 
     public DcMotor[] allMotors;
     double[] rotationArray;
@@ -40,6 +52,8 @@ public class NullHardware {
         DriveMotorFR = hwMap.dcMotor.get("DriveFR");
         DriveMotorBL = hwMap.dcMotor.get("DriveBL");
         DriveMotorBR = hwMap.dcMotor.get("DriveBR");
+
+        FourBarLift.init(ahwMap, atelemetry);
 
         allMotors = new DcMotor[]{
                 DriveMotorFL, DriveMotorFR, DriveMotorBL, DriveMotorBR
@@ -78,6 +92,7 @@ public class NullHardware {
         }
     }
 
+    //Base encoder function.
     public void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
         int newTargetFL;
         int newTargetFR;
