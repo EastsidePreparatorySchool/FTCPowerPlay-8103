@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import nullrobotics.NM;
+import nullrobotics.VoidLib;
 
 public class FourBarLift {
     private DcMotor LiftMotorL = null;
@@ -15,14 +15,21 @@ public class FourBarLift {
     private Servo FourBarServoL = null;
     private Servo FourBarServoR = null;
 
-    private Servo ClawServo = null;
+    public Servo ClawServo = null;
 
     private Telemetry telemetry;
 
-//    public boolean isLiftLowered;
+    private static int FOUR_BAR_ZERO_DIFF = 0; //difference in degrees of four bar resting position to perfect zero
+    private static int FOUR_BAR_SERVO_RANGE = 270;
 
-    private int FOUR_BAR_ZERO_DIFF; //difference in degrees of four bar resting position to perfect zero
-    private int FOUR_BAR_SERVO_RANGE;
+    private static int TICKS_PER_LIFT_CM = 20; //Ticks per Centimeter
+    private static int CLAW_CLEAR_HEIGHT = 0; //Ticks
+
+    private int CurrentLiftHeight;
+
+    private static double CLAW_OPEN_POS = 0;
+    private static double CLAW_CLOSED_POS = 0.18;
+    private boolean isClawOpen;
 
     //Full mechanism
     public void FourBarLift() {
@@ -31,34 +38,88 @@ public class FourBarLift {
 
     public void init (HardwareMap map, Telemetry tel) {
         //Initialize everything.
+
+        //Setup lift motors
         LiftMotorL = map.dcMotor.get("LiftL");
         LiftMotorR = map.dcMotor.get("LiftR");
+
+        LiftMotorL.setDirection(DcMotor.Direction.REVERSE);
+        LiftMotorR.setDirection(DcMotor.Direction.FORWARD);
+
+        DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
+
+        VoidLib.initMotor(LiftMotorL);
+        VoidLib.initMotor(LiftMotorR);
+
+        //Setup four bar servos
         FourBarServoL = map.servo.get("FourBarL");
         FourBarServoR = map.servo.get("FourBarR");
+
+        //Set four bar servo directions
+        FourBarServoL.setDirection(Servo.Direction.FORWARD);
+        FourBarServoR.setDirection(Servo.Direction.REVERSE);
+
+        //setup claw servo
         ClawServo = map.servo.get("Claw");
+
+        ClawServo.setDirection(Servo.Direction.REVERSE);
 
         this.telemetry = tel;
 
-        telemetry.addData("Four Bar Servo L Position: ", FourBarServoL.getPosition());
-        telemetry.addData("Four Bar Servo R Position: ", FourBarServoR.getPosition());
-        telemetry.addData("Claw Servo Position", ClawServo.getPosition());
+        CurrentLiftHeight = 0;
     }
-    
-    private double degToPos(int deg){
-        return deg / FOUR_BAR_SERVO_RANGE;
+
+    //Claw
+
+    public void open(){
+        ClawServo.setPosition(CLAW_OPEN_POS);
+        isClawOpen = true;
+    }
+
+    public void close(){
+        ClawServo.setPosition(CLAW_CLOSED_POS);
+        isClawOpen = false;
+    }
+
+    public void toggle() {
+        if(isClawOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
     }
 
     //Four Bar Mechanism
-    public void reach(int deg) {
-        FourBarServoL.setPosition( degToPos(FOUR_BAR_ZERO_DIFF + deg ));
-        FourBarServoR.setPosition( degToPos(FOUR_BAR_ZERO_DIFF - deg ));
-        //TODO: Built-in protection for going through the middle.
+    public void reach(double pos) {
+        //Protection for going through the middle at too low a position.
+        //TODO: add an error light to the robot?
+//        if(  Math.abs(pos - 0.5) < 0.2 && LiftMotorL.getCurrentPosition() < CLAW_CLEAR_HEIGHT ){
+//            telemetry.addData("ERROR:", "Four bar too low to make the passthru.");
+//            telemetry.update();
+//            return;
+//        }
+
+        FourBarServoL.setPosition(pos);
+        FourBarServoR.setPosition(pos);
     }
     
-    //lift
-    public void rise(int cm, double speed) {
-        this.encode(speed, NM.cm(cm), NM.cm(cm));
+    //Lift
+    public void riseTo(int posInCm, double speed) {
+        this.riseBy(posInCm - CurrentLiftHeight, speed);
     }
+
+    public void riseBy(int cm, double speed) {
+//        this.endLiftMovement();
+        int ticks = (int) (cm * TICKS_PER_LIFT_CM);
+        this.encode(speed, ticks, ticks);
+        this.CurrentLiftHeight += cm;
+        this.telServoPositions();
+    }
+
+//    public void liftTo(int posCm, double speed) {
+//        int ticks = (int) (posCm * TICKS_PER_LIFT_CM);
+//        this.encode(speed, ticks, ticks);
+//    }
 
     //forward/backward already handled by the DCMotor.Direction
     public void encode(double speed, int ticksL, int ticksR) {
@@ -68,8 +129,8 @@ public class FourBarLift {
         // Determine new target position, and pass to motor controller
         newTargetL = LiftMotorL.getCurrentPosition() + ticksL;
         newTargetR = LiftMotorR.getCurrentPosition() + ticksR;
-        LiftMotorL.setTargetPosition(newTargetL);
-        LiftMotorR.setTargetPosition(newTargetR);
+        LiftMotorL.setTargetPosition(ticksL);
+        LiftMotorR.setTargetPosition(ticksR);
 
         telemetry.addData("Locked & loaded.", ":)");
         telemetry.addData("LF position", LiftMotorL.getCurrentPosition());
@@ -104,6 +165,10 @@ public class FourBarLift {
             telemetry.update();
         }
 
+        // DO NOTHING WHEN IT'S DONE
+    }
+
+    public void endLiftMovement() {
         // Stop all motion;
         LiftMotorL.setPower(0);
         LiftMotorR.setPower(0);
@@ -111,6 +176,13 @@ public class FourBarLift {
         // Turn off RUN_TO_POSITION
         LiftMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
+    public void telServoPositions(){
+        telemetry.addData("Four Bar Servo L Position: ", FourBarServoL.getPosition());
+        telemetry.addData("Four Bar Servo R Position: ", FourBarServoR.getPosition());
+        telemetry.addData("Claw Servo Position", ClawServo.getPosition());
+        telemetry.addData("LiftPosition", CurrentLiftHeight);
+        telemetry.update();
     }
 }

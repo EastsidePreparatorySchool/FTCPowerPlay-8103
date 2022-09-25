@@ -21,35 +21,31 @@ public class SimpleAuto extends LinearOpMode {
 
         waitForStart();
 
-//        robot.drive(Owl.DEFAULTDRIVESPEED, 1000);
-//        robot.strafe(0.3, 50* Val.CM);
-//        robot.turn(0.3, Val.deg(90));
-
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(150));
+        robot.drive(VoidLib.DEFAULTDRIVESPEED, (150));
 
         robot.tsleep(5000);
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(-30));
+        robot.drive(VoidLib.DEFAULTDRIVESPEED, (-30));
 
         robot.tsleep(5000);
 
-        robot.turn(NM.DEFAULTDRIVESPEED, NM.deg(90));
+        robot.turn(VoidLib.DEFAULTDRIVESPEED, (90));
 
         robot.tsleep(5000);
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(-20));
+        robot.drive(VoidLib.DEFAULTDRIVESPEED, (-20));
 
         robot.tsleep(1000);
 
-        robot.strafe(NM.DEFAULTDRIVESPEED, NM.cm(-120));
+        robot.strafe(VoidLib.DEFAULTDRIVESPEED, (-120));
 
         robot.tsleep(1000);
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(20));
+        robot.drive(VoidLib.DEFAULTDRIVESPEED, (20));
 
         robot.tsleep(1000);
 
-        robot.turn(NM.DEFAULTDRIVESPEED, NM.deg(270));
+        robot.turn(VoidLib.DEFAULTDRIVESPEED, (270));
 
 
 
