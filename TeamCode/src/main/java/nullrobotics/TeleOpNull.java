@@ -36,14 +36,13 @@ public class TeleOpNull extends LinearOpMode {
         double rightPower;
         double strafePower;
 
+        // multiplier for slow mode
+        double multiplier;
+
         FBCurrentPositionIndex = fourbar.FBInitialPositionIndex;
 
         while (opModeIsActive()) {
             // power
-
-
-            // multiplier for slow mode
-            double multiplier = 1;
             // check for controller inputs
             double drive = -gamepad1.left_stick_y;
             double strafe = -gamepad1.left_stick_x;
@@ -52,6 +51,7 @@ public class TeleOpNull extends LinearOpMode {
             leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
             strafePower = Range.clip(strafe, -1.0, 1.0);
             rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
+            
             if(gamepad1.left_bumper) {
                 multiplier = 0.5;
             } else {
