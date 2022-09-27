@@ -17,7 +17,7 @@ public class NullHardware {
     public DcMotor DriveMotorBL = null;
     public DcMotor DriveMotorBR = null;
 
-    public FourBarLift FourBarLift = new FourBarLift();
+//    public FourBarLift FourBarLift = new FourBarLift();
 
     public DcMotor[] allMotors;
     double[] rotationArray;
@@ -47,7 +47,7 @@ public class NullHardware {
         DriveMotorBL = hwMap.dcMotor.get("DriveBL");
         DriveMotorBR = hwMap.dcMotor.get("DriveBR");
 
-        FourBarLift.init(ahwMap, atelemetry);
+//        FourBarLift.init(ahwMap, atelemetry);
 
         allMotors = new DcMotor[]{
                 DriveMotorFL, DriveMotorFR, DriveMotorBL, DriveMotorBR

@@ -5,15 +5,19 @@ package nullrobotics;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import nullrobotics.lib.FourBarLift;
+
 @Autonomous(name="Four Bar Test", group="8103")
 public class FourBarTest extends LinearOpMode {
 
     //declare opmode members
-    NullHardware robot = new NullHardware();
+    NullHardware chassis = new NullHardware();
+    FourBarLift fourbar = new FourBarLift();
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, telemetry);
+        chassis.init(hardwareMap, telemetry);
+        fourbar.init(hardwareMap, telemetry);
 
         //telemetry
         telemetry.addData("Status", "started");
@@ -21,46 +25,46 @@ public class FourBarTest extends LinearOpMode {
 
         waitForStart();
 
-            robot.FourBarLift.telServoPositions();
+            fourbar.telPositions();
 
-//            robot.FourBarLift.riseBy(15, 0.3);
+//            fourbar.riseBy(15, 0.3);
 //
-//            robot.FourBarLift.reach(0.8);
+//            fourbar.reach(0.8);
 //
-//            robot.tsleep(3000);
+//            chassis.tsleep(3000);
 //
-//            robot.FourBarLift.reach(1);
+//            fourbar.reach(1);
 //
-//            robot.tsleep(3000);
+//            chassis.tsleep(3000);
 
-            robot.FourBarLift.open();
-            robot.tsleep(3000);
-            robot.FourBarLift.close();
-            robot.tsleep(1000);
+            fourbar.open();
+            chassis.tsleep(3000);
+            fourbar.close();
+            chassis.tsleep(1000);
 
-            robot.FourBarLift.reach(0.9);
+            fourbar.reach(0.9);
 
-            robot.tsleep(1000);
+            chassis.tsleep(1000);
 
-            robot.FourBarLift.riseBy(45, 0.3);
+            fourbar.riseBy(45, 0.3);
 
-            robot.tsleep(1000);
+            chassis.tsleep(1000);
 
-//            robot.FourBarLift.reach(1);
+//            fourbar.reach(1);
 //
-//            robot.tsleep(1000);
+//            chassis.tsleep(1000);
 
-            robot.FourBarLift.open();
+            fourbar.open();
 
-            robot.tsleep(1000);
+            chassis.tsleep(1000);
 
-            robot.FourBarLift.reach(0.8);
+            fourbar.reach(0.8);
 
-            robot.FourBarLift.riseBy(-10, 0.2);
+            fourbar.riseBy(-45, 0.2);
 
-//            robot.FourBarLift.endLiftMovement();
+//            fourbar.endLiftMovement();
 
-            robot.tsleep(10000);
+            chassis.tsleep(10000);
     }
 
 }

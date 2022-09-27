@@ -15,7 +15,7 @@ public class FourBarLift {
     private Servo FourBarServoL = null;
     private Servo FourBarServoR = null;
 
-    public Servo ClawServo = null;
+    private Servo ClawServo = null;
 
     private Telemetry telemetry;
 
@@ -25,12 +25,18 @@ public class FourBarLift {
     private static int TICKS_PER_LIFT_CM = 20; //Ticks per Centimeter
     private static int CLAW_CLEAR_HEIGHT = 0; //Ticks
 
-    private int CurrentLiftHeight;
+    public int CurrentLiftHeight;
 
     private static double CLAW_OPEN_POS = 0;
-    private static double CLAW_CLOSED_POS = 0.18;
+    private static double CLAW_CLOSED_POS = /*0.18*/ 0.22;
     private boolean isClawOpen;
 
+    public static int FBInitialPositionIndex = 3;
+
+
+    public static double[] FBPositionArr = new double[] {
+            0, 0.15, 0.3, 0.7, 0.85, 1
+    };
     //Full mechanism
     public void FourBarLift() {
         //Nothing.
@@ -67,6 +73,8 @@ public class FourBarLift {
         this.telemetry = tel;
 
         CurrentLiftHeight = 0;
+
+        this.reachToIndex(FBInitialPositionIndex);
     }
 
     //Claw
@@ -102,8 +110,13 @@ public class FourBarLift {
         FourBarServoL.setPosition(pos);
         FourBarServoR.setPosition(pos);
     }
+
+    public void reachToIndex(int index) {
+        this.reach(FBPositionArr[index]);
+    }
     
     //Lift
+    //TODO: Position array for lift heights
     public void riseTo(int posInCm, double speed) {
         this.riseBy(posInCm - CurrentLiftHeight, speed);
     }
@@ -113,7 +126,6 @@ public class FourBarLift {
         int ticks = (int) (cm * TICKS_PER_LIFT_CM);
         this.encode(speed, ticks, ticks);
         this.CurrentLiftHeight += cm;
-        this.telServoPositions();
     }
 
 //    public void liftTo(int posCm, double speed) {
@@ -123,26 +135,27 @@ public class FourBarLift {
 
     //forward/backward already handled by the DCMotor.Direction
     public void encode(double speed, int ticksL, int ticksR) {
+
         int newTargetL;
         int newTargetR;
 
         // Determine new target position, and pass to motor controller
         newTargetL = LiftMotorL.getCurrentPosition() + ticksL;
         newTargetR = LiftMotorR.getCurrentPosition() + ticksR;
-        LiftMotorL.setTargetPosition(ticksL);
-        LiftMotorR.setTargetPosition(ticksR);
+        LiftMotorL.setTargetPosition(newTargetL);
+        LiftMotorR.setTargetPosition(newTargetR);
 
         telemetry.addData("Locked & loaded.", ":)");
-        telemetry.addData("LF position", LiftMotorL.getCurrentPosition());
-        telemetry.addData("LF target (should be " + newTargetL + ")", LiftMotorL.getTargetPosition());
-        telemetry.addData("LF ticks", ticksL);
-        telemetry.addData("RF position", LiftMotorR.getCurrentPosition());
-        telemetry.addData("RF target (should be " + newTargetR + ")", LiftMotorR.getTargetPosition());
-        telemetry.addData("RF ticks", ticksR);
+        telemetry.addData("L position", LiftMotorL.getCurrentPosition());
+        telemetry.addData("L target (should be " + newTargetL + ")", LiftMotorL.getTargetPosition());
+        telemetry.addData("L ticks", ticksL);
+        telemetry.addData("R position", LiftMotorR.getCurrentPosition());
+        telemetry.addData("R target (should be " + newTargetR + ")", LiftMotorR.getTargetPosition());
+        telemetry.addData("R ticks", ticksR);
         telemetry.addData("Speed", speed);
         telemetry.update();
 
-//        threadSleep(5000);
+//        tsleep(5000);
 
         // Turn On RUN_TO_POSITION
         LiftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -165,7 +178,6 @@ public class FourBarLift {
             telemetry.update();
         }
 
-        // DO NOTHING WHEN IT'S DONE
     }
 
     public void endLiftMovement() {
@@ -178,11 +190,29 @@ public class FourBarLift {
         LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void telServoPositions(){
+    public int[] getLiftEncoderPositions() {
+        return new int[]{
+                LiftMotorL.getCurrentPosition(),
+                LiftMotorR.getCurrentPosition()
+        };
+    }
+
+    //Telemetry
+    public void telPositions(){
         telemetry.addData("Four Bar Servo L Position: ", FourBarServoL.getPosition());
         telemetry.addData("Four Bar Servo R Position: ", FourBarServoR.getPosition());
         telemetry.addData("Claw Servo Position", ClawServo.getPosition());
-        telemetry.addData("LiftPosition", CurrentLiftHeight);
+        telemetry.addData("CurrentLiftHeight Variable", CurrentLiftHeight);
+        telemetry.addData("Lift L", LiftMotorL.getCurrentPosition() / TICKS_PER_LIFT_CM);
+        telemetry.addData("Lift R", LiftMotorR.getCurrentPosition() / TICKS_PER_LIFT_CM);
         telemetry.update();
+    }
+
+    public void tsleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (Exception e) {
+            //do nothing
+        }
     }
 }
