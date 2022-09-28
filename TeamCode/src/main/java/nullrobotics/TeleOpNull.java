@@ -14,7 +14,8 @@ public class TeleOpNull extends LinearOpMode {
     NullHardware robot = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
 
-    private boolean hasXYBeenReleased;
+    private boolean hasFBBtnsBeenReleased;
+    private boolean hasClawBtnBeenReleased;
     public int FBCurrentPositionIndex;
 
     @Override
@@ -53,7 +54,7 @@ public class TeleOpNull extends LinearOpMode {
             rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
             
             if(gamepad1.left_bumper) {
-                multiplier = 0.5;
+                multiplier = 0.25;
             } else {
                 multiplier = 1;
             }
@@ -66,36 +67,40 @@ public class TeleOpNull extends LinearOpMode {
 
             //lift (tentative)
             if(gamepad1.a){
-                fourbar.riseBy(5, 0.2);
+                fourbar.riseBy(5, 0.6);
             } else if (gamepad1.b) {
-                fourbar.riseBy(-5, 0.2);
+                fourbar.riseBy(-5, 0.6);
             }
 
+            //Four Bar
             if(!gamepad1.x && !gamepad1.y) {
-                hasXYBeenReleased = true;
+                hasFBBtnsBeenReleased = true;
             }
-            if(gamepad1.x && hasXYBeenReleased) {
+            if(gamepad1.x && hasFBBtnsBeenReleased) {
                 FBCurrentPositionIndex ++;
                 if(FBCurrentPositionIndex > fourbar.FBPositionArr.length - 1){
                     FBCurrentPositionIndex = fourbar.FBPositionArr.length -1;
                 }
                 fourbar.reachToIndex(FBCurrentPositionIndex);
-                hasXYBeenReleased = false;
+                hasFBBtnsBeenReleased = false;
             }
-            if(gamepad1.y && hasXYBeenReleased) {
+            if(gamepad1.y && hasFBBtnsBeenReleased) {
                 FBCurrentPositionIndex --;
                 if(FBCurrentPositionIndex < 0){
                     FBCurrentPositionIndex = 0;
                 }
                 fourbar.reachToIndex(FBCurrentPositionIndex);
-                hasXYBeenReleased = false;
+                hasFBBtnsBeenReleased = false;
             }
 
-            //TODO: Use "released" system
-            if(gamepad1.right_trigger > 0.1) {
-                fourbar.close();
-            } else if (gamepad1.right_bumper) {
-                fourbar.open();
+            //Claw
+            if(gamepad1.right_trigger == 0){
+                hasClawBtnBeenReleased = true;
+            }
+
+            if(gamepad1.right_trigger > 0 && hasClawBtnBeenReleased){
+                fourbar.toggleClaw();
+                hasClawBtnBeenReleased = false;
             }
 
 
@@ -104,7 +109,7 @@ public class TeleOpNull extends LinearOpMode {
             telemetry.addData("Motors", "left (%.2f), right (%.2f), strafe (%.2f), b-button (%.2b)", leftPower, rightPower, strafePower, gamepad1.b);
             telemetry.addData("CurrentLiftHeight variable", fourbar.CurrentLiftHeight);
             telemetry.addData("Four Bar Position Index ", FBCurrentPositionIndex);
-            telemetry.addData("Four Bar XY Release", hasXYBeenReleased);
+            telemetry.addData("Four Bar XY Release", hasFBBtnsBeenReleased);
             int[] liftEncoderPos = fourbar.getLiftEncoderPositions();
             telemetry.addData("Lift Encoders", "Left: " + liftEncoderPos[0] + ", Right: " + liftEncoderPos[1]);
             telemetry.update();

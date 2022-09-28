@@ -79,21 +79,21 @@ public class FourBarLift {
 
     //Claw
 
-    public void open(){
+    public void openClaw(){
         ClawServo.setPosition(CLAW_OPEN_POS);
         isClawOpen = true;
     }
 
-    public void close(){
+    public void closeClaw(){
         ClawServo.setPosition(CLAW_CLOSED_POS);
         isClawOpen = false;
     }
 
-    public void toggle() {
+    public void toggleClaw() {
         if(isClawOpen) {
-            this.close();
+            this.closeClaw();
         } else {
-            this.open();
+            this.openClaw();
         }
     }
 

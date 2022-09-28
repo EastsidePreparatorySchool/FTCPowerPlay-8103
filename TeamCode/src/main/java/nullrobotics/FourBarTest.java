@@ -37,9 +37,9 @@ public class FourBarTest extends LinearOpMode {
 //
 //            chassis.tsleep(3000);
 
-            fourbar.open();
+            fourbar.openClaw();
             chassis.tsleep(3000);
-            fourbar.close();
+            fourbar.closeClaw();
             chassis.tsleep(1000);
 
             fourbar.reach(0.9);
@@ -54,7 +54,7 @@ public class FourBarTest extends LinearOpMode {
 //
 //            chassis.tsleep(1000);
 
-            fourbar.open();
+            fourbar.openClaw();
 
             chassis.tsleep(1000);
 
