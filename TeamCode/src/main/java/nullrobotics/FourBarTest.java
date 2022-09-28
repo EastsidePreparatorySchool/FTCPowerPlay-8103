@@ -46,7 +46,7 @@ public class FourBarTest extends LinearOpMode {
 
             chassis.tsleep(1000);
 
-            fourbar.riseBy(45, 0.3);
+            fourbar.rise(45, 0.3);
 
             chassis.tsleep(1000);
 
@@ -60,7 +60,7 @@ public class FourBarTest extends LinearOpMode {
 
             fourbar.reach(0.8);
 
-            fourbar.riseBy(-45, 0.2);
+            fourbar.rise(-45, 0.2);
 
 //            fourbar.endLiftMovement();
 

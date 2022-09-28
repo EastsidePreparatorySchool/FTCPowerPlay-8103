@@ -16,7 +16,9 @@ public class TeleOpNull extends LinearOpMode {
 
     private boolean hasFBBtnsBeenReleased;
     private boolean hasClawBtnBeenReleased;
+    private boolean hasLiftBtnsBeenReleased;
     public int FBCurrentPositionIndex;
+    public int LiftCurrentPositionIndex;
 
     @Override
     public void runOpMode() {
@@ -53,7 +55,7 @@ public class TeleOpNull extends LinearOpMode {
             strafePower = Range.clip(strafe, -1.0, 1.0);
             rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
             
-            if(gamepad1.left_bumper) {
+            if(gamepad1.left_trigger > 0) {
                 multiplier = 0.25;
             } else {
                 multiplier = 1;
@@ -65,11 +67,27 @@ public class TeleOpNull extends LinearOpMode {
             robot.DriveMotorBL.setPower((leftPower + strafePower) * multiplier);
             robot.DriveMotorBR.setPower((rightPower - strafePower) * multiplier);
 
-            //lift (tentative)
-            if(gamepad1.a){
-                fourbar.riseBy(5, 0.6);
-            } else if (gamepad1.b) {
-                fourbar.riseBy(-5, 0.6);
+            //Lift
+//            if(gamepad1.a){
+//                fourbar.rise(5, 1);
+//            } else if (gamepad1.b) {
+//                fourbar.rise(-5, 1);
+//            }
+            if(gamepad1.b) {
+                LiftCurrentPositionIndex ++;
+                if(LiftCurrentPositionIndex > fourbar.LiftPositionArr.length - 1){
+                    LiftCurrentPositionIndex = fourbar.LiftPositionArr.length -1;
+                }
+                fourbar.rise(LiftCurrentPositionIndex, fourbar.LIFT_TELEOP_SPEED);
+                hasLiftBtnsBeenReleased = false;
+            }
+            if(gamepad1.a) {
+                LiftCurrentPositionIndex ++;
+                if(LiftCurrentPositionIndex > fourbar.LiftPositionArr.length - 1){
+                    LiftCurrentPositionIndex = fourbar.LiftPositionArr.length -1;
+                }
+                fourbar.rise(LiftCurrentPositionIndex, fourbar.LIFT_TELEOP_SPEED);
+                hasLiftBtnsBeenReleased = false;
             }
 
             //Four Bar
@@ -103,6 +121,7 @@ public class TeleOpNull extends LinearOpMode {
                 hasClawBtnBeenReleased = false;
             }
 
+            //Presets? Use second DPAD maybe?
 
             // Show the elapsed game time and wheel power. Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -31,12 +31,18 @@ public class FourBarLift {
     private static double CLAW_CLOSED_POS = /*0.18*/ 0.22;
     private boolean isClawOpen;
 
-    public static int FBInitialPositionIndex = 3;
-
-
+    public static int FBInitialPositionIndex = 2;
     public static double[] FBPositionArr = new double[] {
-            0, 0.15, 0.3, 0.7, 0.85, 1
+            0, /*0.15,*/ 0.3, 0.7, /*0.85,*/ 1
     };
+
+    public static double LIFT_TELEOP_SPEED = 0.8;
+
+    public static int LiftInitialPositionIndex = 0;
+    public static int[] LiftPositionArr = new int[] {
+            0, 5, 15, 30
+    };
+
     //Full mechanism
     public void FourBarLift() {
         //Nothing.
@@ -118,20 +124,15 @@ public class FourBarLift {
     //Lift
     //TODO: Position array for lift heights
     public void riseTo(int posInCm, double speed) {
-        this.riseBy(posInCm - CurrentLiftHeight, speed);
+        this.rise(posInCm - CurrentLiftHeight, speed);
     }
 
-    public void riseBy(int cm, double speed) {
+    public void rise(int cm, double speed) {
 //        this.endLiftMovement();
         int ticks = (int) (cm * TICKS_PER_LIFT_CM);
         this.encode(speed, ticks, ticks);
         this.CurrentLiftHeight += cm;
     }
-
-//    public void liftTo(int posCm, double speed) {
-//        int ticks = (int) (posCm * TICKS_PER_LIFT_CM);
-//        this.encode(speed, ticks, ticks);
-//    }
 
     //forward/backward already handled by the DCMotor.Direction
     public void encode(double speed, int ticksL, int ticksR) {
@@ -140,8 +141,8 @@ public class FourBarLift {
         int newTargetR;
 
         // Determine new target position, and pass to motor controller
-        newTargetL = LiftMotorL.getCurrentPosition() + ticksL;
-        newTargetR = LiftMotorR.getCurrentPosition() + ticksR;
+        newTargetL = /*LiftMotorL.getCurrentPosition() + */ticksL;
+        newTargetR = /*LiftMotorR.getCurrentPosition() + */ticksR;
         LiftMotorL.setTargetPosition(newTargetL);
         LiftMotorR.setTargetPosition(newTargetR);
 
