@@ -56,14 +56,12 @@ public class TeleOpNull extends LinearOpMode {
             if (gamepad1.dpad_up == true) drive = 1;
             if (gamepad1.dpad_down == true) drive = -1;
 
-            double slidepos = gamepad1.right_trigger;
-            double slideneg = gamepad1.left_trigger;
             // process inputs
             leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
             strafePower = Range.clip(strafe, -1.0, 1.0);
             rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
             
-            if(gamepad1.left_trigger > 0) {
+            if(gamepad1.right_bumper) {
                 multiplier = 0.25;
             } else {
                 multiplier = 1;
