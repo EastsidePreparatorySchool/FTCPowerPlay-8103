@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import nullrobotics.VoidLib;
-
 public class FourBarLift {
+    // Motor and servo declarations
     private DcMotor LiftMotorL = null;
     private DcMotor LiftMotorR = null;
 
@@ -19,39 +18,50 @@ public class FourBarLift {
 
     private Telemetry telemetry;
 
-    private static int FOUR_BAR_ZERO_DIFF = 0; //difference in degrees of four bar resting position to perfect zero
-    private static int FOUR_BAR_SERVO_RANGE = 270;
+    // Lift calibration and default speed
+    private final int TICKS_PER_LIFT_CM = 20; //Ticks per Centimeter
+    private final int CLAW_CLEAR_HEIGHT = 0; //Ticks
+    public final double LIFT_TELEOP_SPEED = 0.8;
 
-    private static int TICKS_PER_LIFT_CM = 20; //Ticks per Centimeter
-    private static int CLAW_CLEAR_HEIGHT = 0; //Ticks
-
-    public int CurrentLiftHeight;
-
-    private static double CLAW_OPEN_POS = 0;
-    private static double CLAW_CLOSED_POS = /*0.18*/ 0.22;
-    private boolean isClawOpen;
-
-    public static int FBInitialPositionIndex = 2;
-    public static double[] FBPositionArr = new double[] {
-            0, /*0.15,*/ 0.3, 0.7, /*0.85,*/ 1
-    };
-
-    public static double LIFT_TELEOP_SPEED = 0.8;
-
-    public static int LiftInitialPositionIndex = 0;
-    public static int[] LiftPositionArr = new int[] {
+    //Lift position setup
+    public final int LiftInitialPositionIndex = 0;
+    public final int[] LiftPositionArr = new int[] {
             0, 5, 15, 30
     };
 
-    //Full mechanism
-    public void FourBarLift() {
+    //Claw position setup
+    private final double CLAW_OPEN_POS = 0;
+    private final double CLAW_CLOSED_POS = /*0.18*/ 0.22;
+    private boolean isClawOpen;
+
+    //Four bar position setup
+    public final int FBInitialPositionIndex = 0;
+    public final boolean FBInitialSideIndex = true;
+
+    public boolean FBCurrentSideIndex; //true = forward
+    public int FBCurrentPositionIndex;
+    private final double[][] FBPositionArr = new double[][] {
+            new double[] {
+                    // bottom - top
+                    0.7, 1
+            },
+            new double[] {
+                    // bottom - top
+                    0.3, 0
+            }
+    };
+
+
+
+    // Full mechanism
+    public FourBarLift() {
         //Nothing.
     }
 
     public void init (HardwareMap map, Telemetry tel) {
-        //Initialize everything.
+        // Initialize everything.
 
-        //Setup lift motors
+        // Setup lift motors
         LiftMotorL = map.dcMotor.get("LiftL");
         LiftMotorR = map.dcMotor.get("LiftR");
 
@@ -63,24 +73,21 @@ public class FourBarLift {
         VoidLib.initMotor(LiftMotorL);
         VoidLib.initMotor(LiftMotorR);
 
-        //Setup four bar servos
+        // Setup four bar servos
         FourBarServoL = map.servo.get("FourBarL");
         FourBarServoR = map.servo.get("FourBarR");
 
-        //Set four bar servo directions
         FourBarServoL.setDirection(Servo.Direction.FORWARD);
         FourBarServoR.setDirection(Servo.Direction.REVERSE);
 
-        //setup claw servo
+        // Setup claw servo
         ClawServo = map.servo.get("Claw");
 
         ClawServo.setDirection(Servo.Direction.REVERSE);
 
         this.telemetry = tel;
 
-        CurrentLiftHeight = 0;
-
-        this.reachToIndex(FBInitialPositionIndex);
+        this.FBReachToIndex(FBInitialSideIndex, FBInitialPositionIndex);
     }
 
     //Claw
@@ -117,21 +124,30 @@ public class FourBarLift {
         FourBarServoR.setPosition(pos);
     }
 
-    public void reachToIndex(int index) {
-        this.reach(FBPositionArr[index]);
+    public void FBReachToIndex(boolean side, int index) {
+        this.reach(
+                FBPositionArr[side ? 0 : 1][index]
+                );
+    }
+
+    public void FBToggleSide() {
+        this.FBCurrentSideIndex = !this.FBCurrentSideIndex;
+        FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
+    }
+
+    public void FBReachNextPos() {
+        this.FBCurrentPositionIndex ++;
+        if(this.FBCurrentPositionIndex > this.FBPositionArr[this.FBCurrentSideIndex ? 0 : 1].length - 1){
+            this.FBCurrentPositionIndex = 0;
+        }
+        this.FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
     }
     
     //Lift
-    //TODO: Position array for lift heights
-    public void riseTo(int posInCm, double speed) {
-        this.rise(posInCm - CurrentLiftHeight, speed);
-    }
-
-    public void rise(int cm, double speed) {
+    public void lift(int cm, double speed) {
 //        this.endLiftMovement();
-        int ticks = (int) (cm * TICKS_PER_LIFT_CM);
+        int ticks = (cm * TICKS_PER_LIFT_CM);
         this.encode(speed, ticks, ticks);
-        this.CurrentLiftHeight += cm;
     }
 
     //forward/backward already handled by the DCMotor.Direction
@@ -203,7 +219,6 @@ public class FourBarLift {
         telemetry.addData("Four Bar Servo L Position: ", FourBarServoL.getPosition());
         telemetry.addData("Four Bar Servo R Position: ", FourBarServoR.getPosition());
         telemetry.addData("Claw Servo Position", ClawServo.getPosition());
-        telemetry.addData("CurrentLiftHeight Variable", CurrentLiftHeight);
         telemetry.addData("Lift L", LiftMotorL.getCurrentPosition() / TICKS_PER_LIFT_CM);
         telemetry.addData("Lift R", LiftMotorR.getCurrentPosition() / TICKS_PER_LIFT_CM);
         telemetry.update();

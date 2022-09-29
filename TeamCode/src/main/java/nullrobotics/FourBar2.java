@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullHardware;
 
 @Autonomous(name="Four Bar Test 2", group="8103")
 public class FourBar2 extends LinearOpMode {

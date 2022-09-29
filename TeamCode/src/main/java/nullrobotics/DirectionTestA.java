@@ -5,10 +5,12 @@ package nullrobotics;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="direction test", group="8103")
+import nullrobotics.lib.NullHardware;
+
+@Autonomous(name="Direction Test A", group="8103")
 public class DirectionTestA extends LinearOpMode {
 
-    //declare opmode members
+    //declare OpMode members
     NullHardware robot = new NullHardware();
 
     @Override

@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullHardware;
+import nullrobotics.lib.VoidLib;
 
 @Autonomous(name="Simple Auto", group="8103")
 public class SimpleAuto extends LinearOpMode {
 
-    //declare opmode members
+    //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
 
@@ -25,31 +27,31 @@ public class SimpleAuto extends LinearOpMode {
 
         waitForStart();
 
-        chassis.drive(VoidLib.DEFAULTDRIVESPEED, (150));
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (150));
 
         chassis.tsleep(5000);
 
-        chassis.drive(VoidLib.DEFAULTDRIVESPEED, (-30));
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (-30));
 
         chassis.tsleep(5000);
 
-        chassis.turn(VoidLib.DEFAULTDRIVESPEED, (90));
+        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, (90));
 
         chassis.tsleep(5000);
 
-        chassis.drive(VoidLib.DEFAULTDRIVESPEED, (-20));
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (-20));
 
         chassis.tsleep(1000);
 
-        chassis.strafe(VoidLib.DEFAULTDRIVESPEED, (-120));
+        chassis.strafe(VoidLib.DEFAULT_DRIVE_SPEED, (-120));
 
         chassis.tsleep(1000);
 
-        chassis.drive(VoidLib.DEFAULTDRIVESPEED, (20));
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (20));
 
         chassis.tsleep(1000);
 
-        chassis.turn(VoidLib.DEFAULTDRIVESPEED, (270));
+        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, (270));
 
 
 

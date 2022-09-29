@@ -1,9 +1,9 @@
-package nullrobotics;
+package nullrobotics.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class VoidLib {
-    public static final double DEFAULTDRIVESPEED = 0.65;
+    public static final double DEFAULT_DRIVE_SPEED = 0.65;
 
     public static void initMotor(DcMotor m){
         m.setPower(0.0);

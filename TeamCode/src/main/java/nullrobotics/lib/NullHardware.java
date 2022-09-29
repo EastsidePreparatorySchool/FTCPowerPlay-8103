@@ -1,4 +1,4 @@
-package nullrobotics;
+package nullrobotics.lib;
 
 //This is the Hardware.java file for Robotics 2022-23 Power Play.
 //The robot's name is ???
@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import nullrobotics.lib.FourBarLift;
 
 public class NullHardware {
     public DcMotor DriveMotorFL = null;
