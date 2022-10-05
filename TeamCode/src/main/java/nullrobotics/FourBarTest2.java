@@ -9,15 +9,13 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
 @Autonomous(name="Four Bar Test 2", group="8103")
-public class FourBar2 extends LinearOpMode {
+public class FourBarTest2 extends LinearOpMode {
 
     //declare opmode members
-    NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
 
     @Override
     public void runOpMode() {
-        chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
 
         //telemetry
@@ -26,6 +24,9 @@ public class FourBar2 extends LinearOpMode {
 
         waitForStart();
 
+        fourbar.debug_SetLiftMotorPwr(0.6);
+
+        fourbar.tsleep(2000);
 
 
     }

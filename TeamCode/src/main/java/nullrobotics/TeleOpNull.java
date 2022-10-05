@@ -57,8 +57,8 @@ public class TeleOpNull extends LinearOpMode {
             * LB: Slow mode
             * LT: Grab
             *
-            * A: Four Bar side toggle
-            * B: Four Bar Pos +1
+            * A: Four Bar position
+            * B: Four Bar side
             * X:
             * Y:
             * */
@@ -103,15 +103,18 @@ public class TeleOpNull extends LinearOpMode {
                 if(LiftCurrentPositionIndex > fourbar.LiftPositionArr.length - 1){
                     LiftCurrentPositionIndex = fourbar.LiftPositionArr.length -1;
                 }
-                fourbar.lift(LiftCurrentPositionIndex, fourbar.LIFT_TELEOP_SPEED);
+                fourbar.lift(fourbar.LiftPositionArr[LiftCurrentPositionIndex], fourbar.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
             if(gamepad1.left_trigger > 0 && gamepad1.left_trigger < 1 && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex --;
-                if(LiftCurrentPositionIndex > fourbar.LiftPositionArr.length - 1){
-                    LiftCurrentPositionIndex = fourbar.LiftPositionArr.length -1;
+                if(LiftCurrentPositionIndex < 0){
+                    LiftCurrentPositionIndex = 0;
                 }
-                fourbar.lift(LiftCurrentPositionIndex, fourbar.LIFT_TELEOP_SPEED);
+                fourbar.lift(fourbar.LiftPositionArr[LiftCurrentPositionIndex], fourbar.LIFT_TELEOP_SPEED);
+                if(LiftCurrentPositionIndex == 0){
+                    fourbar.endLiftMovement();
+                }
                 hasLiftBtnsBeenReleased = false;
             }
             if(gamepad1.left_trigger == 1) {
@@ -122,7 +125,7 @@ public class TeleOpNull extends LinearOpMode {
             if(!gamepad1.b && !gamepad1.a) {
                 hasFBBtnsBeenReleased = true;
             }
-            if(gamepad1.b && hasFBBtnsBeenReleased) {
+            if(gamepad1.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 2 )) {
                 fourbar.FBToggleSide();
                 hasFBBtnsBeenReleased = false;
             }
@@ -147,8 +150,11 @@ public class TeleOpNull extends LinearOpMode {
             telemetry.addData("Motors", "left (%.2f), right (%.2f), strafe (%.2f), b-button (%.2b)", leftPower, rightPower, strafePower, gamepad1.b);
             telemetry.addData("Four Bar Position Index ", fourbar.FBCurrentPositionIndex);
             telemetry.addData("Four Bar XY Release", hasFBBtnsBeenReleased);
-            int[] liftEncoderPos = fourbar.getLiftEncoderPositions();
-            telemetry.addData("Lift Encoders", "Left: " + liftEncoderPos[0] + ", Right: " + liftEncoderPos[1]);
+            double[] liftMotorData = fourbar.getLiftMotorData();
+            telemetry.addData("Lift Encoders", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
+            telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
+            telemetry.addData("Lift Position Ideal Height", fourbar.LiftPositionArr[LiftCurrentPositionIndex]);
+            telemetry.addData("Lift motor current", "Left:" + liftMotorData[2] + ", Right:" + liftMotorData[3]);
             telemetry.update();
         }
     }
