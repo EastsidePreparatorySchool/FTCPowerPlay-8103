@@ -159,6 +159,10 @@ public class NullHardware {
 
     }
 
+    public void encoderDistanceCalibration(){
+        encode(0.8, 1000,1000,1000,1000);
+    }
+
     public void drive(double speed, double cm){
         int ticks = (int) ( cm * TICKS_PER_CM );
         encode(speed, ticks, ticks, ticks, ticks);
