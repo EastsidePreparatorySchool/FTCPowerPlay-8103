@@ -1,10 +1,9 @@
-package nullrobotics;
+package nullrobotics.lib;
 
 //This is the Hardware.java file for Robotics 2022-23 Power Play.
-//The robot's name is Sketchy Boi.
+//The robot's name is ???
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,8 +15,13 @@ public class NullHardware {
     public DcMotor DriveMotorBL = null;
     public DcMotor DriveMotorBR = null;
 
+//    public FourBarLift FourBarLift = new FourBarLift();
+
     public DcMotor[] allMotors;
     double[] rotationArray;
+
+    private static final double TICKS_PER_CM = 17;
+    private static final double TICKS_PER_DEG = 8;
 
     //Local opMode members.
     HardwareMap hwMap = null;
@@ -41,6 +45,8 @@ public class NullHardware {
         DriveMotorBL = hwMap.dcMotor.get("DriveBL");
         DriveMotorBR = hwMap.dcMotor.get("DriveBR");
 
+//        FourBarLift.init(ahwMap, atelemetry);
+
         allMotors = new DcMotor[]{
                 DriveMotorFL, DriveMotorFR, DriveMotorBL, DriveMotorBR
         };
@@ -53,10 +59,7 @@ public class NullHardware {
         DriveMotorFR.setDirection(DcMotor.Direction.REVERSE);
 
         for (DcMotor m : allMotors) {
-            m.setPower(0.0);
-            m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //this is good for auto, but is it good for driver control?
+            VoidLib.initMotor(m);
         }
 
     }
@@ -78,7 +81,8 @@ public class NullHardware {
         }
     }
 
-    public void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
+    //Base encoder function.
+    private void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
         int newTargetFL;
         int newTargetFR;
         int newTargetBL;
@@ -155,15 +159,22 @@ public class NullHardware {
 
     }
 
-    public void drive(double speed, int ticks){
+    public void encoderDistanceCalibration(){
+        encode(0.8, 1000,1000,1000,1000);
+    }
+
+    public void drive(double speed, double cm){
+        int ticks = (int) ( cm * TICKS_PER_CM );
         encode(speed, ticks, ticks, ticks, ticks);
     }
 
-    public void strafe(double speed, int ticks){
+    public void strafe(double speed, double cm){
+        int ticks = (int) ( cm * TICKS_PER_CM );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
-    public void turn(double speed, int ticks){
+    public void turn(double speed, int deg){
+        int ticks = (int) ( deg * TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks);
     }
 }

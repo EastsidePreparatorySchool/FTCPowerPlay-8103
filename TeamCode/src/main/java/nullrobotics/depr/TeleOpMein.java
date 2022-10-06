@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import nullrobotics.NullHardware;
+import nullrobotics.lib.NullHardware;
 
 
-@TeleOp(name="null robotics teleop (Mein)", group="8103")
+@TeleOp(name="[old] null robotics teleop (Mein)", group="8103")
 
 public class TeleOpMein extends LinearOpMode {
     //Declare opmode members.

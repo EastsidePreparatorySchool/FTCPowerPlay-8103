@@ -5,15 +5,21 @@ package nullrobotics;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullHardware;
+import nullrobotics.lib.VoidLib;
+
 @Autonomous(name="Simple Auto", group="8103")
 public class SimpleAuto extends LinearOpMode {
 
-    //declare opmode members
-    NullHardware robot = new NullHardware();
+    //Declare OpMode members
+    NullHardware chassis = new NullHardware();
+    FourBarLift fourbar = new FourBarLift();
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, telemetry);
+        chassis.init(hardwareMap, telemetry);
+        fourbar.init(hardwareMap, telemetry);
 
         //telemetry
         telemetry.addData("Status", "started");
@@ -21,35 +27,31 @@ public class SimpleAuto extends LinearOpMode {
 
         waitForStart();
 
-//        robot.drive(Owl.DEFAULTDRIVESPEED, 1000);
-//        robot.strafe(0.3, 50* Val.CM);
-//        robot.turn(0.3, Val.deg(90));
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (150));
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(150));
+        chassis.tsleep(5000);
 
-        robot.tsleep(5000);
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (-30));
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(-30));
+        chassis.tsleep(5000);
 
-        robot.tsleep(5000);
+        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, (90));
 
-        robot.turn(NM.DEFAULTDRIVESPEED, NM.deg(90));
+        chassis.tsleep(5000);
 
-        robot.tsleep(5000);
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (-20));
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(-20));
+        chassis.tsleep(1000);
 
-        robot.tsleep(1000);
+        chassis.strafe(VoidLib.DEFAULT_DRIVE_SPEED, (-120));
 
-        robot.strafe(NM.DEFAULTDRIVESPEED, NM.cm(-120));
+        chassis.tsleep(1000);
 
-        robot.tsleep(1000);
+        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, (20));
 
-        robot.drive(NM.DEFAULTDRIVESPEED, NM.cm(20));
+        chassis.tsleep(1000);
 
-        robot.tsleep(1000);
-
-        robot.turn(NM.DEFAULTDRIVESPEED, NM.deg(270));
+        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, (270));
 
 
 
