@@ -119,14 +119,6 @@ public class FourBarLift {
 
     //Four Bar Mechanism
     public void reach(double pos) {
-        //Protection for going through the middle at too low a position.
-        //TODO: add an error light to the robot?
-//        if(  Math.abs(pos - 0.5) < 0.2 && LiftMotorL.getCurrentPosition() < CLAW_CLEAR_HEIGHT ){
-//            telemetry.addData("ERROR:", "Four bar too low to make the passthru.");
-//            telemetry.update();
-//            return;
-//        }
-
         FourBarServoL.setPosition(pos);
         FourBarServoR.setPosition(pos);
     }
@@ -143,7 +135,7 @@ public class FourBarLift {
         } else if (FBCurrentSideIndex == 1) {
             FBCurrentSideIndex = 0;
         } else {
-            //what the fuck
+            //what the fuck happened
         }
         FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
     }
@@ -159,29 +151,21 @@ public class FourBarLift {
     //Lift
     public void lift(int ticks, double speed) {
 //        this.endLiftMovement();
-        this.encode(speed, ticks, ticks);
+        this.encode(speed, ticks);
     }
 
     //forward/backward already handled by the DCMotor.Direction
-    public void encode(double speed, int ticksL, int ticksR) {
-
-        int newTargetL;
-        int newTargetR;
-
+    private void encode(double speed, int ticks) {
         // Determine new target position, and pass to motor controller
-        newTargetL = /*LiftMotorL.getCurrentPosition() + */ticksL;
-        newTargetR = /*LiftMotorR.getCurrentPosition() + */ticksR;
-        LiftMotorL.setTargetPosition(newTargetL);
-        LiftMotorR.setTargetPosition(newTargetR);
+        LiftMotorL.setTargetPosition(ticks);
+        LiftMotorR.setTargetPosition(ticks);
 //        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Locked & loaded.", ":)");
         telemetry.addData("L position", LiftMotorL.getCurrentPosition());
-        telemetry.addData("L target (should be " + newTargetL + ")", LiftMotorL.getTargetPosition());
-        telemetry.addData("L ticks", ticksL);
+        telemetry.addData("L target (should be " + ticks + ")", LiftMotorL.getTargetPosition());
         telemetry.addData("R position", LiftMotorR.getCurrentPosition());
-        telemetry.addData("R target (should be " + newTargetR + ")", LiftMotorR.getTargetPosition());
-        telemetry.addData("R ticks", ticksR);
+        telemetry.addData("R target (should be " + ticks + ")", LiftMotorR.getTargetPosition());
         telemetry.addData("Speed", speed);
         telemetry.update();
 
@@ -198,20 +182,21 @@ public class FourBarLift {
         // always end the motion as soon as possible.
         // However, if you require that BOTH motors have finished their moves before the robot continues
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        // update: loop was commented out so the lift movement becomes asynchronous.
 
-        long beginTime = System.currentTimeMillis();
-
-        while (LiftMotorL.isBusy() && LiftMotorR.isBusy()) {
-            telemetry.addData("L position", LiftMotorL.getCurrentPosition());
-            telemetry.addData("L target", LiftMotorL.getTargetPosition());
-            telemetry.addData("R position", LiftMotorR.getCurrentPosition());
-            telemetry.addData("R target", LiftMotorR.getTargetPosition());
-            telemetry.update();
-
-            if(System.currentTimeMillis() - beginTime > LIFT_TIMEOUT){
-                return;
-            }
-        }
+//        long beginTime = System.currentTimeMillis();
+//
+//        while (LiftMotorL.isBusy() && LiftMotorR.isBusy()) {
+//            telemetry.addData("L position", LiftMotorL.getCurrentPosition());
+//            telemetry.addData("L target", LiftMotorL.getTargetPosition());
+//            telemetry.addData("R position", LiftMotorR.getCurrentPosition());
+//            telemetry.addData("R target", LiftMotorR.getTargetPosition());
+//            telemetry.update();
+//
+//            if(System.currentTimeMillis() - beginTime > LIFT_TIMEOUT){
+//                return;
+//            }
+//        }
 
     }
 
@@ -229,8 +214,10 @@ public class FourBarLift {
         return new double[]{
                 (double) LiftMotorL.getCurrentPosition(),
                 (double) LiftMotorR.getCurrentPosition(),
+                (double) LiftMotorL.getTargetPosition(),
+                (double) LiftMotorR.getTargetPosition(),
                 LiftMotorL.getCurrent(CurrentUnit.AMPS),
-                LiftMotorL.getCurrent(CurrentUnit.AMPS)
+                LiftMotorR.getCurrent(CurrentUnit.AMPS)
         };
     }
 

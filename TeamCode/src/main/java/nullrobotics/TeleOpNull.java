@@ -147,14 +147,14 @@ public class TeleOpNull extends LinearOpMode {
             // Telemetry
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f), strafe (%.2f), b-button (%.2b)", leftPower, rightPower, strafePower, gamepad1.b);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f), strafe (%.2f)", leftPower, rightPower, strafePower);
             telemetry.addData("Four Bar Position Index ", fourbar.FBCurrentPositionIndex);
-            telemetry.addData("Four Bar XY Release", hasFBBtnsBeenReleased);
             double[] liftMotorData = fourbar.getLiftMotorData();
-            telemetry.addData("Lift Encoders", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
+            telemetry.addData("Lift Encoder Positions", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
+            telemetry.addData("Lift Encoder Targets", "Left: " + liftMotorData[2] + ", Right: " + liftMotorData[3]);
+            telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
             telemetry.addData("Lift Position Ideal Height", fourbar.LiftPositionArr[LiftCurrentPositionIndex]);
-            telemetry.addData("Lift motor current", "Left:" + liftMotorData[2] + ", Right:" + liftMotorData[3]);
             telemetry.update();
         }
     }

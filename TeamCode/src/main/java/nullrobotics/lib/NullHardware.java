@@ -82,7 +82,7 @@ public class NullHardware {
     }
 
     //Base encoder function.
-    public void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
+    private void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
         int newTargetFL;
         int newTargetFR;
         int newTargetBL;
