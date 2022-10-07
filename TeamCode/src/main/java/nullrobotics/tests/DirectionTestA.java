@@ -1,4 +1,4 @@
-package nullrobotics;
+package nullrobotics.tests;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 

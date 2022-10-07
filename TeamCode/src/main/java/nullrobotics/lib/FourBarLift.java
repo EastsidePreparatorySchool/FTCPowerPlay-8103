@@ -32,7 +32,7 @@ public class FourBarLift {
     public final int LiftInitialPositionIndex = 0;
 
     public final int[] LiftPositionArr = new int[] {
-            0, VoidLib.LIFT_HEIGHT_intake, VoidLib.LIFT_HEIGHT_lowPole, VoidLib.LIFT_HEIGHT_mediumPole, VoidLib.LIFT_HEIGHT_highPole, VoidLib.LIFT_HEIGHT_max
+            0, VoidLib.LIFT_HEIGHT_intake, VoidLib.LIFT_HEIGHT_lowPole, VoidLib.LIFT_HEIGHT_mediumPole, VoidLib.LIFT_HEIGHT_highPole
     };
 
     //Four bar position setup

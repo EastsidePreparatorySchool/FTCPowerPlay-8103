@@ -1,4 +1,4 @@
-package nullrobotics;
+package nullrobotics.auto;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
@@ -7,15 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
+import nullrobotics.lib.VoidLib;
 
-@Autonomous(name="Four Bar Test 2", group="8103")
-public class FourBarTest2 extends LinearOpMode {
+@Autonomous(name="[A1] Parking", group="8103")
+public class A1_Parking extends LinearOpMode {
 
-    //declare opmode members
+    //Declare OpMode members
+    NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
 
     @Override
     public void runOpMode() {
+        chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
 
         //telemetry
@@ -24,10 +27,7 @@ public class FourBarTest2 extends LinearOpMode {
 
         waitForStart();
 
-        fourbar.debug_SetLiftMotorPwr(0.6);
-
-        fourbar.tsleep(2000);
-
+        chassis.encoderDistanceCalibration();
 
     }
 

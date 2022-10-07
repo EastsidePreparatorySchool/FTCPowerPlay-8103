@@ -152,9 +152,9 @@ public class TeleOpNull extends LinearOpMode {
             double[] liftMotorData = fourbar.getLiftMotorData();
             telemetry.addData("Lift Encoder Positions", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
             telemetry.addData("Lift Encoder Targets", "Left: " + liftMotorData[2] + ", Right: " + liftMotorData[3]);
+            telemetry.addData("Lift Position Ideal Height", fourbar.LiftPositionArr[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
-            telemetry.addData("Lift Position Ideal Height", fourbar.LiftPositionArr[LiftCurrentPositionIndex]);
             telemetry.update();
         }
     }
