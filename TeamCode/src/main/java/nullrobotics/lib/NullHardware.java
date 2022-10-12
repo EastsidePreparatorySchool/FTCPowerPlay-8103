@@ -142,18 +142,25 @@ public class NullHardware {
             telemetry.addData("LB target", DriveMotorBL.getTargetPosition());
             telemetry.addData("RB position", DriveMotorBR.getCurrentPosition());
             telemetry.addData("RB target", DriveMotorBR.getTargetPosition());
-            telemetry.update();
 
-            int positionDifference = Math.abs(DriveMotorFL.getTargetPosition() - DriveMotorFL.getCurrentPosition());
+
+            double positionDifference = Math.abs(DriveMotorFL.getTargetPosition() - DriveMotorFL.getCurrentPosition());
+            telemetry.addData("Position Difference", positionDifference);
+
             if(positionDifference < VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION){
-                int speedMultiplier = positionDifference / VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION;
+                double speedMultiplier = 0.1 + 0.9 * ( positionDifference / VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION );
+
                 DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
                 DriveMotorFR.setPower(Math.abs(speed * speedMultiplier));
                 DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
                 DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
-            }
-        }
 
+                telemetry.addData("Decel Threshold", VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION);
+                telemetry.addData("Speed Multiplier", speedMultiplier);
+            }
+
+            telemetry.update();
+        }
         // Stop all motion;
         DriveMotorFL.setPower(0);
         DriveMotorFR.setPower(0);

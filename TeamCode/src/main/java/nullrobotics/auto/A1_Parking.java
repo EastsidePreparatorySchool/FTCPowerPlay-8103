@@ -27,9 +27,9 @@ public class A1_Parking extends LinearOpMode {
 
         waitForStart();
 
-//        chassis.encoderDistanceCalibration();
-
         chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, 48);
+//        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, 360);
     }
+
 
 }

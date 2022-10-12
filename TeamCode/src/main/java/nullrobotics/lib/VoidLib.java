@@ -17,14 +17,11 @@ public class VoidLib {
     //Drive
     public static final double DEFAULT_DRIVE_SPEED = 0.65;
     public static final double SLOWMODE_MULTIPLIER = 0.25;
-    public static final int ENCODER_DRIVE_BEGIN_DECELERATION = 500;
+    public static final int ENCODER_DRIVE_BEGIN_DECELERATION = 500; // Ticks from target position to begin deceleration
 
-/*
-1000 ticks -> 28 in */
-
-    public static final double TICKS_PER_IN = 41;
+    public static final double TICKS_PER_IN = 38;
     public static final double TICKS_PER_CM = TICKS_PER_IN * 2.54;
-    public static final double TICKS_PER_DEG = 8;
+    public static final double TICKS_PER_DEG = 8.9;
 
 
     //Lift
