@@ -24,16 +24,10 @@ public class FourBarLift {
 
     private Telemetry telemetry;
 
-    private final int CLAW_CLEAR_HEIGHT = 0; //Ticks
-    public final double LIFT_TELEOP_SPEED = 0.8;
-    private final long LIFT_TIMEOUT = 5000; //Milliseconds
-
     //Lift position setup
     public final int LiftInitialPositionIndex = 0;
 
-    public final int[] LiftPositionArr = new int[] {
-            0, VoidLib.LIFT_HEIGHT_intake, VoidLib.LIFT_HEIGHT_lowPole, VoidLib.LIFT_HEIGHT_mediumPole, VoidLib.LIFT_HEIGHT_highPole
-    };
+//    public final int[] LiftPositionArr = VoidLib.LIFT_POSITIONS;
 
     //Four bar position setup
     public final int FBInitialPositionIndex = 0;
@@ -41,20 +35,8 @@ public class FourBarLift {
 
     public int FBCurrentSideIndex;
     public int FBCurrentPositionIndex;
-    private final double[][] FBPositionArr = new double[][] {
-            new double[] {
-                    // bottom - top
-                    0.7, 1
-            },
-            new double[] {
-                    // bottom - top
-                    0.3, 0
-            }
-    };
 
     //Claw position setup
-    private final double CLAW_OPEN_POS = 0;
-    private final double CLAW_CLOSED_POS = /*0.18*/ 0.22;
     private boolean isClawOpen;
 
     // Full mechanism
@@ -100,12 +82,12 @@ public class FourBarLift {
     //Claw
 
     public void openClaw(){
-        ClawServo.setPosition(CLAW_OPEN_POS);
+        ClawServo.setPosition(VoidLib.CLAW_OPEN_POS);
         isClawOpen = true;
     }
 
     public void closeClaw(){
-        ClawServo.setPosition(CLAW_CLOSED_POS);
+        ClawServo.setPosition(VoidLib.CLAW_CLOSED_POS);
         isClawOpen = false;
     }
 
@@ -125,7 +107,7 @@ public class FourBarLift {
 
     public void FBReachToIndex(int side, int index) {
         this.reach(
-                FBPositionArr[side][index]
+                VoidLib.FOUR_BAR_POSITIONS[side][index]
                 );
     }
 
@@ -142,7 +124,7 @@ public class FourBarLift {
 
     public void FBReachNextPos() {
         this.FBCurrentPositionIndex ++;
-        if(this.FBCurrentPositionIndex > this.FBPositionArr[this.FBCurrentSideIndex].length - 1){
+        if(this.FBCurrentPositionIndex > VoidLib.FOUR_BAR_POSITIONS[this.FBCurrentSideIndex].length - 1){
             this.FBCurrentPositionIndex = 0;
         }
         this.FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);

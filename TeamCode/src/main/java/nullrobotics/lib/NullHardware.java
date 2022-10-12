@@ -20,9 +20,6 @@ public class NullHardware {
     public DcMotor[] allMotors;
     double[] rotationArray;
 
-    private static final double TICKS_PER_CM = 17;
-    private static final double TICKS_PER_DEG = 8;
-
     //Local opMode members.
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
@@ -82,7 +79,10 @@ public class NullHardware {
     }
 
     //Base encoder function.
-    private void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
+//    private void encode(double speed, int fl, int fr, int bl, int br){
+//        encode(speed, fl, fr, bl, br, false);
+//    }
+    private void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR /*, boolean waitForMovementFinish*/) {
         int newTargetFL;
         int newTargetFR;
         int newTargetBL;
@@ -114,7 +114,7 @@ public class NullHardware {
         telemetry.addData("Speed", speed);
         telemetry.update();
 
-//        threadSleep(5000);
+//        this.tsleep(5000);
 
         // Turn On RUN_TO_POSITION
         DriveMotorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -143,6 +143,15 @@ public class NullHardware {
             telemetry.addData("RB position", DriveMotorBR.getCurrentPosition());
             telemetry.addData("RB target", DriveMotorBR.getTargetPosition());
             telemetry.update();
+
+            int positionDifference = Math.abs(DriveMotorFL.getTargetPosition() - DriveMotorFL.getCurrentPosition());
+            if(positionDifference < VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION){
+                int speedMultiplier = positionDifference / VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION;
+                DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
+                DriveMotorFR.setPower(Math.abs(speed * speedMultiplier));
+                DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
+                DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
+            }
         }
 
         // Stop all motion;
@@ -163,18 +172,18 @@ public class NullHardware {
         encode(0.8, 1000,1000,1000,1000);
     }
 
-    public void drive(double speed, double cm){
-        int ticks = (int) ( cm * TICKS_PER_CM );
+    public void drive(double speed, double in){
+        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
         encode(speed, ticks, ticks, ticks, ticks);
     }
 
-    public void strafe(double speed, double cm){
-        int ticks = (int) ( cm * TICKS_PER_CM );
+    public void strafe(double speed, double in){
+        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
     public void turn(double speed, int deg){
-        int ticks = (int) ( deg * TICKS_PER_DEG );
+        int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks);
     }
 }

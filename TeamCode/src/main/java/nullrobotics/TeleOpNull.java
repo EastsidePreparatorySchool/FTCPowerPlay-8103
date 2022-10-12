@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
+import nullrobotics.lib.VoidLib;
 
 @TeleOp(name="null robotics teleop", group="Linear 8103")
 public class TeleOpNull extends LinearOpMode {
@@ -81,7 +82,7 @@ public class TeleOpNull extends LinearOpMode {
 
             // Slow Mode
             if(gamepad1.right_bumper) {
-                multiplier = 0.25;
+                multiplier = VoidLib.SLOWMODE_MULTIPLIER;
             } else {
                 multiplier = 1;
             }
@@ -100,10 +101,10 @@ public class TeleOpNull extends LinearOpMode {
 
             if(gamepad1.left_bumper && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex ++;
-                if(LiftCurrentPositionIndex > fourbar.LiftPositionArr.length - 1){
-                    LiftCurrentPositionIndex = fourbar.LiftPositionArr.length -1;
+                if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
+                    LiftCurrentPositionIndex = VoidLib.LIFT_POSITIONS.length -1;
                 }
-                fourbar.lift(fourbar.LiftPositionArr[LiftCurrentPositionIndex], fourbar.LIFT_TELEOP_SPEED);
+                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
             if(gamepad1.left_trigger > 0 && gamepad1.left_trigger < 1 && hasLiftBtnsBeenReleased) {
@@ -111,14 +112,14 @@ public class TeleOpNull extends LinearOpMode {
                 if(LiftCurrentPositionIndex < 0){
                     LiftCurrentPositionIndex = 0;
                 }
-                fourbar.lift(fourbar.LiftPositionArr[LiftCurrentPositionIndex], fourbar.LIFT_TELEOP_SPEED);
+                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_DESC_SPEED);
                 if(LiftCurrentPositionIndex == 0){
                     fourbar.endLiftMovement();
                 }
                 hasLiftBtnsBeenReleased = false;
             }
             if(gamepad1.left_trigger == 1) {
-                fourbar.lift(0, fourbar.LIFT_TELEOP_SPEED);
+                fourbar.lift(0, VoidLib.LIFT_TELEOP_SPEED);
             }
 
             // Four Bar
@@ -152,7 +153,7 @@ public class TeleOpNull extends LinearOpMode {
             double[] liftMotorData = fourbar.getLiftMotorData();
             telemetry.addData("Lift Encoder Positions", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
             telemetry.addData("Lift Encoder Targets", "Left: " + liftMotorData[2] + ", Right: " + liftMotorData[3]);
-            telemetry.addData("Lift Position Ideal Height", fourbar.LiftPositionArr[LiftCurrentPositionIndex]);
+            telemetry.addData("Lift Position Ideal Height", VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
             telemetry.update();
