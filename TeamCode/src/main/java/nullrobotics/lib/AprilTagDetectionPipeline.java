@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-package nullrobotics.vision;
+package nullrobotics.lib;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.calib3d.Calib3d;

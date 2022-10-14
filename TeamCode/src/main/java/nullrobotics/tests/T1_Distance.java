@@ -1,4 +1,4 @@
-package nullrobotics.auto;
+package nullrobotics.tests;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
@@ -9,8 +9,8 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
-@Autonomous(name="[A1] Parking", group="8103")
-public class A1_Parking extends LinearOpMode {
+@Autonomous(name="[T1] Distance 2 Ft", group="Test")
+public class T1_Distance extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -28,7 +28,6 @@ public class A1_Parking extends LinearOpMode {
         waitForStart();
 
         chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, 48);
-//        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, 360);
     }
 
 

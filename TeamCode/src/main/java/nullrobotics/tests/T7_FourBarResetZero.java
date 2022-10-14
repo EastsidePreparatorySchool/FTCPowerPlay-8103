@@ -8,10 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
-@Autonomous(name="Four Bar Test 2", group="8103")
-public class FourBarTest2 extends LinearOpMode {
+@Autonomous(name="[T7] Four Bar Reset Zero", group="Test")
+public class T7_FourBarResetZero extends LinearOpMode {
 
-    //declare opmode members
+    //Declare OpMode members
+    NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
 
     @Override
@@ -24,10 +25,8 @@ public class FourBarTest2 extends LinearOpMode {
 
         waitForStart();
 
-        fourbar.debug_SetLiftMotorPwr(0.6);
-
-        fourbar.tsleep(2000);
-
+        fourbar.reach(0.5);
+        fourbar.tsleep(10000000);
 
     }
 

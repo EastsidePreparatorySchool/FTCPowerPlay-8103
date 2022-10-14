@@ -1,25 +1,27 @@
-package nullrobotics;
+package nullrobotics.auto;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
 
-@Autonomous(name="Four Bar Reset Zero", group="8103")
-public class FourBarResetZero extends LinearOpMode {
+@Autonomous(name="[A2] Select Signal Zone", group="Auto")
+public class A2_SelectSignalZone extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
+    AprilTagImplementation camera = new AprilTagImplementation();
 
     @Override
     public void runOpMode() {
+        chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
+        camera.init(hardwareMap, telemetry);
 
         //telemetry
         telemetry.addData("Status", "started");
@@ -27,9 +29,17 @@ public class FourBarResetZero extends LinearOpMode {
 
         waitForStart();
 
-        fourbar.reach(0.5);
-        fourbar.tsleep(10000000);
+        camera.onOpModeBegin();
+
+        chassis.drive(3);
+
+        chassis.turn(90);
+
+        chassis.drive(-24);
+
+        camera.scanForTags();
 
     }
+
 
 }

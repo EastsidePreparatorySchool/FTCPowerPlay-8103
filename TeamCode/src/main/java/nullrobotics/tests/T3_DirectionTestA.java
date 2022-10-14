@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.NullHardware;
 
-@Autonomous(name="Direction Test A", group="8103")
-public class DirectionTestA extends LinearOpMode {
+@Autonomous(name="[T3] Direction Test A", group="Test")
+public class T3_DirectionTestA extends LinearOpMode {
 
     //declare OpMode members
     NullHardware robot = new NullHardware();

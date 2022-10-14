@@ -1,4 +1,4 @@
-package nullrobotics;
+package nullrobotics.templates;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
@@ -9,7 +9,7 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
-@Autonomous(name="Simple Auto", group="8103")
+@Autonomous(name="[AX] Auto Template", group="Z")
 public class SimpleAuto extends LinearOpMode {
 
     //Declare OpMode members

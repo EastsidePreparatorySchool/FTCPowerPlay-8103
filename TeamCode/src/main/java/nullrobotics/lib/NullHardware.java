@@ -147,15 +147,19 @@ public class NullHardware {
             double positionDifference = Math.abs(DriveMotorFL.getTargetPosition() - DriveMotorFL.getCurrentPosition());
             telemetry.addData("Position Difference", positionDifference);
 
-            if(positionDifference < VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION){
-                double speedMultiplier = 0.1 + 0.9 * ( positionDifference / VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION );
+            if(positionDifference <= ticksFL * VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION_PERCENT){
+//                double speedMultiplier = 0.1 + 0.9 * ( positionDifference / VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION );
+                //speed during deceleration
+                double speedMultiplier = 0.5 * Math.sin(
+                        Math.PI * ((positionDifference / (VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION_PERCENT * ticksFL)) + 0.5)
+                ) + 0.5;
 
                 DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
                 DriveMotorFR.setPower(Math.abs(speed * speedMultiplier));
                 DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
                 DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
 
-                telemetry.addData("Decel Threshold", VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION);
+                telemetry.addData("Decel Threshold", VoidLib.ENCODER_DRIVE_BEGIN_DECELERATION_PERCENT);
                 telemetry.addData("Speed Multiplier", speedMultiplier);
             }
 
@@ -184,13 +188,25 @@ public class NullHardware {
         encode(speed, ticks, ticks, ticks, ticks);
     }
 
+    public void drive(double in){
+        this.drive(VoidLib.DEFAULT_DRIVE_SPEED, in);
+    }
+
     public void strafe(double speed, double in){
         int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
+    public void strafe(double in){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in);
+    }
+
     public void turn(double speed, int deg){
         int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks);
+    }
+
+    public void turn(int deg){
+        this.turn(VoidLib.DEFAULT_DRIVE_SPEED, deg);
     }
 }

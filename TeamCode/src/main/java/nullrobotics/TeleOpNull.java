@@ -9,7 +9,7 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
-@TeleOp(name="null robotics teleop", group="Linear 8103")
+@TeleOp(name="null robotics teleop", group="A")
 public class TeleOpNull extends LinearOpMode {
     // initialize telemetry
     private ElapsedTime runtime = new ElapsedTime();

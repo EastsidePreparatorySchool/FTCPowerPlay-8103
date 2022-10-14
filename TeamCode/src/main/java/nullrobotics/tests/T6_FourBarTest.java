@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
-@Autonomous(name="Four Bar Test", group="8103")
-public class FourBarTest extends LinearOpMode {
+@Autonomous(name="[T6] Four Bar Test", group="Test")
+public class T6_FourBarTest extends LinearOpMode {
 
     //declare opmode members
     NullHardware chassis = new NullHardware();
