@@ -13,7 +13,7 @@ import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
-@Autonomous(name="[A3] Score Preload Cone", group="Auto")
+@Autonomous(name="[3] Score Preload Cone", group="Auto")
 public class A3_ScorePreload extends LinearOpMode {
 
     //Declare OpMode members
@@ -71,8 +71,6 @@ public class A3_ScorePreload extends LinearOpMode {
             //Convey back primary detection
             camera.addDetectionToTelemetry(primaryDetection);
             telemetry.update();
-
-//            chassis.tsleep(5000);
 
             chassis.drive(-6);
 

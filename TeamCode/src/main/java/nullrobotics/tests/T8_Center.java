@@ -1,19 +1,20 @@
-package nullrobotics.auto;
+package nullrobotics.tests;
 
+//Terminator, Destroyer of All, Bane of Android Studio
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
-import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
+import nullrobotics.lib.VoidLib;
 
-//Parks in the corner Terminal zone.
-//@Autonomous(name="[1] Terminal Park", group="Auto")
-public class A1_TerminalPark extends LinearOpMode {
+@Autonomous(name="[T8] Center", group="Test")
+public class T8_Center extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
-    Label allianceColor;
 
     @Override
     public void runOpMode() {
@@ -27,14 +28,8 @@ public class A1_TerminalPark extends LinearOpMode {
         waitForStart();
 
         chassis.drive(3);
-
-        if(allianceColor == Label.BLUE) {
-            chassis.turn(90);
-        } else if(allianceColor == Label.RED) {
-            chassis.turn(-90);
-        }
-
-        chassis.drive(-24);
-
+        chassis.strafe(-12);
     }
+
+
 }

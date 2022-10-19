@@ -225,6 +225,7 @@ public class FourBarLift {
         LiftMotorR.setPower(pwr);
     }
 
+    //Macros
     public void preloadCone(){
         this.FBReachToIndex(0, 0);
         this.tsleep(2000);

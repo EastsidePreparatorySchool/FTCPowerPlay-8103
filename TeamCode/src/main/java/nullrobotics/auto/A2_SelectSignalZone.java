@@ -1,6 +1,5 @@
 package nullrobotics.auto;
 
-//Terminator, Destroyer of All, Bane of Android Studio
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,15 +10,23 @@ import java.util.ArrayList;
 
 import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
 
-@Autonomous(name="[A2] Select Signal Zone", group="Auto")
+//Detect tag on the signal sleeve, then go to the right zone.
+//Is the same for all four quarters of the field.
+
+//Setup position: right in front of short yellow pole
+//Choose L or R by: is the Signal Cone to the LEFT or RIGHT of the robot's starting position?
+
+//@Autonomous(name="[2] Select Signal Zone", group="Auto")
 public class A2_SelectSignalZone extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
     AprilTagImplementation camera = new AprilTagImplementation();
+    Label signalDirection;
 
     @Override
     public void runOpMode() {
@@ -37,7 +44,13 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         chassis.drive(3);
 
-        chassis.strafe(5);
+        if(signalDirection == Label.LEFT){
+            chassis.strafe(-14);
+        } else if (signalDirection == Label.RIGHT){
+            chassis.strafe(14);
+        } else {
+            stop();
+        }
 
         chassis.drive(5);
 
@@ -67,8 +80,8 @@ public class A2_SelectSignalZone extends LinearOpMode {
             switch (primaryDetection.id) {
                 case 0:
                     //Zone 1
-                    chassis.strafe(-24);
-                    chassis.drive(24);
+                    chassis.strafe(-26);
+                    chassis.drive(30);
                     break;
                 case 2:
                     //Zone 2 (go around to not knock over cone)
@@ -86,6 +99,5 @@ public class A2_SelectSignalZone extends LinearOpMode {
         }
 
     }
-
 
 }

@@ -202,12 +202,12 @@ public class NullHardware {
         this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in);
     }
 
-    public void turn(double speed, int deg){
+    public void turn(double speed, double deg){
         int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks);
     }
 
-    public void turn(int deg){
+    public void turn(double deg){
         this.turn(VoidLib.DEFAULT_DRIVE_SPEED, deg);
     }
 }
