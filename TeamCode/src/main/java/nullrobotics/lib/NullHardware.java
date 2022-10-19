@@ -50,10 +50,11 @@ public class NullHardware {
 
         rotationArray = new double[]{-1.0, 1.0, -1.0, 1.0};
 
-        DriveMotorBL.setDirection(DcMotor.Direction.FORWARD);
-        DriveMotorBR.setDirection(DcMotor.Direction.REVERSE);
         DriveMotorFL.setDirection(DcMotor.Direction.FORWARD);
         DriveMotorFR.setDirection(DcMotor.Direction.REVERSE);
+        DriveMotorBL.setDirection(DcMotor.Direction.FORWARD);
+        DriveMotorBR.setDirection(DcMotor.Direction.REVERSE);
+
 
         for (DcMotor m : allMotors) {
             VoidLib.initMotor(m);

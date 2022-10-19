@@ -27,8 +27,6 @@ public class FourBarLift {
     //Lift position setup
     public final int LiftInitialPositionIndex = 0;
 
-//    public final int[] LiftPositionArr = VoidLib.LIFT_POSITIONS;
-
     //Four bar position setup
     public final int FBInitialPositionIndex = 0;
     public final int FBInitialSideIndex = 0;
@@ -225,5 +223,13 @@ public class FourBarLift {
     public void debug_SetLiftMotorPwr(double pwr){
         LiftMotorL.setPower(pwr);
         LiftMotorR.setPower(pwr);
+    }
+
+    public void preloadCone(){
+        this.FBReachToIndex(0, 0);
+        this.tsleep(2000);
+        this.closeClaw();
+        this.tsleep(1000);
+        this.FBReachToIndex(0, 1);
     }
 }

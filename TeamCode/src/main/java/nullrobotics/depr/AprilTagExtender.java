@@ -34,7 +34,6 @@
 
         import nullrobotics.lib.AprilTagDetectionPipeline;
 
-        //        @Autonomous(name = "April Tag Implementation", group = "Z")
         public class AprilTagExtender extends LinearOpMode {
             OpenCvCamera camera;
             AprilTagDetectionPipeline aprilTagDetectionPipeline;

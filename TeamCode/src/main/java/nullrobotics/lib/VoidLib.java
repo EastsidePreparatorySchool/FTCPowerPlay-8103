@@ -53,4 +53,7 @@ public class VoidLib {
     //Claw
     public static final double CLAW_OPEN_POS = 0;
     public static final double CLAW_CLOSED_POS = /*0.18*/ 0.22;
+
+    //Vision
+    public static final long APRIL_SCAN_TIMEOUT = 10000;
 }

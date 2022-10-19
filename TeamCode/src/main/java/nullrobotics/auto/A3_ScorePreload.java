@@ -13,8 +13,8 @@ import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
-@Autonomous(name="[A2] Select Signal Zone", group="Auto")
-public class A2_SelectSignalZone extends LinearOpMode {
+@Autonomous(name="[A3] Score Preload Cone", group="Auto")
+public class A3_ScorePreload extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -42,13 +42,27 @@ public class A2_SelectSignalZone extends LinearOpMode {
         chassis.drive(5);
 
         ArrayList<AprilTagDetection> detections = camera.scan();
+        //1st. Score preload cone
 
+        //Move back and lower fourbar
+        chassis.drive(-6);
+        fourbar.FBReachToIndex(0, 0);
+
+        //Go around Zone 2 to move into position
+        chassis.strafe(-24);
+        chassis.drive(52);
+        chassis.strafe(14);
+        //Lift
+        fourbar.openClaw();
+
+
+        //2nd. Park
         if(detections == null){
             //If it can't find a tag, then park normally.
-            chassis.drive(-5);
-            chassis.strafe(-5);
+            chassis.strafe(-14);
+            chassis.drive(-52);
             chassis.turn(90);
-            chassis.drive(-24);
+            chassis.drive(-36);
 
         } else {
 
@@ -67,19 +81,15 @@ public class A2_SelectSignalZone extends LinearOpMode {
             switch (primaryDetection.id) {
                 case 0:
                     //Zone 1
-                    chassis.strafe(-24);
-                    chassis.drive(24);
+                    chassis.strafe(-8);
                     break;
                 case 2:
                     //Zone 2 (go around to not knock over cone)
-                    chassis.strafe(-24);
-                    chassis.drive(52);
-                    chassis.strafe(29);
+                    chassis.strafe(8);
                     break;
                 case 1:
                     //Zone 3
-                    chassis.strafe(31);
-                    chassis.drive(28);
+                    chassis.strafe(30);
                     break;
             }
 

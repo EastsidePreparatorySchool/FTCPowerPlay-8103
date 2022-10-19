@@ -1,7 +1,6 @@
 package nullrobotics;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -13,7 +12,7 @@ import nullrobotics.lib.VoidLib;
 public class TeleOpNull extends LinearOpMode {
     // initialize telemetry
     private ElapsedTime runtime = new ElapsedTime();
-    NullHardware robot = new NullHardware();
+    NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
 
     private boolean hasFBBtnsBeenReleased;
@@ -26,13 +25,8 @@ public class TeleOpNull extends LinearOpMode {
     public void runOpMode() {
 
         // initialize the hardware map
-        robot.init(hardwareMap, telemetry);
+        chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
-        //Magic piece of code does something important
-        robot.DriveMotorFL.setDirection(DcMotor.Direction.FORWARD);
-        robot.DriveMotorFR.setDirection(DcMotor.Direction.REVERSE);
-        robot.DriveMotorBL.setDirection(DcMotor.Direction.FORWARD);
-        robot.DriveMotorBR.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for start
         waitForStart();
@@ -88,10 +82,10 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             // Set Power
-            robot.DriveMotorFL.setPower((leftPower - strafePower) * multiplier);
-            robot.DriveMotorFR.setPower((rightPower + strafePower) * multiplier);
-            robot.DriveMotorBL.setPower((leftPower + strafePower) * multiplier);
-            robot.DriveMotorBR.setPower((rightPower - strafePower) * multiplier);
+            chassis.DriveMotorFL.setPower((leftPower - strafePower) * multiplier);
+            chassis.DriveMotorFR.setPower((rightPower + strafePower) * multiplier);
+            chassis.DriveMotorBL.setPower((leftPower + strafePower) * multiplier);
+            chassis.DriveMotorBR.setPower((rightPower - strafePower) * multiplier);
 
             // Four Bar Lift controls on the second gamepad
             // Lift
