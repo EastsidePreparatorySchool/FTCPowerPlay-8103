@@ -34,6 +34,8 @@ public class A2_SelectSignalZone extends LinearOpMode {
         fourbar.init(hardwareMap, telemetry);
         camera.init(hardwareMap, telemetry);
 
+        signalDirection = this.getSignalDirection();
+
         fourbar.preloadCone();
 
         //telemetry
@@ -42,15 +44,23 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         waitForStart();
 
+        fourbar.FBReachToIndex(0, 1); //raise cone so camera can see
+
         chassis.drive(3);
 
+        chassis.turn(90);
+
         if(signalDirection == Label.LEFT){
-            chassis.strafe(-14);
+            chassis.drive(12);
         } else if (signalDirection == Label.RIGHT){
-            chassis.strafe(14);
+            chassis.drive(-12);
         } else {
+            telemetry.addData("Unknown Label", signalDirection.toString());
+            telemetry.update();
             stop();
         }
+
+        chassis.turn(-90);
 
         chassis.drive(5);
 
@@ -98,6 +108,10 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         }
 
+    }
+
+    public Label getSignalDirection(){
+        return Label.NONE;
     }
 
 }

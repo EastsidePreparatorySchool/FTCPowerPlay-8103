@@ -228,9 +228,7 @@ public class FourBarLift {
     //Macros
     public void preloadCone(){
         this.FBReachToIndex(0, 0);
-        this.tsleep(2000);
-        this.closeClaw();
         this.tsleep(1000);
-        this.FBReachToIndex(0, 1);
+        this.closeClaw();
     }
 }

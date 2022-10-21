@@ -20,6 +20,8 @@ public class A1_TerminalPark extends LinearOpMode {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
 
+        this.allianceColor = getAllianceColor();
+
         //telemetry
         telemetry.addData("Status", "started");
         telemetry.update();
@@ -36,5 +38,9 @@ public class A1_TerminalPark extends LinearOpMode {
 
         chassis.drive(-24);
 
+    }
+
+    public Label getAllianceColor(){
+        return Label.NONE;
     }
 }

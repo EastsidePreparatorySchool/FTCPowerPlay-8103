@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import nullrobotics.lib.NullHardware;
 
 
-@TeleOp(name="[old] null robotics teleop (Mein)", group="Deprecated")
+//@TeleOp(name="[old] null robotics teleop (Mein)", group="Deprecated")
 
 public class TeleOpMein extends LinearOpMode {
     //Declare opmode members.
