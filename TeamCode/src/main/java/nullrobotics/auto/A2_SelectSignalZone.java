@@ -19,7 +19,6 @@ import nullrobotics.lib.NullHardware;
 //Setup position: right in front of short yellow pole
 //Choose L or R by: is the Signal Cone to the LEFT or RIGHT of the robot's starting position?
 
-//@Autonomous(name="[2] Select Signal Zone", group="Auto")
 public class A2_SelectSignalZone extends LinearOpMode {
 
     //Declare OpMode members
@@ -46,7 +45,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         fourbar.FBReachToIndex(0, 1); //raise cone so camera can see
 
-        chassis.drive(3);
+        chassis.drive(0.5, 3);
 
         chassis.turn(90);
 

@@ -15,7 +15,7 @@ public class VoidLib {
     }
 
     //Drive
-    public static final double DEFAULT_DRIVE_SPEED = 0.7;
+    public static final double DEFAULT_DRIVE_SPEED = 0.4;
     public static final double SLOWMODE_MULTIPLIER = 0.25;
 
     public static final double ENCODER_DRIVE_ACCEL_PERIOD_PERCENT = 0.2; // % from target position to begin deceleration
@@ -44,12 +44,12 @@ public class VoidLib {
     public static final double[][] FOUR_BAR_POSITIONS = new double[][] {
         new double[] {
                 // bottom - top
-                0.7, 1
+                0.7, .95
         },
-                new double[] {
-                        // bottom - top
-                        0.3, 0
-                }
+        new double[] {
+                // bottom - top
+                0.25, 0
+        }
     };
 
 

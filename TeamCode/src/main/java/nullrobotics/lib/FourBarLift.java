@@ -52,7 +52,7 @@ public class FourBarLift {
         DcMotor.Direction R = DcMotor.Direction.REVERSE;
         DcMotor.Direction F = DcMotor.Direction.FORWARD;
 
-        LiftMotorL.setDirection(F);
+        LiftMotorL.setDirection(R);
         LiftMotorR.setDirection(F);
 
         DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
@@ -132,6 +132,12 @@ public class FourBarLift {
     public void lift(int ticks, double speed) {
 //        this.endLiftMovement();
         this.encode(speed, ticks);
+    }
+
+    public void liftWaitForStop() {
+        while (LiftMotorL.isBusy() && LiftMotorR.isBusy()) {
+            //DONT YOU DARE F*CKING DO ANYTHING YOU STUPIND FUCKING HUNK OF METAL
+        }
     }
 
     //forward/backward already handled by the DCMotor.Direction
