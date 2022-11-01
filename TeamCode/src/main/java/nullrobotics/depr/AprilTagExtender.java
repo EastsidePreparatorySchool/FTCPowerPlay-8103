@@ -20,10 +20,9 @@
          * SOFTWARE.
          */
 
-        package nullrobotics.vision;
+        package nullrobotics.depr;
 
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
         import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
         import org.openftc.apriltag.AprilTagDetection;
@@ -33,8 +32,9 @@
 
         import java.util.ArrayList;
 
-        @TeleOp(name = "April Tags (Demo)", group = "8103")
-        public class AprilDemo extends LinearOpMode {
+        import nullrobotics.lib.AprilTagDetectionPipeline;
+
+        public class AprilTagExtender extends LinearOpMode {
             OpenCvCamera camera;
             AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -76,7 +76,13 @@
                     }
                 });
 
+                //Initialize robot components
+                customInit();
+
                 waitForStart();
+
+                //our function
+                afterStart();
 
                 telemetry.setMsTransmissionInterval(50);
 
@@ -102,6 +108,8 @@
                             if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                                 aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
                             }
+
+                            caseNoTagsSeen();
                         }
                         // We do see tags!
                         else {
@@ -122,12 +130,39 @@
                                 telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                                 telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
                             }
+
+                            caseTagsSeen(detections);
                         }
 
                         telemetry.update();
+
+                        eachFrameAction();
+
                     }
 
                     sleep(20);
                 }
+
             }
+
+            public void customInit(){
+                //Nothing
+            }
+
+            public void afterStart() {
+                //Nothing, override this in extensions
+            }
+
+            public void caseNoTagsSeen() {
+                //Nothing, override this in extensions
+            }
+
+            public void caseTagsSeen(ArrayList<AprilTagDetection> detection){
+                //Nothing, override this in extensions
+            }
+
+            public void eachFrameAction(){
+                //Nothing
+            }
+
         }

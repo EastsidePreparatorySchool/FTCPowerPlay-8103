@@ -9,6 +9,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class NullHardware {
     public DcMotor DriveMotorFL = null;
     public DcMotor DriveMotorFR = null;
@@ -19,9 +23,6 @@ public class NullHardware {
 
     public DcMotor[] allMotors;
     double[] rotationArray;
-
-    private static final double TICKS_PER_CM = 17;
-    private static final double TICKS_PER_DEG = 8;
 
     //Local opMode members.
     HardwareMap hwMap = null;
@@ -53,10 +54,11 @@ public class NullHardware {
 
         rotationArray = new double[]{-1.0, 1.0, -1.0, 1.0};
 
-        DriveMotorBL.setDirection(DcMotor.Direction.FORWARD);
-        DriveMotorBR.setDirection(DcMotor.Direction.REVERSE);
         DriveMotorFL.setDirection(DcMotor.Direction.FORWARD);
         DriveMotorFR.setDirection(DcMotor.Direction.REVERSE);
+        DriveMotorBL.setDirection(DcMotor.Direction.FORWARD);
+        DriveMotorBR.setDirection(DcMotor.Direction.REVERSE);
+
 
         for (DcMotor m : allMotors) {
             VoidLib.initMotor(m);
@@ -82,11 +84,17 @@ public class NullHardware {
     }
 
     //Base encoder function.
-    private void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR) {
+//    private void encode(double speed, int fl, int fr, int bl, int br){
+//        encode(speed, fl, fr, bl, br, false);
+//    }
+    private void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR, boolean useAccelCurve) {
         int newTargetFL;
         int newTargetFR;
         int newTargetBL;
         int newTargetBR;
+
+        ArrayList<Tuple> velocityList = new ArrayList();
+
 
         // Determine new target position, and pass to motor controller
         newTargetFL = DriveMotorFL.getCurrentPosition() + ticksFL;
@@ -97,6 +105,9 @@ public class NullHardware {
         DriveMotorFR.setTargetPosition(newTargetFR);
         DriveMotorBL.setTargetPosition(newTargetBL);
         DriveMotorBR.setTargetPosition(newTargetBR);
+
+        int initialPositionFL = DriveMotorFL.getCurrentPosition();
+        double accelPeriodLength = (newTargetFL - initialPositionFL) * VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT;
 
         telemetry.addData("Locked & loaded.", "Waiting 5 seconds.");
         telemetry.addData("LF position", DriveMotorFL.getCurrentPosition());
@@ -114,7 +125,7 @@ public class NullHardware {
         telemetry.addData("Speed", speed);
         telemetry.update();
 
-//        threadSleep(5000);
+//        this.tsleep(5000);
 
         // Turn On RUN_TO_POSITION
         DriveMotorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -142,9 +153,87 @@ public class NullHardware {
             telemetry.addData("LB target", DriveMotorBL.getTargetPosition());
             telemetry.addData("RB position", DriveMotorBR.getCurrentPosition());
             telemetry.addData("RB target", DriveMotorBR.getTargetPosition());
+
+//            double beginningPositionDifference = Math.abs(DriveMotorFL.getCurrentPosition() - initialPositionFL);
+//            double endPositionDifference = Math.abs(DriveMotorFL.getTargetPosition() - DriveMotorFL.getCurrentPosition());
+//            telemetry.addData("Beginning Position Difference", beginningPositionDifference);
+//            telemetry.addData("End Position Difference", endPositionDifference);
+
+            //Accel + Decel
+            double distanceFromBegin = DriveMotorFL.getCurrentPosition() - initialPositionFL;
+            double distanceFromEnd = newTargetFL - DriveMotorFL.getCurrentPosition();
+
+            if(distanceFromBegin <= accelPeriodLength && useAccelCurve){
+                //Accel
+                double accelPeriodPercent = distanceFromBegin / accelPeriodLength;
+                double curveMultiplier = (1-VoidLib.ENCODER_DRIVE_ACCEL_MIN_SPEED) * calculateAccelMultiplier(accelPeriodPercent, true) + VoidLib.ENCODER_DRIVE_ACCEL_MIN_SPEED;
+
+                telemetry.addData("Curve Multiplier", curveMultiplier);
+                telemetry.addData("Distance from Beginning", distanceFromBegin);
+                telemetry.addData("Pd. % Remaining", distanceFromBegin / accelPeriodLength);
+
+                DriveMotorFL.setPower(Math.abs(speed * curveMultiplier));
+                DriveMotorFR.setPower(Math.abs(speed * curveMultiplier));
+                DriveMotorBL.setPower(Math.abs(speed * curveMultiplier));
+                DriveMotorBR.setPower(Math.abs(speed * curveMultiplier));
+
+                velocityList.add(new Tuple(distanceFromBegin, distanceFromEnd, accelPeriodPercent, curveMultiplier));
+
+            } else if(distanceFromEnd <= accelPeriodLength && useAccelCurve){
+                //Decel
+                double decelPeriodPercent = distanceFromEnd / accelPeriodLength;
+                double curveMultiplier = (1-VoidLib.ENCODER_DRIVE_DECEL_MIN_SPEED) * calculateAccelMultiplier(decelPeriodPercent, false) + VoidLib.ENCODER_DRIVE_DECEL_MIN_SPEED;
+
+                telemetry.addData("Curve Multiplier", curveMultiplier);
+                telemetry.addData("Distance from End", distanceFromEnd);
+                telemetry.addData("Pd. % Remaining", distanceFromEnd / accelPeriodLength);
+
+                DriveMotorFL.setPower(Math.abs(speed * curveMultiplier));
+                DriveMotorFR.setPower(Math.abs(speed * curveMultiplier));
+                DriveMotorBL.setPower(Math.abs(speed * curveMultiplier));
+                DriveMotorBR.setPower(Math.abs(speed * curveMultiplier));
+
+                velocityList.add(new Tuple(distanceFromBegin, distanceFromEnd, decelPeriodPercent, curveMultiplier));
+
+            } else if (useAccelCurve){
+                //Regular
+
+                DriveMotorFL.setPower(Math.abs(speed));
+                DriveMotorFR.setPower(Math.abs(speed));
+                DriveMotorBL.setPower(Math.abs(speed));
+                DriveMotorBR.setPower(Math.abs(speed));
+
+//                velocityList.add(new Tuple(distanceFromBegin, distanceFromEnd, 0,1));
+            }
+
+            //ACCELERATION CURVE
+//            if(beginningPositionDifference <= ticksFL * VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT){
+//                double speedMultiplier = depr_calculateAccelMultiplier(beginningPositionDifference, ticksFL);
+//
+//                DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
+//                DriveMotorFR.setPower(Math.abs(speed * speedMultiplier));
+//                DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
+//                DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
+//
+//                telemetry.addData("Accel Threshold", VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT);
+//                telemetry.addData("Speed Multiplier", speedMultiplier);
+//            }
+
+            //DECELERATION CURVE
+//            if(endPositionDifference <= ticksFL * VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT){
+//                double speedMultiplier = depr_calculateAccelMultiplier( endPositionDifference, ticksFL);
+//
+//                DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
+//                DriveMotorFR.setPower(Math.abs(speed * speedMultiplier));
+//                DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
+//                DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
+//
+//                telemetry.addData("Decel Threshold", VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT);
+//                telemetry.addData("Speed Multiplier", speedMultiplier);
+//            }
+
             telemetry.update();
         }
-
         // Stop all motion;
         DriveMotorFL.setPower(0);
         DriveMotorFR.setPower(0);
@@ -157,24 +246,90 @@ public class NullHardware {
         DriveMotorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         DriveMotorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        telemetry.addData("Accel Period Length", accelPeriodLength);
+        telemetry.addData("VELOCITY LIST", "");
+
+        for (Tuple tuple : velocityList) {
+            telemetry.addData("Beg:" + tuple.begDistance + ", End:" + tuple.endDistance, "Curve:" + tuple.curveMultiplier);
+        }
+
+        telemetry.update();
+
+    }
+
+    public void encode(double speed, int ticksFL, int ticksFR, int ticksBL, int ticksBR){
+        this.encode(speed, ticksFL, ticksFR, ticksBL, ticksBR, false);
     }
 
     public void encoderDistanceCalibration(){
         encode(0.8, 1000,1000,1000,1000);
     }
 
-    public void drive(double speed, double cm){
-        int ticks = (int) ( cm * TICKS_PER_CM );
+    //Drive
+    public void drive(double speed, double in){
+        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
         encode(speed, ticks, ticks, ticks, ticks);
     }
 
-    public void strafe(double speed, double cm){
-        int ticks = (int) ( cm * TICKS_PER_CM );
+    public void drive(double in){
+        this.drive(VoidLib.DEFAULT_DRIVE_SPEED, in);
+    }
+
+    public void drive(double speed, double in, boolean useAccelCurve){
+        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+        encode(speed, ticks, ticks, ticks, ticks, useAccelCurve);
+    }
+
+    public void drive(double in, boolean useAccelCurve){
+        this.drive(VoidLib.DEFAULT_DRIVE_SPEED, in, useAccelCurve);
+    }
+
+    //Strafe
+    public void strafe(double speed, double in){
+        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
-    public void turn(double speed, int deg){
-        int ticks = (int) ( deg * TICKS_PER_DEG );
+    public void strafe(double in){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in);
+    }
+
+    public void strafe(double speed, double in, boolean useAccelCurve){
+        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+        encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
+    }
+
+    public void strafe(double in, boolean useAccelCurve){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in, useAccelCurve);
+    }
+
+    //Turn
+    public void turn(double speed, double deg){
+        int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks);
+    }
+
+    public void turn(double deg){
+        this.turn(VoidLib.DEFAULT_DRIVE_SPEED, deg);
+    }
+
+    public void turn(double speed, double deg, boolean useAccelCurve){
+        int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
+        encode(speed, -ticks, ticks, -ticks, ticks, useAccelCurve);
+    }
+
+    public void turn(double deg, boolean useAccelCurve){
+        this.turn(VoidLib.DEFAULT_DRIVE_SPEED, deg, useAccelCurve);
+    }
+
+//    private double depr_calculateAccelMultiplier(double positionDifference, double totalDistance){
+//        double speedMultiplier = 0.5 * Math.sin(
+//                -1 * Math.PI * ((positionDifference / (VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT * totalDistance)) + 0.5)
+//        ) + 0.5;
+//        return speedMultiplier;
+//    }
+
+    private double calculateAccelMultiplier(double pdPercentRemaining, boolean isAccel){
+        return ((-Math.cos(pdPercentRemaining * Math.PI))/2) + .5;
     }
 }

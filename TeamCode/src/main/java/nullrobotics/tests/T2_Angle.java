@@ -1,17 +1,16 @@
-package nullrobotics;
+package nullrobotics.tests;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
-@Autonomous(name="Four Bar Reset Zero", group="8103")
-public class FourBarResetZero extends LinearOpMode {
+@Autonomous(name="[T2] Angle 180 Deg", group="Test")
+public class T2_Angle extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -19,6 +18,7 @@ public class FourBarResetZero extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
 
         //telemetry
@@ -27,9 +27,8 @@ public class FourBarResetZero extends LinearOpMode {
 
         waitForStart();
 
-        fourbar.reach(0.5);
-        fourbar.tsleep(10000000);
-
+        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, 180);
     }
+
 
 }
