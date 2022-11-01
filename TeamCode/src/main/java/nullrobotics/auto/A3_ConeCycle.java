@@ -31,6 +31,8 @@ public class A3_ConeCycle extends LinearOpMode {
         fourbar.init(hardwareMap, telemetry);
         camera.init(hardwareMap, telemetry);
 
+//        signalDirection = this.getSignalDirection();
+
         fourbar.preloadCone();
 
         //telemetry

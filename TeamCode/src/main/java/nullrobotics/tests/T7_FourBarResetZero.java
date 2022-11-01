@@ -25,6 +25,8 @@ public class T7_FourBarResetZero extends LinearOpMode {
 
         waitForStart();
 
+        fourbar.lift(700, 0.5);
+        fourbar.liftWaitForStop();
         fourbar.reach(0.5);
         fourbar.tsleep(10000000);
 

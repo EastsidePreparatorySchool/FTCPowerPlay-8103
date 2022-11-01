@@ -136,7 +136,6 @@ public class FourBarLift {
 
     public void liftWaitForStop() {
         while (LiftMotorL.isBusy() && LiftMotorR.isBusy()) {
-            //DONT YOU DARE F*CKING DO ANYTHING YOU STUPIND FUCKING HUNK OF METAL
         }
     }
 

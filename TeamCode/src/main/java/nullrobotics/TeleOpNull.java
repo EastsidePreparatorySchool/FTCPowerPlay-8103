@@ -120,7 +120,7 @@ public class TeleOpNull extends LinearOpMode {
             if(!gamepad1.b && !gamepad1.a) {
                 hasFBBtnsBeenReleased = true;
             }
-            if(gamepad1.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 2 )) {
+            if(gamepad1.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 1 )) {
                 fourbar.FBToggleSide();
                 hasFBBtnsBeenReleased = false;
             }

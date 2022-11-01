@@ -36,8 +36,8 @@ public class VoidLib {
     public static final int[] LIFT_POSITIONS = new int[] {
             0, //Ground
             500, //Low pole
-            750, //Medium pole
-            1100 //High pole
+            800, //Medium pole
+            1200 //High pole
     };
 
     //Four Bar
