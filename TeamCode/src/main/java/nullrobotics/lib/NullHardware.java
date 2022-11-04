@@ -285,22 +285,40 @@ public class NullHardware {
     }
 
     //Strafe
-    public void strafe(double speed, double in){
-        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+    public void strafe(double speed, double in_left){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN_STRAFE );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
-    public void strafe(double in){
-        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in);
+    public void strafe(double in_left){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in_left);
     }
 
-    public void strafe(double speed, double in, boolean useAccelCurve){
-        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+    public void strafe(double speed, double in_left, boolean useAccelCurve){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN_STRAFE );
         encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
     }
 
-    public void strafe(double in, boolean useAccelCurve){
-        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in, useAccelCurve);
+    public void strafe(double in_left, boolean useAccelCurve){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
+    }
+
+    public void strafe_classic(double speed, double in_left){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN );
+        encode(speed, ticks, -ticks, -ticks, ticks);
+    }
+
+    public void strafe_classic(double in_left){
+        this.strafe_classic(VoidLib.DEFAULT_DRIVE_SPEED, in_left);
+    }
+
+    public void strafe_classic(double speed, double in_left, boolean useAccelCurve){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN );
+        encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
+    }
+
+    public void strafe_classic(double in_left, boolean useAccelCurve){
+        this.strafe_classic(VoidLib.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
     }
 
     //Turn

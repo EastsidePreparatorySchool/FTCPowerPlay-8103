@@ -15,7 +15,7 @@ import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
-@Autonomous(name="[3] Cone Cycle", group="Auto")
+//@Autonomous(name="[3T] Cone Cycle", group="Auto")
 public class A3_ConeCycle extends LinearOpMode {
 
     //Declare OpMode members
@@ -23,7 +23,8 @@ public class A3_ConeCycle extends LinearOpMode {
     FourBarLift fourbar = new FourBarLift();
     AprilTagImplementation camera = new AprilTagImplementation();
 
-    Label signalDirection = Label.RIGHT;
+    Label signalDirection = Label.NONE;
+//    Label signalDirection = Label.BLUECORNER;
 
     @Override
     public void runOpMode() {
@@ -31,7 +32,7 @@ public class A3_ConeCycle extends LinearOpMode {
         fourbar.init(hardwareMap, telemetry);
         camera.init(hardwareMap, telemetry);
 
-//        signalDirection = this.getSignalDirection();
+        signalDirection = this.getSignalDirection();
 
         fourbar.preloadCone();
 
@@ -42,65 +43,78 @@ public class A3_ConeCycle extends LinearOpMode {
         waitForStart();
 
         //1st. Detect signal cone
-        chassis.drive(4);
 
-        chassis.turn(90);
+        chassis.drive(8, true);
 
-        if(signalDirection == Label.LEFT){
-            chassis.drive(12);
-        } else if (signalDirection == Label.RIGHT){
-            chassis.drive(-12);
-        } else {
-            telemetry.addData("Unknown Label", signalDirection.toString());
-            telemetry.update();
-            stop();
-        }
-
-        chassis.turn(-90);
-
-        chassis.drive(4);
-
-        fourbar.FBReachToIndex(0, 1); //raise cone so camera can see
+        fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
         ArrayList<AprilTagDetection> detections = camera.scan();
 
-        //2nd. Score preload cone
-        fourbar.FBReachToIndex(0, 0);
+        //2nd. Drive towards the pole
 
-        //Move back and lower fourbar
-        chassis.drive(-5);
+        chassis.drive(48, true);
 
-        //Go around Zone 2 to move into position
-//        chassis.strafe(-25);
-        chassis.turn(90);
-        chassis.drive(24);
-        chassis.turn(-90);
+        chassis.tsleep(500);
 
-        chassis.drive(0.2, -10); //square back against the wall
-        chassis.drive(52);
+        //3rd. Lift the slides and strafe in
 
-        chassis.strafe(13);
-//        chassis.turn(90);
-//        chassis.drive(-13);
-//        chassis.turn(-90);
-
-        //Lift
-        fourbar.lift(1300, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(1200, VoidLib.LIFT_TELEOP_SPEED);
         fourbar.liftWaitForStop();
-        chassis.tsleep(2000);
-        fourbar.FBReachToIndex(0, 1);
 
-        chassis.drive(3);
+        chassis.tsleep(1000);
 
-        fourbar.lift(1200, 0.1);
-        fourbar.liftWaitForStop();
+        if(signalDirection == Label.REDCORNER){
+            chassis.strafe(0.3, 11.5);
+        } else if (signalDirection == Label.BLUECORNER){
+            chassis.strafe(0.3, -11.5);
+        }
+
+        //4th. Drive in, lower the fourbar for accuracy (Claire's Methodd) and open the claw
+
+        chassis.tsleep(1000);
+
+        chassis.drive(0.4, 3);
+
+        chassis.tsleep(1000);
+
+        fourbar.FBReachToIndex(0, 2);
+
+        chassis.tsleep(1000);
+
         fourbar.openClaw();
 
-        chassis.drive(-4);
-        fourbar.lift(0,0.4);
+        chassis.tsleep(1000);
 
-        //3rd. Park
+        //5th. Back out and lower the slides
 
+        chassis.drive(0.4, -4);
+
+        fourbar.tsleep(1000);
+
+        if(signalDirection == Label.REDCORNER){
+            chassis.strafe(-12, true);
+        } else if (signalDirection == Label.BLUECORNER){
+            chassis.strafe(12, true);
+        }
+        fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+        fourbar.liftWaitForStop();
+
+        //6th. Go to the right zone
+
+        switch (detections.get(0).id){
+            case 0:
+                //Zone 1
+                chassis.strafe(-24);
+                break;
+            case 2:
+                break;
+            case 1:
+                //Zone 3
+                chassis.strafe(24);
+                break;
+        }
+
+        chassis.drive(-5);
 
     }
 
