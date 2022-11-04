@@ -2,7 +2,6 @@ package nullrobotics.auto;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.openftc.apriltag.AprilTagDetection;
@@ -16,7 +15,7 @@ import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
 //@Autonomous(name="[3T] Cone Cycle", group="Auto")
-public class A3_ConeCycle extends LinearOpMode {
+public class A3_SingleCone extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -44,7 +43,7 @@ public class A3_ConeCycle extends LinearOpMode {
 
         //1st. Detect signal cone
 
-        chassis.drive(8, true);
+        chassis.drive(0.3, 8);
 
         fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
@@ -63,10 +62,11 @@ public class A3_ConeCycle extends LinearOpMode {
 
         chassis.tsleep(1000);
 
+        double strafeAmt = 11.75;
         if(signalDirection == Label.REDCORNER){
-            chassis.strafe(0.3, 11.5);
+            chassis.strafe(0.3, strafeAmt);
         } else if (signalDirection == Label.BLUECORNER){
-            chassis.strafe(0.3, -11.5);
+            chassis.strafe(0.3, -strafeAmt);
         }
 
         //4th. Drive in, lower the fourbar for accuracy (Claire's Methodd) and open the claw
