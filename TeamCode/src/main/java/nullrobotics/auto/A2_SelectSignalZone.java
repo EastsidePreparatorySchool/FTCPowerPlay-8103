@@ -19,6 +19,7 @@ import nullrobotics.lib.NullHardware;
 //Setup position: right in front of short yellow pole
 //Choose L or R by: is the Signal Cone to the LEFT or RIGHT of the robot's starting position?
 
+@Autonomous(name="[2] Select Signal Zone", group="Auto")
 public class A2_SelectSignalZone extends LinearOpMode {
 
     //Declare OpMode members
@@ -43,23 +44,9 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         waitForStart();
 
-        fourbar.FBReachToIndex(0, 1); //raise cone so camera can see
+        fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
         chassis.drive(0.5, 3);
-
-        chassis.turn(90);
-
-        if(signalDirection == Label.LEFT){
-            chassis.drive(12);
-        } else if (signalDirection == Label.RIGHT){
-            chassis.drive(-12);
-        } else {
-            telemetry.addData("Unknown Label", signalDirection.toString());
-            telemetry.update();
-            stop();
-        }
-
-        chassis.turn(-90);
 
         chassis.drive(5);
 
@@ -68,7 +55,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
         if(detections == null){
             //If it can't find a tag, then park normally.
             chassis.drive(-5);
-            chassis.strafe(-5);
+            chassis.strafe_classic(-5);
             chassis.turn(90);
             chassis.drive(-24);
 
@@ -84,23 +71,28 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
             chassis.drive(-6);
 
-            fourbar.FBReachToIndex(0, 0);
+            fourbar.FBReachToIndex(0, 1);
 
             switch (primaryDetection.id) {
                 case 0:
                     //Zone 1
-                    chassis.strafe(-26);
+                    chassis.strafe_classic(-26);
                     chassis.drive(30);
                     break;
                 case 2:
+                    /*
                     //Zone 2 (go around to not knock over cone)
-                    chassis.strafe(-24);
+                    chassis.strafe_classic(-24);
                     chassis.drive(52);
-                    chassis.strafe(29);
+                    chassis.strafe_classic(29);
+                    break;
+                    */
+                    //Zone 2 (just smash through)
+                    chassis.drive(52);
                     break;
                 case 1:
                     //Zone 3
-                    chassis.strafe(31);
+                    chassis.strafe_classic(31);
                     chassis.drive(28);
                     break;
             }

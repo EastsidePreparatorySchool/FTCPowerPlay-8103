@@ -117,17 +117,56 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             // Four Bar
-            if(!gamepad1.b && !gamepad1.a) {
+
+            if(!gamepad1.b && !gamepad1.a && !gamepad1.y && !gamepad1.x) {
                 hasFBBtnsBeenReleased = true;
             }
+
             if(gamepad1.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 1 )) {
                 fourbar.FBToggleSide();
                 hasFBBtnsBeenReleased = false;
             }
+            /*
             if(gamepad1.a && hasFBBtnsBeenReleased) {
                 fourbar.FBReachNextPos();
                 hasFBBtnsBeenReleased = false;
             }
+            if(gamepad1.y && hasFBBtnsBeenReleased) {
+                fourbar.reach(VoidLib.FOUR_BAR_POSITIONS_CAPSTONE[fourbar.FBCurrentSideIndex]);
+                hasFBBtnsBeenReleased = false;
+            }
+            if(gamepad1.x && hasFBBtnsBeenReleased) {
+                fourbar.reach(VoidLib.FOUR_BAR_POSITIONS_DROP[fourbar.FBCurrentSideIndex]);
+                hasFBBtnsBeenReleased = false;
+            }*/
+
+            if(gamepad1.a && hasFBBtnsBeenReleased) {
+                if(fourbar.FBCurrentPositionIndex != 1) {
+                    fourbar.FBReachCatalogical(1);
+                } else {
+                    fourbar.FBReachCatalogical(3);
+                }
+                hasFBBtnsBeenReleased = false;
+            }
+
+            if(gamepad1.x && hasFBBtnsBeenReleased) {
+                if(fourbar.FBCurrentPositionIndex != 2) {
+                    fourbar.FBReachCatalogical(2);
+                } else {
+                    fourbar.FBReachCatalogical(3);
+                }
+                hasFBBtnsBeenReleased = false;
+            }
+
+            if(gamepad1.y && hasFBBtnsBeenReleased) {
+                if(fourbar.FBCurrentPositionIndex != 0) {
+                    fourbar.FBReachCatalogical(0);
+                } else {
+                    fourbar.FBReachCatalogical(3);
+                }
+                hasFBBtnsBeenReleased = false;
+            }
+
 
             // Claw
             if(gamepad1.right_trigger == 0){
@@ -137,6 +176,11 @@ public class TeleOpNull extends LinearOpMode {
             if(gamepad1.right_trigger > 0 && hasClawBtnBeenReleased){
                 fourbar.toggleClaw();
                 hasClawBtnBeenReleased = false;
+            }
+
+            //Reset zero
+            if(gamepad1.start) {
+                fourbar.resetLiftEncoders();
             }
 
             // Telemetry

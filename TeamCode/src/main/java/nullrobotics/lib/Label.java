@@ -15,5 +15,7 @@ public class Label {
     public static Label LEFT = new Label("Left");
     public static Label RIGHT = new Label("Right");
     public static Label NONE = new Label("None");
+    public static Label REDCORNER = new Label("RedCorner");
+    public static Label BLUECORNER = new Label("BlueCorner");
 
 }
