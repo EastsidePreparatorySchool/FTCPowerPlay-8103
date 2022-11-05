@@ -2,11 +2,11 @@ package nullrobotics.autovariant;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import nullrobotics.auto.A3_SingleCone;
+import nullrobotics.auto.A4_DualCone;
 import nullrobotics.lib.Label;
 
-@Autonomous(name = "[3] Single Cone (Blue Corner)", group = "Auto")
-public class A3_SingleCone_BC extends A3_SingleCone {
+@Autonomous(name = "[4] Dual Cone (Blue Corner)", group = "Auto")
+public class A4_DualCone_BC extends A4_DualCone {
     @Override
     public Label getSignalDirection(){
         return Label.BLUECORNER;

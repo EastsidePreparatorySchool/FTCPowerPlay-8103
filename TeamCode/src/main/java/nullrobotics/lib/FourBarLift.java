@@ -21,11 +21,7 @@ public class FourBarLift {
     private Telemetry telemetry;
 
     //Lift position setup
-    public final int LiftInitialPositionIndex = 0;
-
-    //Four bar position setup
-    public final int FBInitialPositionIndex = 0;
-    public final int FBInitialSideIndex = 0;
+    public final int LiftInitialPositionIndex = 1;
 
     public int FBCurrentSideIndex;
     public int FBCurrentPositionIndex;
@@ -70,7 +66,7 @@ public class FourBarLift {
 
         this.telemetry = tel;
 
-        this.FBReachToIndex(FBInitialSideIndex, FBInitialPositionIndex);
+        this.FBReachToIndex(0, 1);
     }
 
     //Claw
@@ -95,7 +91,7 @@ public class FourBarLift {
 
     //Four Bar Mechanism
     public void reach(double pos) {
-        FourBarServoL.setPosition(pos);
+        FourBarServoL.setPosition(pos + 0.01);
         FourBarServoR.setPosition(pos);
     }
 

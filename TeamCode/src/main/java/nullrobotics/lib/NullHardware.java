@@ -83,6 +83,10 @@ public class NullHardware {
         }
     }
 
+    public void rest1(){
+        this.tsleep(500);
+    }
+
     //Base encoder function.
 //    private void encode(double speed, int fl, int fr, int bl, int br){
 //        encode(speed, fl, fr, bl, br, false);
@@ -133,10 +137,12 @@ public class NullHardware {
         DriveMotorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         DriveMotorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        DriveMotorFL.setPower(Math.abs(speed));
-        DriveMotorFR.setPower(Math.abs(speed));
-        DriveMotorBL.setPower(Math.abs(speed));
-        DriveMotorBR.setPower(Math.abs(speed));
+        if(!useAccelCurve) {
+            DriveMotorFL.setPower(Math.abs(speed));
+            DriveMotorFR.setPower(Math.abs(speed));
+            DriveMotorBL.setPower(Math.abs(speed));
+            DriveMotorBR.setPower(Math.abs(speed));
+        }
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
