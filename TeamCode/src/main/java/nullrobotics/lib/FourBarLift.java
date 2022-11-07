@@ -45,7 +45,7 @@ public class FourBarLift {
         DcMotor.Direction F = DcMotor.Direction.FORWARD;
 
         LiftMotorL.setDirection(R);
-        LiftMotorR.setDirection(F);
+        LiftMotorR.setDirection(R);
 
         DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
 

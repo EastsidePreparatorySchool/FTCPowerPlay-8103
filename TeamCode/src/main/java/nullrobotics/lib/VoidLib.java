@@ -63,13 +63,13 @@ public class VoidLib {
 
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
             new double[]{
-                    0.65, //Capstone
+                    0.66, //Capstone
                     0.70, //Intake
                     0.85, //Place
                     0.95 //Top
             },
             new double[]{
-                    0.32, //Capstone
+                    0.31, //Capstone
                     0.27, //Intake
                     0.15, //Place
                     0.05 //Top
