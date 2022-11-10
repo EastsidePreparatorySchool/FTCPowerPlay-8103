@@ -62,7 +62,7 @@ public class A3_SingleCone extends LinearOpMode {
 
         chassis.tsleep(1000);
 
-        double strafeAmt = 11.75;
+        double strafeAmt = 12;
         if(signalDirection == Label.REDCORNER){
             chassis.strafe(0.3, strafeAmt);
         } else if (signalDirection == Label.BLUECORNER){
@@ -87,7 +87,7 @@ public class A3_SingleCone extends LinearOpMode {
 
         //5th. Back out and lower the slides
 
-        chassis.drive(0.4, -4);
+        chassis.drive(0.4, -3);
 
         fourbar.tsleep(1000);
 

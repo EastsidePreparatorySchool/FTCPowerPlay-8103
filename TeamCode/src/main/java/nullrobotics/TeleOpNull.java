@@ -179,7 +179,7 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             //Reset zero
-            if(gamepad1.start) {
+            if(gamepad1.back) {
                 fourbar.resetLiftEncoders();
             }
 

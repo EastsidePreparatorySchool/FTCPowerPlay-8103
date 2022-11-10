@@ -63,14 +63,14 @@ public class VoidLib {
 
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
             new double[]{
-                    0.68, //Capstone
-                    0.7, //Bottom
-                    0.8, //Place
+                    0.66, //Capstone
+                    0.70, //Intake
+                    0.85, //Place
                     0.95 //Top
             },
             new double[]{
-                    0.3, //Capstone
-                    0.25, //Bottom
+                    0.31, //Capstone
+                    0.27, //Intake
                     0.15, //Place
                     0.05 //Top
             }
@@ -82,5 +82,5 @@ public class VoidLib {
     public static final double CLAW_CLOSED_POS = 0.2;
 
     //Vision
-    public static final long APRIL_SCAN_TIMEOUT = 10000;
+    public static final long APRIL_SCAN_TIMEOUT = 3500;
 }
