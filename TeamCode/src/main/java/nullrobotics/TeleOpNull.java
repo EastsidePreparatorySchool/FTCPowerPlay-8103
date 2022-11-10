@@ -4,9 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
+import java.util.List;
+
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
+import nullrobotics.lib.VuforiaImplementation;
 
 @TeleOp(name="null robotics teleop", group="A")
 public class TeleOpNull extends LinearOpMode {
@@ -21,12 +26,15 @@ public class TeleOpNull extends LinearOpMode {
 //    public int FBCurrentPositionIndex;
     public int LiftCurrentPositionIndex;
 
+    private VuforiaImplementation vuforia = new VuforiaImplementation();
+
     @Override
     public void runOpMode() {
 
         // initialize the hardware map
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
+        vuforia.initElements(hardwareMap);
 
         // Wait for start
         waitForStart();
@@ -194,6 +202,23 @@ public class TeleOpNull extends LinearOpMode {
             telemetry.addData("Lift Position Ideal Height", VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
+
+            //TensorFlow
+            List<Recognition> vufRecog = vuforia.look(telemetry);
+            if (vufRecog != null) {
+                telemetry.addData("# of Objects Detected", vufRecog.size());
+
+                // step through the list of recognitions and display boundary info.
+                int i = 0;
+                for (Recognition recognition : vufRecog) {
+                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                            recognition.getLeft(), recognition.getTop());
+                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                            recognition.getRight(), recognition.getBottom());
+                    i++;
+                }
+            }
             telemetry.update();
         }
     }
