@@ -1,4 +1,6 @@
 package nullrobotics;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -7,6 +9,12 @@ import com.qualcomm.robotcore.util.Range;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
+// RR
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import nullrobotics.RR.drive.SampleMecanumDrive;
 
 @TeleOp(name="null robotics teleop", group="A")
 public class TeleOpNull extends LinearOpMode {
@@ -37,6 +45,12 @@ public class TeleOpNull extends LinearOpMode {
 
         // multiplier for slow mode
         double multiplier;
+
+        // RR
+        SampleMecanumDrive mechdrive = new SampleMecanumDrive(hardwareMap);
+        Trajectory trajectory = mechdrive.trajectoryBuilder(new Pose2d())
+                .forward(72)
+                .build();
 
         while (opModeIsActive()) {
 
@@ -139,6 +153,13 @@ public class TeleOpNull extends LinearOpMode {
                 hasClawBtnBeenReleased = false;
             }
 
+            // RR
+
+
+
+            if(gamepad2.a == true){
+                mechdrive.followTrajectory(trajectory);
+            }
             // Telemetry
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
