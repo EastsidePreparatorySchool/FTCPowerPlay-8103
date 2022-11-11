@@ -78,6 +78,22 @@ public class TeleOpNull extends LinearOpMode {
             if (gamepad1.dpad_up) drive = 1;
             if (gamepad1.dpad_down) drive = -1;
 
+            //dpad slides
+            /*if (gamepad2.dpad_up) {
+                LiftCurrentPositionIndex ++;
+                if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
+                    LiftCurrentPositionIndex = VoidLib.LIFT_POSITIONS.length -1;
+                }
+                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_SPEED);
+            }
+            if (gamepad2.dpad_down) {
+                LiftCurrentPositionIndex --;
+                if(LiftCurrentPositionIndex < 0){
+                    LiftCurrentPositionIndex = 0;
+                }
+                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_DESC_SPEED);
+            }*/
+
             // Process Inputs
             leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
             strafePower = Range.clip(strafe, -1.0, 1.0);
@@ -97,12 +113,11 @@ public class TeleOpNull extends LinearOpMode {
             chassis.DriveMotorBR.setPower((rightPower - strafePower) * multiplier);
 
             // Four Bar Lift controls on the second gamepad
-            // Lift
-            if(!gamepad1.left_bumper && gamepad1.left_trigger == 0){
+            if(!gamepad2.left_bumper && gamepad2.left_trigger == 0){
                 hasLiftBtnsBeenReleased = true;
             }
 
-            if(gamepad1.left_bumper && hasLiftBtnsBeenReleased) {
+            if((gamepad2.left_bumper || gamepad2.dpad_up) && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex ++;
                 if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
                     LiftCurrentPositionIndex = VoidLib.LIFT_POSITIONS.length -1;
@@ -110,7 +125,7 @@ public class TeleOpNull extends LinearOpMode {
                 fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
-            if(gamepad1.left_trigger > 0 && gamepad1.left_trigger < 1 && hasLiftBtnsBeenReleased) {
+            if(((gamepad2.left_trigger > 0 && gamepad2.left_trigger < 1) || gamepad2.dpad_down) && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex --;
                 if(LiftCurrentPositionIndex < 0){
                     LiftCurrentPositionIndex = 0;
@@ -121,20 +136,20 @@ public class TeleOpNull extends LinearOpMode {
                 }
                 hasLiftBtnsBeenReleased = false;
             }
-            if(gamepad1.left_trigger == 1) {
+            if(gamepad2.left_trigger == 1) {
                 fourbar.lift(0, VoidLib.LIFT_TELEOP_SPEED);
             }
 
             // Four Bar
-
-            if(!gamepad1.b && !gamepad1.a && !gamepad1.y && !gamepad1.x) {
+            if(!gamepad2.b && !gamepad2.a && !gamepad2.y && !gamepad2.x) {
                 hasFBBtnsBeenReleased = true;
             }
 
-            if(gamepad1.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 1 )) {
+            if(gamepad2.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 1 )) {
                 fourbar.FBToggleSide();
                 hasFBBtnsBeenReleased = false;
             }
+
             /*
             if(gamepad1.a && hasFBBtnsBeenReleased) {
                 fourbar.FBReachNextPos();
@@ -149,7 +164,7 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }*/
 
-            if(gamepad1.a && hasFBBtnsBeenReleased) {
+            if(gamepad2.a && hasFBBtnsBeenReleased) {
                 if(fourbar.FBCurrentPositionIndex != 1) {
                     fourbar.FBReachCatalogical(1);
                 } else {
@@ -158,7 +173,7 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }
 
-            if(gamepad1.x && hasFBBtnsBeenReleased) {
+            if(gamepad2.x && hasFBBtnsBeenReleased) {
                 if(fourbar.FBCurrentPositionIndex != 2) {
                     fourbar.FBReachCatalogical(2);
                 } else {
@@ -167,7 +182,7 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }
 
-            if(gamepad1.y && hasFBBtnsBeenReleased) {
+            if(gamepad2.y && hasFBBtnsBeenReleased) {
                 if(fourbar.FBCurrentPositionIndex != 0) {
                     fourbar.FBReachCatalogical(0);
                 } else {
@@ -178,11 +193,11 @@ public class TeleOpNull extends LinearOpMode {
 
 
             // Claw
-            if(gamepad1.right_trigger == 0){
+            if(gamepad2.right_trigger == 0){
                 hasClawBtnBeenReleased = true;
             }
 
-            if(gamepad1.right_trigger > 0 && hasClawBtnBeenReleased){
+            if(gamepad2.right_trigger > 0 && hasClawBtnBeenReleased){
                 fourbar.toggleClaw();
                 hasClawBtnBeenReleased = false;
             }
