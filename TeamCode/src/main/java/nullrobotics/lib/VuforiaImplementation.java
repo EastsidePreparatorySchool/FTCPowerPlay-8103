@@ -38,11 +38,17 @@ public class VuforiaImplementation {
          */
         private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
         private static final String[] LABELS = {
-                "Ball",
-                "Cube",
-                "Duck",
-                "Marker"
+                "Cone",
+                "Unlabeled 1",
+                "Unlabeled 2",
+                "Unlabeled 3"
         };
+
+        private String cameraNameStr;
+
+        public VuforiaImplementation(String cameraNameString) {
+            this.cameraNameStr = cameraNameString;
+        }
 
         /*
          * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -92,7 +98,7 @@ public class VuforiaImplementation {
             }
         }
 
-        public List<Recognition> look(Telemetry telemetry){
+        public List<Recognition> look(){
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -113,7 +119,7 @@ public class VuforiaImplementation {
 
             parameters.vuforiaLicenseKey = VUFORIA_KEY;
             parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-            parameters.cameraName = hardwareMap.get(WebcamName.class, "CameraF");
+            parameters.cameraName = hardwareMap.get(WebcamName.class, this.cameraNameStr);
 
             //  Instantiate the Vuforia engine
             vuforia = ClassFactory.getInstance().createVuforia(parameters);

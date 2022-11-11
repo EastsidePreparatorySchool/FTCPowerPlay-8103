@@ -26,7 +26,7 @@ public class TeleOpNull extends LinearOpMode {
 //    public int FBCurrentPositionIndex;
     public int LiftCurrentPositionIndex;
 
-    private VuforiaImplementation vuforia = new VuforiaImplementation();
+//    private VuforiaImplementation vuforia = new VuforiaImplementation("CameraB");
 
     @Override
     public void runOpMode() {
@@ -34,7 +34,8 @@ public class TeleOpNull extends LinearOpMode {
         // initialize the hardware map
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
-        vuforia.initElements(hardwareMap);
+
+        fourbar.FBReachToIndex(0, 3);
 
         // Wait for start
         waitForStart();
@@ -203,22 +204,6 @@ public class TeleOpNull extends LinearOpMode {
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
 
-            //TensorFlow
-            List<Recognition> vufRecog = vuforia.look(telemetry);
-            if (vufRecog != null) {
-                telemetry.addData("# of Objects Detected", vufRecog.size());
-
-                // step through the list of recognitions and display boundary info.
-                int i = 0;
-                for (Recognition recognition : vufRecog) {
-                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                            recognition.getLeft(), recognition.getTop());
-                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                            recognition.getRight(), recognition.getBottom());
-                    i++;
-                }
-            }
             telemetry.update();
         }
     }

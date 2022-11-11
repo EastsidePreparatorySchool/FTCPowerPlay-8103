@@ -66,10 +66,10 @@ public class V2_SimpleTensorFlow extends LinearOpMode {
      */
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     private static final String[] LABELS = {
-            "Ball",
-            "Cube",
-            "Duck",
-            "Marker"
+            "Cone",
+            "Unlabeled 1",
+            "Unlabeled 2",
+            "Unlabeled 3"
     };
 
     /*
