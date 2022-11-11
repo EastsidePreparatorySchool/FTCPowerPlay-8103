@@ -91,8 +91,8 @@ public class FourBarLift {
 
     //Four Bar Mechanism
     public void reach(double pos) {
-        FourBarServoL.setPosition(pos + 0.02);
-        FourBarServoR.setPosition(pos);
+        FourBarServoL.setPosition(pos + 0.01);
+        FourBarServoR.setPosition(pos - 0.02);
     }
 
     public void FBReachToIndex(int side, int index) {
