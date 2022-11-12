@@ -83,6 +83,10 @@ public class NullHardware {
         }
     }
 
+    public void rest1(){
+        this.tsleep(500);
+    }
+
     //Base encoder function.
 //    private void encode(double speed, int fl, int fr, int bl, int br){
 //        encode(speed, fl, fr, bl, br, false);
@@ -133,10 +137,12 @@ public class NullHardware {
         DriveMotorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         DriveMotorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        DriveMotorFL.setPower(Math.abs(speed));
-        DriveMotorFR.setPower(Math.abs(speed));
-        DriveMotorBL.setPower(Math.abs(speed));
-        DriveMotorBR.setPower(Math.abs(speed));
+        if(!useAccelCurve) {
+            DriveMotorFL.setPower(Math.abs(speed));
+            DriveMotorFR.setPower(Math.abs(speed));
+            DriveMotorBL.setPower(Math.abs(speed));
+            DriveMotorBR.setPower(Math.abs(speed));
+        }
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -285,22 +291,40 @@ public class NullHardware {
     }
 
     //Strafe
-    public void strafe(double speed, double in){
-        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+    public void strafe(double speed, double in_left){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN_STRAFE );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
-    public void strafe(double in){
-        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in);
+    public void strafe(double in_left){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in_left);
     }
 
-    public void strafe(double speed, double in, boolean useAccelCurve){
-        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+    public void strafe(double speed, double in_left, boolean useAccelCurve){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN_STRAFE );
         encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
     }
 
-    public void strafe(double in, boolean useAccelCurve){
-        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in, useAccelCurve);
+    public void strafe(double in_left, boolean useAccelCurve){
+        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
+    }
+
+    public void strafe_classic(double speed, double in_left){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN );
+        encode(speed, ticks, -ticks, -ticks, ticks);
+    }
+
+    public void strafe_classic(double in_left){
+        this.strafe_classic(VoidLib.DEFAULT_DRIVE_SPEED, in_left);
+    }
+
+    public void strafe_classic(double speed, double in_left, boolean useAccelCurve){
+        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN );
+        encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
+    }
+
+    public void strafe_classic(double in_left, boolean useAccelCurve){
+        this.strafe_classic(VoidLib.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
     }
 
     //Turn

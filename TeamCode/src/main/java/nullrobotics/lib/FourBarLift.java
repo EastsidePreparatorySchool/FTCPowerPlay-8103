@@ -2,15 +2,11 @@ package nullrobotics.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-
-import java.sql.Time;
 
 public class FourBarLift {
     // Motor and servo declarations
@@ -25,11 +21,7 @@ public class FourBarLift {
     private Telemetry telemetry;
 
     //Lift position setup
-    public final int LiftInitialPositionIndex = 0;
-
-    //Four bar position setup
-    public final int FBInitialPositionIndex = 0;
-    public final int FBInitialSideIndex = 0;
+    public final int LiftInitialPositionIndex = 1;
 
     public int FBCurrentSideIndex;
     public int FBCurrentPositionIndex;
@@ -53,7 +45,7 @@ public class FourBarLift {
         DcMotor.Direction F = DcMotor.Direction.FORWARD;
 
         LiftMotorL.setDirection(R);
-        LiftMotorR.setDirection(F);
+        LiftMotorR.setDirection(R);
 
         DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
 
@@ -74,7 +66,7 @@ public class FourBarLift {
 
         this.telemetry = tel;
 
-        this.FBReachToIndex(FBInitialSideIndex, FBInitialPositionIndex);
+        this.FBReachToIndex(0, 1);
     }
 
     //Claw
@@ -99,13 +91,13 @@ public class FourBarLift {
 
     //Four Bar Mechanism
     public void reach(double pos) {
-        FourBarServoL.setPosition(pos);
-        FourBarServoR.setPosition(pos);
+        FourBarServoL.setPosition(pos + 0.01);
+        FourBarServoR.setPosition(pos - 0.02);
     }
 
     public void FBReachToIndex(int side, int index) {
         this.reach(
-                VoidLib.FOUR_BAR_POSITIONS[side][index]
+                VoidLib.FOUR_BAR_POSITIONS_NEO[side][index]
                 );
     }
 
@@ -117,15 +109,23 @@ public class FourBarLift {
         } else {
             //what the fuck happened
         }
-        FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
+//        FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
+        this.reach(VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]);
     }
 
-    public void FBReachNextPos() {
-        this.FBCurrentPositionIndex ++;
-        if(this.FBCurrentPositionIndex > VoidLib.FOUR_BAR_POSITIONS[this.FBCurrentSideIndex].length - 1){
-            this.FBCurrentPositionIndex = 0;
-        }
-        this.FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
+//    public void FBReachNextPos() {
+//        this.FBCurrentPositionIndex ++;
+//        if(this.FBCurrentPositionIndex > VoidLib.FOUR_BAR_POSITIONS[this.FBCurrentSideIndex].length - 1){
+//            this.FBCurrentPositionIndex = 0;
+//        }
+//        this.FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
+//    }
+
+    public void FBReachCatalogical(int index) {
+        this.FBCurrentPositionIndex = index;
+        this.reach(
+                VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
+        );
     }
     
     //Lift
@@ -230,10 +230,19 @@ public class FourBarLift {
         LiftMotorR.setPower(pwr);
     }
 
+    //Reset lift zeroes
+    public void resetLiftEncoders(){
+        LiftMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LiftMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        LiftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LiftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     //Macros
     public void preloadCone(){
-        this.FBReachToIndex(0, 0);
-        this.tsleep(1000);
+        this.FBReachToIndex(0, 1);
+        this.tsleep(500);
         this.closeClaw();
     }
 }
