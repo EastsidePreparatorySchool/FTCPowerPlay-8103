@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import nullrobotics.RR.drive.DriveConstants;
 import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullHardware;
 
 import java.util.Objects;
 
@@ -32,11 +34,14 @@ public class MaxVelocityTuner extends LinearOpMode {
     private double maxVelocity = 0.0;
 
     private VoltageSensor batteryVoltageSensor;
-
+    NullHardware chassis = new NullHardware();
+    FourBarLift fourbar = new FourBarLift();
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        chassis.init(hardwareMap, telemetry);
+        fourbar.init(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();

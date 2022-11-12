@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullHardware;
 
 /*
  * This is a simple routine to test translational drive capabilities.
@@ -17,11 +19,13 @@ import nullrobotics.RR.drive.SampleMecanumDrive;
 @Autonomous(group = "drive")
 public class StrafeTest extends LinearOpMode {
     public static double DISTANCE = 60; // in
-
+    NullHardware chassis = new NullHardware();
+    FourBarLift fourbar = new FourBarLift();
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
+        chassis.init(hardwareMap, telemetry);
+        fourbar.init(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())

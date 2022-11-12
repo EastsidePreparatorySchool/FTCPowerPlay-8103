@@ -23,6 +23,8 @@ import static nullrobotics.RR.drive.DriveConstants.MOTOR_VELO_PID;
 import static nullrobotics.RR.drive.DriveConstants.RUN_USING_ENCODER;
 import static nullrobotics.RR.drive.DriveConstants.kV;
 
+import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullHardware;
 /*
  * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
  * loop velocity control. Although it may seem unnecessary, tuning these coefficients is just as
@@ -50,6 +52,10 @@ import static nullrobotics.RR.drive.DriveConstants.kV;
 @Config
 @Autonomous(group = "drive")
 public class DriveVelocityPIDTuner extends LinearOpMode {
+
+    NullHardware chassis = new NullHardware();
+    FourBarLift fourbar = new FourBarLift();
+
     public static double DISTANCE = 72; // in
 
     enum Mode {
@@ -64,7 +70,11 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
     }
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        chassis.init(hardwareMap, telemetry);
+        fourbar.init(hardwareMap, telemetry);
+
         if (!RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("%s does not need to be run if the built-in motor velocity" +
                     "PID is not in use", getClass().getSimpleName());

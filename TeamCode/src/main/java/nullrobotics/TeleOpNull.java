@@ -46,12 +46,6 @@ public class TeleOpNull extends LinearOpMode {
         // multiplier for slow mode
         double multiplier;
 
-        // RR
-        SampleMecanumDrive mechdrive = new SampleMecanumDrive(hardwareMap);
-        Trajectory trajectory = mechdrive.trajectoryBuilder(new Pose2d())
-                .forward(72)
-                .build();
-
         while (opModeIsActive()) {
 
             /*
@@ -153,13 +147,6 @@ public class TeleOpNull extends LinearOpMode {
                 hasClawBtnBeenReleased = false;
             }
 
-            // RR
-
-
-
-            if(gamepad2.a == true){
-                mechdrive.followTrajectory(trajectory);
-            }
             // Telemetry
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
