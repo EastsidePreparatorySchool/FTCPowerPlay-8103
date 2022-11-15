@@ -27,7 +27,7 @@ public class RR_Strafe_Test extends LinearOpMode {
         SampleMecanumDrive mechdrive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(72)
+                .strafeRight(72*1.18)
                 .build();
 
 
