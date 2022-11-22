@@ -1,4 +1,4 @@
-package nullrobotics.lib;
+package nullrobotics.depr;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

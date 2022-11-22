@@ -18,15 +18,9 @@ public class T5_FourBarTest2 extends LinearOpMode {
         fourbar.init(hardwareMap, telemetry);
 
         //telemetry
-        telemetry.addData("Status", "started");
-        telemetry.update();
-
         waitForStart();
-
-        fourbar.debug_SetLiftMotorPwr(0.6);
-
-        fourbar.tsleep(2000);
-
+        fourbar.LiftMotorL.setPower(0.1);
+        fourbar.tsleep(1000);
 
     }
 

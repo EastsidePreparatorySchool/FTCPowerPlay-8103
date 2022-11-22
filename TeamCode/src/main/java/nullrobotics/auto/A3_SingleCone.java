@@ -9,6 +9,7 @@ import org.openftc.apriltag.AprilTagDetection;
 import java.util.ArrayList;
 
 import nullrobotics.lib.AprilTagImplementation;
+import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
@@ -20,6 +21,7 @@ public class A3_SingleCone extends LinearOpMode {
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
+    CameraSystem camsys = new CameraSystem();
     AprilTagImplementation camera = new AprilTagImplementation();
 
     Label signalDirection = Label.NONE;
@@ -29,7 +31,8 @@ public class A3_SingleCone extends LinearOpMode {
     public void runOpMode() {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
-        camera.init(hardwareMap, telemetry);
+        camsys.init(hardwareMap);
+        camera.init(hardwareMap, telemetry, camsys.Front);
 
         signalDirection = this.getSignalDirection();
 

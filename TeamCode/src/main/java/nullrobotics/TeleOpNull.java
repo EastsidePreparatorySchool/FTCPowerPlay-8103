@@ -4,14 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
-import java.util.List;
-
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
-import nullrobotics.lib.VuforiaImplementation;
 
 @TeleOp(name="null robotics teleop", group="A")
 public class TeleOpNull extends LinearOpMode {

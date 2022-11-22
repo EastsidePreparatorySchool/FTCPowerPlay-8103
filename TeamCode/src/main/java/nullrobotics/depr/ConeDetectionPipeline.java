@@ -1,4 +1,4 @@
-package nullrobotics.lib;
+package nullrobotics.depr;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
