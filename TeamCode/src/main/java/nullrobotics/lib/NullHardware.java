@@ -4,6 +4,7 @@ package nullrobotics.lib;
 //The robot's name is ???
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class NullHardware {
-    public DcMotor DriveMotorFL = null;
-    public DcMotor DriveMotorFR = null;
-    public DcMotor DriveMotorBL = null;
-    public DcMotor DriveMotorBR = null;
+    public DcMotorEx DriveMotorFL = null;
+    public DcMotorEx DriveMotorFR = null;
+    public DcMotorEx DriveMotorBL = null;
+    public DcMotorEx DriveMotorBR = null;
 
 //    public FourBarLift FourBarLift = new FourBarLift();
 
@@ -41,10 +42,10 @@ public class NullHardware {
         telemetry = atelemetry;
 
         //define and init motors
-        DriveMotorFL = hwMap.dcMotor.get("DriveFL");
-        DriveMotorFR = hwMap.dcMotor.get("DriveFR");
-        DriveMotorBL = hwMap.dcMotor.get("DriveBL");
-        DriveMotorBR = hwMap.dcMotor.get("DriveBR");
+        DriveMotorFL = hwMap.get(DcMotorEx.class, "DriveFL");
+        DriveMotorFR = hwMap.get(DcMotorEx.class, "DriveFR");
+        DriveMotorBL = hwMap.get(DcMotorEx.class, "DriveBL");
+        DriveMotorBR = hwMap.get(DcMotorEx.class, "DriveBR");
 
 //        FourBarLift.init(ahwMap, atelemetry);
 
