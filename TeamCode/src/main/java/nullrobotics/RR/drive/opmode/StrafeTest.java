@@ -23,7 +23,7 @@ public class StrafeTest extends LinearOpMode {
     FourBarLift fourbar = new FourBarLift();
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
