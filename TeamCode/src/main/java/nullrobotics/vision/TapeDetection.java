@@ -1,4 +1,4 @@
-package nullrobotics.auto;
+package nullrobotics.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,7 +7,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 
 import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
-import nullrobotics.lib.TapeDetectionPipeline;
 
 @Autonomous
 public class TapeDetection extends LinearOpMode {

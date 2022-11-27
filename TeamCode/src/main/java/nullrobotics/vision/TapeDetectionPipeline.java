@@ -1,4 +1,4 @@
-package nullrobotics.lib;
+package nullrobotics.vision;
 
 import android.graphics.Color;
 
@@ -25,18 +25,33 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 //        Imgproc.boundingRect(trueColors);
 //        filledArea = Imgproc.floodFill(input)
 
-        Imgproc.cvtColor(input, output, Imgproc.CONTOURS_MATCH_I1);
+//        Imgproc.cvtColor(input, output, Imgproc.CONTOURS_MATCH_I1);
 
         //Show only the red
 //        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
 //        Core.inRange(input, redUpper, redLower, output);
 
-        //Binarize the image
-//        Imgproc.threshold(hsv, output, 125, 255, 0);
-
 //        Imgproc.findContours();
         //Turn our bounding rectangles from aligned with camera axis to angled.
 //        Imgproc.minAreaRect();
+
+
+        //ACTUAL
+        //YCrCb
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2YCrCb);
+
+        //Binarize the image
+        Imgproc.threshold(input, output, 125, 255, 0);
+
+        //Isolate the red
+
+        //Draw rectangle
+//        Imgproc.boundingRect() Where do I get the array from?
+
+        //Make min rectangles (angled)
+//        Imgproc.minAreaRect() Where do I get the mat of points from?
+
+        //Calculate motion based on rectange angle
 
         return output;
     }
