@@ -37,13 +37,13 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 
 
         //ACTUAL
-        //YCrCb
+        //YCrCb is better apparently
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2YCrCb);
 
         //Binarize the image
         Imgproc.threshold(input, output, 125, 255, 0);
 
-        //Isolate the red
+        //Isolate the red (Ignore all the other colors)
 
         //Draw rectangle
 //        Imgproc.boundingRect() Where do I get the array from?
