@@ -9,6 +9,7 @@ import org.openftc.apriltag.AprilTagDetection;
 import java.util.ArrayList;
 
 import nullrobotics.lib.AprilTagImplementation;
+import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
@@ -25,14 +26,16 @@ public class A2_SelectSignalZone extends LinearOpMode {
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
-    AprilTagImplementation camera = new AprilTagImplementation();
+    CameraSystem camsys = new CameraSystem();
+    AprilTagImplementation apriltgsi = new AprilTagImplementation();
     Label signalDirection;
 
     @Override
     public void runOpMode() {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
-        camera.init(hardwareMap, telemetry);
+        camsys.init(hardwareMap);
+        apriltgsi.init(hardwareMap, telemetry, camsys.Front);
 
         signalDirection = this.getSignalDirection();
 
@@ -50,7 +53,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         chassis.drive(5);
 
-        ArrayList<AprilTagDetection> detections = camera.scan();
+        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
 
         if(detections == null){
             //If it can't find a tag, then park normally.
@@ -64,7 +67,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
             AprilTagDetection primaryDetection = detections.get(0);
 
             //Convey back primary detection
-            camera.addDetectionToTelemetry(primaryDetection);
+            apriltgsi.addDetectionToTelemetry(primaryDetection);
             telemetry.update();
 
 //            chassis.tsleep(5000);

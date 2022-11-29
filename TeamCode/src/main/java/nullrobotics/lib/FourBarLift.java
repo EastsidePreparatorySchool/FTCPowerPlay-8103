@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class FourBarLift {
     // Motor and servo declarations
-    private DcMotorEx LiftMotorL = null;
+    public DcMotorEx LiftMotorL = null;
     private DcMotorEx LiftMotorR = null;
 
     private Servo FourBarServoL = null;
@@ -44,8 +44,8 @@ public class FourBarLift {
         DcMotor.Direction R = DcMotor.Direction.REVERSE;
         DcMotor.Direction F = DcMotor.Direction.FORWARD;
 
-        LiftMotorL.setDirection(R);
-        LiftMotorR.setDirection(R);
+        LiftMotorL.setDirection(F);
+        LiftMotorR.setDirection(F);
 
         DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
 

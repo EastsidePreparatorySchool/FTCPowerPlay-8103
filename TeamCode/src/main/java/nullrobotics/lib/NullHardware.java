@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.sql.Array;
 import java.util.ArrayList;
@@ -19,8 +22,6 @@ public class NullHardware {
     public DcMotorEx DriveMotorFR = null;
     public DcMotorEx DriveMotorBL = null;
     public DcMotorEx DriveMotorBR = null;
-
-//    public FourBarLift FourBarLift = new FourBarLift();
 
     public DcMotor[] allMotors;
     double[] rotationArray;
@@ -46,8 +47,6 @@ public class NullHardware {
         DriveMotorFR = hwMap.get(DcMotorEx.class, "DriveFR");
         DriveMotorBL = hwMap.get(DcMotorEx.class, "DriveBL");
         DriveMotorBR = hwMap.get(DcMotorEx.class, "DriveBR");
-
-//        FourBarLift.init(ahwMap, atelemetry);
 
         allMotors = new DcMotor[]{
                 DriveMotorFL, DriveMotorFR, DriveMotorBL, DriveMotorBR

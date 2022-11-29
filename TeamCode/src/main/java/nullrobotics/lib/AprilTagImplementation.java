@@ -61,12 +61,13 @@
             HardwareMap hardwareMap;
             Telemetry telemetry;
 
-            public void init(HardwareMap hwMap, Telemetry tel) {
+            public void init(HardwareMap hwMap, Telemetry tel, OpenCvCamera camera) {
                 hardwareMap = hwMap;
                 telemetry = tel;
 
-                int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-                camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CameraF"), cameraMonitorViewId);
+//                int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//                camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CameraF"), cameraMonitorViewId);
+
                 aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
                 camera.setPipeline(aprilTagDetectionPipeline);

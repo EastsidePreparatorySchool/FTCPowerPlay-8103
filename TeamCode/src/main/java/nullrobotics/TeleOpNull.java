@@ -29,12 +29,16 @@ public class TeleOpNull extends LinearOpMode {
 //    public int FBCurrentPositionIndex;
     public int LiftCurrentPositionIndex;
 
+//    private VuforiaImplementation vuforia = new VuforiaImplementation("CameraB");
+
     @Override
     public void runOpMode() {
 
         // initialize the hardware map
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
+
+        fourbar.FBReachToIndex(0, 3);
 
         // Wait for start
         waitForStart();
@@ -217,6 +221,7 @@ public class TeleOpNull extends LinearOpMode {
             telemetry.addData("Lift Position Ideal Height", VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
+
             telemetry.update();
         }
     }
