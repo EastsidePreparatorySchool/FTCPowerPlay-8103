@@ -21,6 +21,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input){
+        //TESTING
 //        Imgproc.cvtColor(input, trueColors, Imgproc.floodFill());
 //        Imgproc.boundingRect(trueColors);
 //        filledArea = Imgproc.floodFill(input)

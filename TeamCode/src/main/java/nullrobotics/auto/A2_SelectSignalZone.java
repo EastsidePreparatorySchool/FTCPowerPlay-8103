@@ -27,7 +27,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
     CameraSystem camsys = new CameraSystem();
-    AprilTagImplementation camera = new AprilTagImplementation();
+    AprilTagImplementation apriltgsi = new AprilTagImplementation();
     Label signalDirection;
 
     @Override
@@ -35,7 +35,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
         camsys.init(hardwareMap);
-        camera.init(hardwareMap, telemetry, camsys.Front);
+        apriltgsi.init(hardwareMap, telemetry, camsys.Front);
 
         signalDirection = this.getSignalDirection();
 
@@ -53,7 +53,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
 
         chassis.drive(5);
 
-        ArrayList<AprilTagDetection> detections = camera.scan();
+        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
 
         if(detections == null){
             //If it can't find a tag, then park normally.
@@ -67,7 +67,7 @@ public class A2_SelectSignalZone extends LinearOpMode {
             AprilTagDetection primaryDetection = detections.get(0);
 
             //Convey back primary detection
-            camera.addDetectionToTelemetry(primaryDetection);
+            apriltgsi.addDetectionToTelemetry(primaryDetection);
             telemetry.update();
 
 //            chassis.tsleep(5000);
