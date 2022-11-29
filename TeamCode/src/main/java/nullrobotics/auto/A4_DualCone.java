@@ -22,7 +22,7 @@ public class A4_DualCone extends LinearOpMode {
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
     CameraSystem camsys = new CameraSystem();
-    AprilTagImplementation camera = new AprilTagImplementation();
+    AprilTagImplementation apriltgsi = new AprilTagImplementation();
 
     Label signalDirection = Label.NONE;
 
@@ -31,7 +31,7 @@ public class A4_DualCone extends LinearOpMode {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
         camsys.init(hardwareMap);
-        camera.init(hardwareMap, telemetry, camsys.Front);
+        apriltgsi.init(hardwareMap, telemetry, camsys.Front);
 
         signalDirection = this.getSignalDirection();
 
@@ -49,7 +49,7 @@ public class A4_DualCone extends LinearOpMode {
 
         fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
-        ArrayList<AprilTagDetection> detections = camera.scan();
+        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
 
         //2nd. Drive towards the pole
 
