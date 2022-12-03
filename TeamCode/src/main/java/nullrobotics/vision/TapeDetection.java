@@ -24,6 +24,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 
 import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.VoidLib;
 
 @Autonomous
 public class TapeDetection extends LinearOpMode {
@@ -39,7 +40,9 @@ public class TapeDetection extends LinearOpMode {
         cams.init(hardwareMap);
         fourbar.init(hardwareMap, telemetry);
 
-        fourbar.FBReachToIndex(0, 3);
+        fourbar.openClaw();
+        fourbar.FBReachToIndex(0,1);
+        fourbar.lift(275, VoidLib.LIFT_TELEOP_SPEED);
 
         cams.TopDown.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
@@ -48,14 +51,14 @@ public class TapeDetection extends LinearOpMode {
                         //Usually this is where you'll want to start streaming from the camera
                         cams.TopDown.startStreaming(1920, 1080);
                         cams.TopDown.setPipeline(tdp);
-                        /*while (1>0) {
+                        while (1>0) {
                             double angleToHeading = (Math.atan((tdp.points[0].y-tdp.points[1].y)/(tdp.points[0].x-tdp.points[1].x)));
-                            double distToBottomOfFrame = 3.5+1.7501;
+                            double distToBottomOfFrame = 3.8125+1.7501;
                             double centerOffset = 0;
                             double tapeWidth = Math.sqrt(Math.pow(tdp.points[3].x-tdp.points[0].x, 2)+Math.pow(tdp.points[3].y-tdp.points[0].y, 2));
                             double scale = 1.875/tapeWidth;
                             Point tapePos = new Point((tdp.points[0].x+tdp.points[3].x)/2, (tdp.points[0].y+tdp.points[3].y)/2);
-                            double xCameraFrame = (800-tapePos.x)*scale;
+                            double xCameraFrame = (400-tapePos.x)*scale;
                             double yCameraFrame = -(tapePos.y-450-centerOffset)*scale;
                             double distToCenterOfCamera = Math.sqrt(Math.pow(xCameraFrame, 2)+Math.pow(yCameraFrame, 2));
                             double angleCameraToTape = -1*Math.atan(yCameraFrame/xCameraFrame);
@@ -79,7 +82,7 @@ public class TapeDetection extends LinearOpMode {
                             telemetry.addData("x robot field frame:", robotPosxFieldFrame);
                             telemetry.addData("y robot fieled frame:", robotPosyFieldFrame);
                             telemetry.update();
-                        }*/
+                        }
                     }
 
                     @Override

@@ -18,6 +18,7 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.CameraSystem;
+import nullrobotics.lib.VoidLib;
 import nullrobotics.vision.TapeDetectionPipeline;
 
 
@@ -64,61 +65,43 @@ public class Test extends LinearOpMode {
         SampleMecanumDrive mechdrive = new SampleMecanumDrive(chassis, hardwareMap);
 
         Pose2d start = new Pose2d(35.5, 62.125, Math.toRadians(90));
-        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
-        TrajectorySequence traj = mechdrive.trajectorySequenceBuilder(start)
-                .addTemporalMarker(0,() -> {
+        //ArrayList<AprilTagDetection> detections = apriltgsi.scan();
+        TrajectorySequence traj1 = mechdrive.trajectorySequenceBuilder(start)
+                /*.addTemporalMarker(0,() -> {
                     AprilTagDetection primaryDetection = detections.get(0);
                     //Convey back primary detection
                     apriltgsi.addDetectionToTelemetry(primaryDetection);
-                })
+                })*/
                 .setReversed(true)
-                //.addTemporalMarker(0.5, () -> {fourbar.lift(1200, VoidLib.LIFT_TELEOP_SPEED);})
-                .splineToLinearHeading(new Pose2d(32, 8, Math.toRadians(45)), Math.toRadians(-100))
-                //.addTemporalMarker(2.75, () -> fourbar.FBReachToIndex(1, 2))
-                //.addTemporalMarker(3.25, () -> fourbar.openClaw())
-                .waitSeconds(1)
-                .setReversed(false)
-                .addDisplacementMarker(() -> {
-                    mechdrive.setPoseEstimate(calcPose(34,11,0));
-                })
-                .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
-                /*
-                .addTemporalMarker(6, () -> {
-                    fourbar.FBReachToIndex(0,1);
-                    fourbar.lift(225, VoidLib.LIFT_TELEOP_DESC_SPEED);
-                    fourbar.closeClaw();
-                })
-                .waitSeconds(1)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(32,8,Math.toRadians(45)), Math.toRadians(-140))
-                .waitSeconds(1)
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
-                .waitSeconds(1)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(32,8,Math.toRadians(45)), Math.toRadians(-140))
-                .waitSeconds(1)
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
-                .waitSeconds(1)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(32,8,Math.toRadians(45)), Math.toRadians(-140))
-                .waitSeconds(1)
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
-                .waitSeconds(1)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(32,8,Math.toRadians(45)), Math.toRadians(-140))
-                .waitSeconds(1)
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
-                .waitSeconds(1)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(32,8,Math.toRadians(45)), Math.toRadians(-140))
-                .waitSeconds(1)
-                .setReversed(false)*/
+                .addTemporalMarker(0.5, () -> {fourbar.lift(1200, VoidLib.LIFT_TELEOP_SPEED);})
+                .splineToLinearHeading(new Pose2d(31, 9, Math.toRadians(45)), Math.toRadians(-100))
+                .addTemporalMarker(2.25, () -> fourbar.FBReachToIndex(1, 2))
+                .addTemporalMarker(2.75, () -> fourbar.openClaw())
                 .build();
-        TrajectorySequence park1 = mechdrive.trajectorySequenceBuilder(traj.end())
+        TrajectorySequence traj2 = mechdrive.trajectorySequenceBuilder(traj1.end())
+                .setReversed(false)
+                .addDisplacementMarker(8, () -> {
+                    fourbar.FBReachToIndex(0,1);
+                    //fourbar.lift(275, VoidLib.LIFT_TELEOP_DESC_SPEED);
+                })
+                .splineToLinearHeading(new Pose2d(41,11.75,0),Math.toRadians(0))
+                .waitSeconds(5)
+                /*.addDisplacementMarker(() -> {
+                            Pose2d currentPose = calcPose(45,10.5,0);
+                            mechdrive.setPoseEstimate(currentPose);
+                            fourbar.lift(350, VoidLib.LIFT_TELEOP_SPEED);
+                            telemetry.addData("current pose", currentPose.toString());
+                            telemetry.update();
+                        })*/
+                .splineToLinearHeading(new Pose2d(61.5, 11.75, Math.toRadians(0)), Math.toRadians(0))
+                /*.addDisplacementMarker(() -> {
+                            fourbar.FBReachToIndex(0,1);
+                            fourbar.lift(225, VoidLib.LIFT_TELEOP_DESC_SPEED);
+                            fourbar.closeClaw();
+
+                        })*/
+                .build();
+        /*TrajectorySequence park1 = mechdrive.trajectorySequenceBuilder(traj.end())
                 .splineToLinearHeading(new Pose2d(12,12,Math.toRadians(90)), Math.toRadians(-90))
                 .build();
         TrajectorySequence park2 = mechdrive.trajectorySequenceBuilder(traj.end())
@@ -128,17 +111,24 @@ public class Test extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(60,22,Math.toRadians(90)), Math.toRadians(45))
                 .build();
         TrajectorySequence cycle5 = mechdrive.trajectorySequenceBuilder(traj.end())
-                        .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(62.5, 11, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(1)
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(32,8,Math.toRadians(45)), Math.toRadians(-140))
-                        .build();
+                .build();*/
 
-
+        fourbar.FBReachToIndex(1, 1);
+        sleep(500);
+        fourbar.closeClaw();
+        sleep(500);
+        fourbar.FBReachToIndex(1,3);
         waitForStart();
         mechdrive.setPoseEstimate(start);
-        mechdrive.followTrajectorySequence(traj);
-        AprilTagDetection primaryDetection = detections.get(0);
+        mechdrive.followTrajectorySequence(traj1);
+        sleep(1000);
+        mechdrive.followTrajectorySequence(traj2);
+
+        /*AprilTagDetection primaryDetection = detections.get(0);
         if(detections == null) {
             mechdrive.followTrajectorySequence(cycle5);
         } else {
@@ -155,7 +145,7 @@ public class Test extends LinearOpMode {
                     mechdrive.followTrajectorySequence(park3);
                     break;
             }
-        }
+        }*/
 
         // RR
 
@@ -324,12 +314,12 @@ public class Test extends LinearOpMode {
     }
     private Pose2d calcPose(double x, double y, double theta) {
         double angleToHeading = Math.atan((tdp.points[0].y-tdp.points[1].y)/(tdp.points[0].x-tdp.points[1].x));
-        double distToBottomOfFrame = 3.5+1.7501;
+        double distToBottomOfFrame = 3.8125+1.7501;
         double centerOffset = 0;
         double tapeWidth = Math.sqrt(Math.pow(tdp.points[3].x-tdp.points[0].x, 2)+Math.pow(tdp.points[3].y-tdp.points[0].y, 2));
         double scale = 1.875/tapeWidth;
         Point tapePos = new Point((tdp.points[0].x+tdp.points[3].x)/2, (tdp.points[0].y+tdp.points[3].y)/2);
-        double xCameraFrame = (800-tapePos.x)*scale;
+        double xCameraFrame = (400-tapePos.x)*scale;
         double yCameraFrame = -(tapePos.y-450-centerOffset)*scale;
         double distToCenterOfCamera = Math.sqrt(Math.pow(xCameraFrame, 2)+Math.pow(yCameraFrame, 2));
         double angleCameraToTape = -1*Math.atan(yCameraFrame/xCameraFrame);

@@ -40,7 +40,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     Mat temp = new Mat();
     MatOfPoint2f point2f = new MatOfPoint2f();
     static final int tol = 70;
-    final int width = 800;
+    final int width = 400;
     final int height = 900;
     final org.opencv.core.Rect rectCrop = new org.opencv.core.Rect(0,490,width,height);
     final Scalar tolmin = new Scalar(50,155,128-tol);

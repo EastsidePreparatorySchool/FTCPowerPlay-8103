@@ -2,6 +2,7 @@ package nullrobotics.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -41,8 +42,8 @@ public class FourBarLift {
         LiftMotorL = map.get(DcMotorEx.class, "LiftL");
         LiftMotorR = map.get(DcMotorEx.class, "LiftR");
 
-        DcMotor.Direction R = DcMotor.Direction.FORWARD;
-        DcMotor.Direction F = DcMotor.Direction.REVERSE;
+        DcMotor.Direction R = DcMotor.Direction.REVERSE;
+        DcMotor.Direction F = DcMotor.Direction.FORWARD;
 
         LiftMotorL.setDirection(F);
         LiftMotorR.setDirection(F);
@@ -65,11 +66,6 @@ public class FourBarLift {
         ClawServo.setDirection(Servo.Direction.REVERSE);
 
         this.telemetry = tel;
-        this.FBReachToIndex(0, 3);
-        //tsleep(500);
-        //this.closeClaw();
-        //tsleep(500);
-        //this.FBReachToIndex(1,3);
     }
 
     //Claw
@@ -94,8 +90,8 @@ public class FourBarLift {
 
     //Four Bar Mechanism
     public void reach(double pos) {
-        FourBarServoL.setPosition(pos + 0.01);
-        FourBarServoR.setPosition(pos - 0.02);
+        FourBarServoL.setPosition(pos + 0.02);
+        FourBarServoR.setPosition(pos + 0.00);
     }
 
     public void FBReachToIndex(int side, int index) {

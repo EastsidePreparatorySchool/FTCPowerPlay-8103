@@ -42,24 +42,6 @@ public class VoidLib {
     };
 
     //Four Bar
-    public static final double[][] FOUR_BAR_POSITIONS = new double[][]{
-            new double[]{
-                    // bottom - top
-                    0.7, .95
-            },
-            new double[]{
-                    // bottom - top
-                    0.25, 0.05
-            }
-    };
-
-    public static final double[] FOUR_BAR_POSITIONS_CAPSTONE = new double[]{
-            0.68, 0.3
-    };
-
-    public static final double[] FOUR_BAR_POSITIONS_DROP = new double[]{
-            0.8,0.15
-    };
 
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
             new double[]{ // High = Top
@@ -70,7 +52,7 @@ public class VoidLib {
             },
             new double[]{ // Low = Top
                     0.31, //Capstone
-                    0.28, //Intake
+                    0.29, //Intake
                     0.15, //Place
                     0.05 //Top
             }
