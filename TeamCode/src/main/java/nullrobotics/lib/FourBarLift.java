@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+import java.util.stream.IntStream;
+
 public class FourBarLift {
     // Motor and servo declarations
     public DcMotorEx LiftMotorL = null;
@@ -42,11 +44,11 @@ public class FourBarLift {
         LiftMotorL = map.get(DcMotorEx.class, "LiftL");
         LiftMotorR = map.get(DcMotorEx.class, "LiftR");
 
-        DcMotor.Direction R = DcMotor.Direction.REVERSE;
-        DcMotor.Direction F = DcMotor.Direction.FORWARD;
+        DcMotor.Direction dirR = DcMotor.Direction.FORWARD;
+        DcMotor.Direction dirF = DcMotor.Direction.REVERSE;
 
-        LiftMotorL.setDirection(F);
-        LiftMotorR.setDirection(F);
+        LiftMotorL.setDirection(dirR);
+        LiftMotorR.setDirection(dirR);
 
         DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
 
@@ -88,9 +90,13 @@ public class FourBarLift {
         }
     }
 
+    public void customClawPos(double clawPos) {
+        ClawServo.setPosition(clawPos);
+    }
+
     //Four Bar Mechanism
     public void reach(double pos) {
-        FourBarServoL.setPosition(pos + 0.02);
+        FourBarServoL.setPosition(pos + 0.00);
         FourBarServoR.setPosition(pos + 0.00);
     }
 
@@ -121,7 +127,26 @@ public class FourBarLift {
 //    }
 
     public void FBReachCatalogical(int index) {
+//        this.FBCurrentPositionIndex = index;
+//        this.reach(
+//                VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
+//        );
+        this.FBReachCatalogical(this.FBCurrentSideIndex, index);
+    }
+
+    public void FBReachCatalogical(int side, int index) {
         this.FBCurrentPositionIndex = index;
+        this.FBCurrentSideIndex = side;
+
+        for (int i = 0; i < 5; i++) {
+            double currentPos = this.FourBarServoL.getPosition();
+            double targetPos = VoidLib.FOUR_BAR_POSITIONS_NEO[side][index];
+            double middlePos = (currentPos + targetPos) / 2;
+            this.reach(middlePos);
+        }
+
+        this.tsleep(200);
+
         this.reach(
                 VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
         );
@@ -135,6 +160,7 @@ public class FourBarLift {
 
     public void liftWaitForStop() {
         while (LiftMotorL.isBusy() && LiftMotorR.isBusy()) {
+            //do absolutely nothing
         }
     }
 

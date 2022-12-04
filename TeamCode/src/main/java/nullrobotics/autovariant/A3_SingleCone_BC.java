@@ -2,7 +2,7 @@ package nullrobotics.autovariant;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import nullrobotics.auto.A3_SingleCone;
+import nullrobotics.auto.norr.A3_SingleCone;
 import nullrobotics.lib.Label;
 
 @Autonomous(name = "[3] Single Cone (Blue Corner)", group = "Auto")

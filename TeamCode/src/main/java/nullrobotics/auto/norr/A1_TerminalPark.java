@@ -1,4 +1,4 @@
-package nullrobotics.auto;
+package nullrobotics.auto.norr;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 

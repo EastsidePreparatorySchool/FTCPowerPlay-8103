@@ -16,7 +16,7 @@ import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 
 //@Autonomous(name="[3T] Cone Cycle", group="Auto")
-public class A3_SingleCone extends LinearOpMode {
+public class OnePlusZero extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -46,15 +46,15 @@ public class A3_SingleCone extends LinearOpMode {
 
         //1st. Detect signal cone
 
-        chassis.drive(0.3, 8);
+        chassis.drive(0.3, -8);
 
         fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
-        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
+        ArrayList<AprilTagDetection> detections = apriltgsi.scan(3500);
 
         //2nd. Drive towards the pole
 
-        chassis.drive(48, true);
+        chassis.drive(-48, true);
 
         chassis.tsleep(500);
 
@@ -76,7 +76,7 @@ public class A3_SingleCone extends LinearOpMode {
 
         chassis.tsleep(1000);
 
-        chassis.drive(0.4, 3);
+        chassis.drive(0.4, -3);
 
         chassis.tsleep(1000);
 
@@ -90,7 +90,7 @@ public class A3_SingleCone extends LinearOpMode {
 
         //5th. Back out and lower the slides
 
-        chassis.drive(0.4, -3);
+        chassis.drive(0.4, 3);
 
         fourbar.tsleep(1000);
 
@@ -117,7 +117,7 @@ public class A3_SingleCone extends LinearOpMode {
                 break;
         }
 
-        chassis.drive(-5);
+        chassis.drive(5);
 
     }
 

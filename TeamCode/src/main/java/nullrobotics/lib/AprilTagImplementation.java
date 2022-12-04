@@ -61,20 +61,20 @@
             HardwareMap hardwareMap;
             Telemetry telemetry;
 
-            public void init(HardwareMap hwMap, Telemetry tel, OpenCvCamera camera) {
+            public void init(HardwareMap hwMap, Telemetry tel, OpenCvCamera camerai) {
                 hardwareMap = hwMap;
                 telemetry = tel;
 
-//                int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//                camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CameraF"), cameraMonitorViewId);
+                int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                this.camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CameraFront"), cameraMonitorViewId);
 
                 aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
-                camera.setPipeline(aprilTagDetectionPipeline);
-                camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+                this.camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
                         camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
+                        camera.setPipeline(aprilTagDetectionPipeline);
                     }
 
                     @Override
@@ -87,7 +87,7 @@
 
             }
 
-            public ArrayList<AprilTagDetection> scan() {
+            public ArrayList<AprilTagDetection> scan(int timeoutMillis) {
                 //We're going to scan until we see something.
 
                 telemetry.addData("Tag Status", "Searching for tags...");
@@ -97,7 +97,7 @@
 
                 long beginTime = System.currentTimeMillis();
 
-                while( System.currentTimeMillis() - beginTime <= VoidLib.APRIL_SCAN_TIMEOUT ){
+                while( System.currentTimeMillis() - beginTime <= timeoutMillis ){
 
                     // Calling getDetectionsUpdate() will only return an object if there was a new frame
                     // processed since the last time we called it. Otherwise, it will return null. This
@@ -152,14 +152,14 @@
 
                 }
 
-                return null;
+                return new ArrayList<AprilTagDetection>();
 
             }
 
             //If we are SURE only one tag will be in frame.
-            public AprilTagDetection scanSingle() {
-                return this.scan().get(0);
-            }
+//            public AprilTagDetection scanSingle() {
+//                return this.scan().get(0);
+//            }
 
             public void addDetectionToTelemetry(AprilTagDetection detection) {
                 telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));

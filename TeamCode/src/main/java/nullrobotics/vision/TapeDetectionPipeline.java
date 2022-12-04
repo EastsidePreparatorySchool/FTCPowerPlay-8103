@@ -6,6 +6,7 @@ import static org.opencv.core.CvType.CV_32S;
 import android.graphics.Color;
 import android.graphics.Rect;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -14,6 +15,8 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import android.graphics.Color;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -81,7 +84,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 
         //Using Lab color space
         // L is brighness, a is red to green, b is blue to yellow
-        input = input.submat(rectCrop);
+//        input = input.submat(rectCrop);
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2Lab);
         //Core.inRange(input, new Scalar(0,40,-50), new Scalar(100,100,50), output);
         //Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2BGR);
@@ -127,8 +130,8 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             points[3]=temp;
         }
         Imgproc.cvtColor(input,input,Imgproc.COLOR_Lab2LRGB);
-        Imgproc.line(input, new Point(0,height/2), new Point(width, height/2), rectColor,5);
-        Imgproc.line(input, new Point(width/2,0), new Point(width/2, height), rectColor,5);
+//        Imgproc.line(input, new Point(0,height/2), new Point(width, height/2), rectColor,5);
+//        Imgproc.line(input, new Point(width/2,0), new Point(width/2, height), rectColor,5);
         for (int i=0; i<4; i++) {
             Imgproc.line(input, points[i], points[(1+i)%4], rectColor, 5);
         }
@@ -146,6 +149,39 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 
         //Calculate motion based on rectange angle
         return input;
+    }
+
+    public Pose2d calcPose(double x, double y, double theta, Telemetry telemetry) {
+        double angleToHeading = Math.atan((points[0].y-points[1].y)/(points[0].x-points[1].x));
+        double distToBottomOfFrame = 0.34375+1.7501;
+        double centerOffset = 0;
+        double tapeWidth = Math.sqrt(Math.pow(points[3].x-points[0].x, 2)+Math.pow(points[3].y-points[0].y, 2));
+        double scale = /*1.875/tapeWidth*/ 0.00240885;
+        Point tapePos = new Point((points[0].x+points[3].x)/2, (points[0].y+points[3].y)/2);
+        double xCameraFrame = (/*1080-*/tapePos.x)*scale;
+        double yCameraFrame = /*-*/(tapePos.y-960-centerOffset)*scale;
+        double distToCenterOfCamera = Math.sqrt(Math.pow(xCameraFrame, 2)+Math.pow(yCameraFrame, 2));
+        double angleCameraToTape = -1*Math.atan(yCameraFrame/xCameraFrame);
+        double angle_d = (Math.PI/2)-Math.abs(angleCameraToTape)-Math.abs(angleToHeading);
+        double cameraPosxFieldFrame= -1*Math.sin(angle_d)*distToCenterOfCamera;
+        double cameraPosyFieldFrame= -1*Math.signum(angleCameraToTape)*Math.cos(angle_d)*distToCenterOfCamera;
+        double distToCenterx = -1*Math.cos(angleToHeading)*distToBottomOfFrame;
+        double distToCentery = -1*Math.sin(angleToHeading)*distToBottomOfFrame;
+        double robotPosxFieldFrame = cameraPosxFieldFrame+distToCenterx;
+        double robotPosyFieldFrame = cameraPosyFieldFrame+distToCentery;
+
+        Pose2d calculatedPosition = new Pose2d(x+robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
+        telemetry.addData("angle:", Math.toDegrees(angleToHeading));
+        telemetry.addData("tape width:", tapeWidth);
+        telemetry.addData("distance to center of camera:", distToCenterOfCamera);
+        telemetry.addData("x camera camera frame", xCameraFrame);
+        telemetry.addData("y camera camera frame", yCameraFrame);
+        telemetry.addData("angleCameraToTape:", Math.toDegrees(angleCameraToTape));
+        telemetry.addData("x camera field frame", cameraPosxFieldFrame);
+        telemetry.addData("y camera fieled frame", cameraPosyFieldFrame);
+        telemetry.addData("Calculated position", calculatedPosition);
+        telemetry.update();
+        return calculatedPosition;
     }
 
 }

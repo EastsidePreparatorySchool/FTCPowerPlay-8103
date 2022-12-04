@@ -1,4 +1,4 @@
-package nullrobotics.auto;
+package nullrobotics.auto.norr;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
@@ -49,7 +49,7 @@ public class A4_DualCone extends LinearOpMode {
 
         fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
-        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
+        ArrayList<AprilTagDetection> detections = apriltgsi.scan(3500);
 
         //2nd. Drive towards the pole
 

@@ -38,7 +38,8 @@ public class TeleOpNull extends LinearOpMode {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
 
-        fourbar.FBReachToIndex(0, 3);
+        fourbar.FBReachToIndex(0, 1);
+        fourbar.FBCurrentPositionIndex = 1;
 
         // Wait for start
         waitForStart();
@@ -153,27 +154,15 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }
 
-            /*
-            if(gamepad1.a && hasFBBtnsBeenReleased) {
-                fourbar.FBReachNextPos();
-                hasFBBtnsBeenReleased = false;
-            }
-            if(gamepad1.y && hasFBBtnsBeenReleased) {
-                fourbar.reach(VoidLib.FOUR_BAR_POSITIONS_CAPSTONE[fourbar.FBCurrentSideIndex]);
-                hasFBBtnsBeenReleased = false;
-            }
-            if(gamepad1.x && hasFBBtnsBeenReleased) {
-                fourbar.reach(VoidLib.FOUR_BAR_POSITIONS_DROP[fourbar.FBCurrentSideIndex]);
-                hasFBBtnsBeenReleased = false;
-            }*/
-
             if(gamepad2.a && hasFBBtnsBeenReleased) {
-                if(fourbar.FBCurrentPositionIndex != 1) {
-                    fourbar.FBReachCatalogical(1);
-                } else {
-                    fourbar.FBReachCatalogical(3);
+                if(fourbar.FBCurrentSideIndex == 0) {
+                    if (fourbar.FBCurrentPositionIndex != 1) {
+                        fourbar.FBReachCatalogical(1);
+                    } else {
+                        fourbar.FBReachCatalogical(3);
+                    }
+                    hasFBBtnsBeenReleased = false;
                 }
-                hasFBBtnsBeenReleased = false;
             }
 
             if(gamepad2.x && hasFBBtnsBeenReleased) {
@@ -185,15 +174,21 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }
 
-            if(gamepad2.y && hasFBBtnsBeenReleased) {
-                if(fourbar.FBCurrentPositionIndex != 0) {
-                    fourbar.FBReachCatalogical(0);
-                } else {
-                    fourbar.FBReachCatalogical(3);
-                }
-                hasFBBtnsBeenReleased = false;
-            }
+//            if(gamepad2.y && hasFBBtnsBeenReleased) {
+//                if(fourbar.FBCurrentPositionIndex != 0) {
+//                    fourbar.FBReachCatalogical(0);
+//                } else {
+//                    fourbar.FBReachCatalogical(3);
+//                }
+//                hasFBBtnsBeenReleased = false;
+//            }
 
+            if(gamepad2.y && hasFBBtnsBeenReleased) {
+                if(fourbar.FBCurrentPositionIndex != 3) {
+                    fourbar.lift(VoidLib.LIFT_POSITIONS[3], VoidLib.LIFT_TELEOP_SPEED);
+                    fourbar.FBReachCatalogical(1, 3);
+                }
+            }
 
             // Claw
             if(gamepad2.right_trigger == 0){

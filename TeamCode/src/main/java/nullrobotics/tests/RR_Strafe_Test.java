@@ -1,4 +1,4 @@
-package nullrobotics.auto;
+package nullrobotics.tests;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -12,7 +12,7 @@ import nullrobotics.lib.NullHardware;
 
 @Config
 @Autonomous(group = "drive")
-public class RR_Straight_Test extends LinearOpMode {
+public class RR_Strafe_Test extends LinearOpMode {
 
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
@@ -25,8 +25,9 @@ public class RR_Straight_Test extends LinearOpMode {
         // RR
         SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
         SampleMecanumDrive mechdrive = new SampleMecanumDrive(chassis, hardwareMap);
-        Trajectory trajectory = mechdrive.trajectoryBuilder(new Pose2d())
-                .forward(72)
+
+        Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(72*1.18)
                 .build();
 
 

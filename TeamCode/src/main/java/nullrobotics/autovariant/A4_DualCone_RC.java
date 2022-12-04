@@ -2,7 +2,7 @@ package nullrobotics.autovariant;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import nullrobotics.auto.A4_DualCone;
+import nullrobotics.auto.norr.A4_DualCone;
 import nullrobotics.lib.Label;
 
 @Autonomous(name = "[4] Dual Cone (Red Corner)", group = "Auto")

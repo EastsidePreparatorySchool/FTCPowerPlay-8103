@@ -2,7 +2,7 @@ package nullrobotics.autovariant;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import nullrobotics.auto.A1_TerminalPark;
+import nullrobotics.auto.norr.A1_TerminalPark;
 import nullrobotics.lib.Label;
 
 @Autonomous(name="[1R] Terminal Park", group="Auto")
