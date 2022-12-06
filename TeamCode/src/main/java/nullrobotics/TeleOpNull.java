@@ -26,6 +26,7 @@ public class TeleOpNull extends LinearOpMode {
     private boolean hasFBBtnsBeenReleased;
     private boolean hasClawBtnBeenReleased;
     private boolean hasLiftBtnsBeenReleased;
+    private boolean hasDpadBeenReleased;
 //    public int FBCurrentPositionIndex;
     public int LiftCurrentPositionIndex;
 
@@ -50,6 +51,8 @@ public class TeleOpNull extends LinearOpMode {
 
         // multiplier for slow mode
         double multiplier;
+
+        int liftPos = 0;
 
         while (opModeIsActive()) {
 
@@ -155,14 +158,12 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             if(gamepad2.a && hasFBBtnsBeenReleased) {
-                if(fourbar.FBCurrentSideIndex == 0) {
-                    if (fourbar.FBCurrentPositionIndex != 1) {
-                        fourbar.FBReachCatalogical(1);
-                    } else {
-                        fourbar.FBReachCatalogical(3);
-                    }
-                    hasFBBtnsBeenReleased = false;
+                if (fourbar.FBCurrentPositionIndex != 1) {
+                    fourbar.FBReachCatalogical(1);
+                } else {
+                    fourbar.FBReachCatalogical(3);
                 }
+                hasFBBtnsBeenReleased = false;
             }
 
             if(gamepad2.x && hasFBBtnsBeenReleased) {
@@ -186,6 +187,8 @@ public class TeleOpNull extends LinearOpMode {
             if(gamepad2.y && hasFBBtnsBeenReleased) {
                 if(fourbar.FBCurrentPositionIndex != 3) {
                     fourbar.lift(VoidLib.LIFT_POSITIONS[3], VoidLib.LIFT_TELEOP_SPEED);
+                    fourbar.liftWaitForStop();
+//                    fourbar.tsleep(1000);
                     fourbar.FBReachCatalogical(1, 3);
                 }
             }
@@ -201,7 +204,7 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             //Reset zero
-            if(gamepad1.back) {
+            if(gamepad1.back || gamepad2.back) {
                 fourbar.resetLiftEncoders();
             }
 

@@ -16,7 +16,7 @@ public class VoidLib {
 
     //Drive
     public static final double DEFAULT_DRIVE_SPEED = 0.4;
-    public static final double SLOWMODE_MULTIPLIER = 0.25;
+    public static final double SLOWMODE_MULTIPLIER = 0.32;
 
     public static final double ENCODER_DRIVE_ACCEL_PERIOD_PERCENT = 0.2; // % from target position to begin deceleration
     public static final double ENCODER_DRIVE_ACCEL_MIN_SPEED = 0.05;
@@ -30,7 +30,7 @@ public class VoidLib {
 
     //Lift
     public static final double LIFT_TELEOP_SPEED = 0.8;
-    public static final double LIFT_TELEOP_DESC_SPEED = 0.6;
+    public static final double LIFT_TELEOP_DESC_SPEED = 0.55;
     public static final long LIFT_TIMEOUT = 5000; //Milliseconds
 
 
@@ -46,13 +46,13 @@ public class VoidLib {
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
             new double[]{ // High = Top
                     0.69, //0.66, //Capstone
-                    0.69, //Intake
+                    0.695, //Intake 0.69
                     0.85, //Place
                     0.92 //Top
             },
             new double[]{ // Low = Top
                     0.15, //0.31, //Capstone
-                    0.30, //Intake
+                    0.295, //Intake 0.30
                     0.15, //Place
                     0.08 //Top
             }
@@ -61,7 +61,7 @@ public class VoidLib {
 
     //Claw
     public static final double CLAW_OPEN_POS = 0.07;
-    public static final double CLAW_CLOSED_POS = 0.18;
+    public static final double CLAW_CLOSED_POS = 0.20;
 
     //Vision
 //    public static final long APRIL_SCAN_TIMEOUT = 3500;
