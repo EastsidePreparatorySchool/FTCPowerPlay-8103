@@ -30,7 +30,7 @@ public class VoidLib {
 
     //Lift
     public static final double LIFT_TELEOP_SPEED = 0.8;
-    public static final double LIFT_TELEOP_DESC_SPEED = 0.55;
+    public static final double LIFT_TELEOP_DESC_SPEED = LIFT_TELEOP_SPEED/*0.55*/;
     public static final long LIFT_TIMEOUT = 5000; //Milliseconds
 
 

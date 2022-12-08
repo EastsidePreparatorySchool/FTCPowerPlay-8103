@@ -54,6 +54,8 @@ public class TeleOpNull extends LinearOpMode {
 
         int liftPos = 0;
 
+        Thread asyncLiftThread;
+
         while (opModeIsActive()) {
 
             /*
@@ -120,7 +122,7 @@ public class TeleOpNull extends LinearOpMode {
             chassis.DriveMotorBR.setPower((rightPower - strafePower) * multiplier);
 
             // Four Bar Lift controls on the second gamepad
-            if(!gamepad2.left_bumper && gamepad2.left_trigger == 0){
+            if(!gamepad2.left_bumper && gamepad2.left_trigger == 0 && !gamepad2.dpad_up && !gamepad2.dpad_right && !gamepad2.dpad_down && !gamepad2.dpad_left){
                 hasLiftBtnsBeenReleased = true;
             }
 
@@ -137,13 +139,16 @@ public class TeleOpNull extends LinearOpMode {
                 if(LiftCurrentPositionIndex < 0){
                     LiftCurrentPositionIndex = 0;
                 }
+
                 fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_DESC_SPEED);
                 if(LiftCurrentPositionIndex == 0){
                     fourbar.endLiftMovement();
                 }
                 hasLiftBtnsBeenReleased = false;
             }
+
             if(gamepad2.left_trigger == 1) {
+                LiftCurrentPositionIndex = 0;
                 fourbar.lift(0, VoidLib.LIFT_TELEOP_SPEED);
             }
 
@@ -186,10 +191,13 @@ public class TeleOpNull extends LinearOpMode {
 
             if(gamepad2.y && hasFBBtnsBeenReleased) {
                 if(fourbar.FBCurrentPositionIndex != 3) {
-                    fourbar.lift(VoidLib.LIFT_POSITIONS[3], VoidLib.LIFT_TELEOP_SPEED);
-                    fourbar.liftWaitForStop();
-//                    fourbar.tsleep(1000);
-                    fourbar.FBReachCatalogical(1, 3);
+                    fourbar.lift(VoidLib.LIFT_POSITIONS[2], VoidLib.LIFT_TELEOP_SPEED);
+//                    fourbar.liftWaitForStop();
+                    asyncLiftThread = new Thread( () -> {
+                        sleep(1000);
+                        fourbar.FBReachCatalogical(1, 3);
+                    } );
+                    asyncLiftThread.start();
                 }
             }
 
