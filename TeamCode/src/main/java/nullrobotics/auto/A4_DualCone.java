@@ -2,7 +2,6 @@ package nullrobotics.auto;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.openftc.apriltag.AprilTagDetection;
@@ -10,6 +9,7 @@ import org.openftc.apriltag.AprilTagDetection;
 import java.util.ArrayList;
 
 import nullrobotics.lib.AprilTagImplementation;
+import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
@@ -21,7 +21,8 @@ public class A4_DualCone extends LinearOpMode {
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
     FourBarLift fourbar = new FourBarLift();
-    AprilTagImplementation camera = new AprilTagImplementation();
+    CameraSystem camsys = new CameraSystem();
+    AprilTagImplementation apriltgsi = new AprilTagImplementation();
 
     Label signalDirection = Label.NONE;
 
@@ -29,7 +30,8 @@ public class A4_DualCone extends LinearOpMode {
     public void runOpMode() {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
-        camera.init(hardwareMap, telemetry);
+        camsys.init(hardwareMap);
+        apriltgsi.init(hardwareMap, telemetry, camsys.Front);
 
         signalDirection = this.getSignalDirection();
 
@@ -47,7 +49,7 @@ public class A4_DualCone extends LinearOpMode {
 
         fourbar.FBReachToIndex(0, 3); //raise cone so camera can see
 
-        ArrayList<AprilTagDetection> detections = camera.scan();
+        ArrayList<AprilTagDetection> detections = apriltgsi.scan();
 
         //2nd. Drive towards the pole
 

@@ -1,4 +1,6 @@
 package nullrobotics;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -7,6 +9,12 @@ import com.qualcomm.robotcore.util.Range;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
+// RR
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import nullrobotics.RR.drive.SampleMecanumDrive;
 
 @TeleOp(name="null robotics teleop", group="A")
 public class TeleOpNull extends LinearOpMode {
@@ -21,12 +29,16 @@ public class TeleOpNull extends LinearOpMode {
 //    public int FBCurrentPositionIndex;
     public int LiftCurrentPositionIndex;
 
+//    private VuforiaImplementation vuforia = new VuforiaImplementation("CameraB");
+
     @Override
     public void runOpMode() {
 
         // initialize the hardware map
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
+
+        fourbar.FBReachToIndex(0, 3);
 
         // Wait for start
         waitForStart();
@@ -209,6 +221,7 @@ public class TeleOpNull extends LinearOpMode {
             telemetry.addData("Lift Position Ideal Height", VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
+
             telemetry.update();
         }
     }
