@@ -105,6 +105,14 @@ public class TeleOpNull extends LinearOpMode {
                 hasLiftBtnsBeenReleased = true;
             }
 
+            //if the lift position is zero, release the power
+            if(fourbar.getLiftLeftPosition() == 0 || fourbar.getLiftRightPosition() == 0 && activateLiftEncoderReset == false){
+                telemetry.addData("Lift position was zero, releasing power and will reset on next UP press.", "");
+                fourbar.debug_SetLiftMotorPwr(0);
+
+                activateLiftEncoderReset = true;
+            }
+
             //Up by one stage
             if((gamepad2.left_bumper || gamepad2.dpad_up) && hasLiftBtnsBeenReleased) {
 
@@ -216,14 +224,6 @@ public class TeleOpNull extends LinearOpMode {
             //Reset zero
             if(gamepad1.back || gamepad2.back) {
                 fourbar.resetLiftEncoders();
-            }
-
-            //if the lift position is zero, release the power
-            if(fourbar.getLiftLeftPosition() == 0 || fourbar.getLiftRightPosition() == 0){
-                telemetry.addData("Lift position was zero, releasing.", "");
-                fourbar.debug_SetLiftMotorPwr(0);
-
-                activateLiftEncoderReset = true;
             }
 
             // Telemetry
