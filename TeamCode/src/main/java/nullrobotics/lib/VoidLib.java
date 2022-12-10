@@ -35,12 +35,12 @@ public class VoidLib {
 
 
     public static final int[] LIFT_POSITIONS = new int[]{
-            0, //Ground
+            -5, //Ground
             105, //2nd cone (stack)
             155, //3rd cone (stack)
             205, //4th cone (stack)
             255, //5th cone (stack)
-            450, //Low pole
+            350, //Low pole
             800, //Medium pole
             1240 //High pole
     };

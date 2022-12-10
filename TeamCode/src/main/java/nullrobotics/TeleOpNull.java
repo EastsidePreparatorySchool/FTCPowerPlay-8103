@@ -105,23 +105,23 @@ public class TeleOpNull extends LinearOpMode {
                 hasLiftBtnsBeenReleased = true;
             }
 
-            //if the lift position is zero, release the power
-            if(fourbar.getLiftLeftPosition() == 0 || fourbar.getLiftRightPosition() == 0 && activateLiftEncoderReset == false){
-                telemetry.addData("Lift position was zero, releasing power and will reset on next UP press.", "");
-                fourbar.debug_SetLiftMotorPwr(0);
-
-                activateLiftEncoderReset = true;
-            }
+            //if the lift position is zero, release the power (DOESNT WORK)
+//            if(fourbar.getLiftLeftPosition() == 0 || fourbar.getLiftRightPosition() == 0 && activateLiftEncoderReset == false && LiftCurrentPositionIndex == 0){
+//                telemetry.addData("Lift position was zero, releasing power and setting flag.", "");
+//                fourbar.debug_SetLiftMotorPwr(0);
+//
+//                activateLiftEncoderReset = true;
+//            }
 
             //Up by one stage
             if((gamepad2.left_bumper || gamepad2.dpad_up) && hasLiftBtnsBeenReleased) {
 
                 //if the reset is activated, then do that.
-                if(activateLiftEncoderReset){
-                    telemetry.addData("Resetting lift encoders", activateLiftEncoderReset);
-                    fourbar.resetLiftEncoders();
-                    activateLiftEncoderReset = false;
-                }
+//                if(activateLiftEncoderReset){
+//                    telemetry.addData("Resetting lift encoders", activateLiftEncoderReset);
+//                    fourbar.resetLiftEncoders();
+//                    activateLiftEncoderReset = false;
+//                }
 
                 LiftCurrentPositionIndex ++;
                 if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
@@ -157,7 +157,7 @@ public class TeleOpNull extends LinearOpMode {
             //Down all the way
             if(gamepad2.left_trigger > 0.05 && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex = 0;
-                fourbar.lift(0, VoidLib.LIFT_TELEOP_SPEED);
+                fourbar.lift(VoidLib.LIFT_POSITIONS[0], VoidLib.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
 
@@ -191,25 +191,16 @@ public class TeleOpNull extends LinearOpMode {
             }
 
 //            if(gamepad2.y && hasFBBtnsBeenReleased) {
-//                if(fourbar.FBCurrentPositionIndex != 0) {
-//                    fourbar.FBReachCatalogical(0);
-//                } else {
-//                    fourbar.FBReachCatalogical(3);
+//                if(fourbar.FBCurrentPositionIndex != 3) {
+//                    fourbar.lift(VoidLib.LIFT_POSITIONS[2], VoidLib.LIFT_TELEOP_SPEED);
+////                    fourbar.liftWaitForStop();
+//                    asyncLiftThread = new Thread( () -> {
+//                        sleep(1000);
+//                        fourbar.FBReachCatalogical(1, 3);
+//                    } );
+//                    asyncLiftThread.start();
 //                }
-//                hasFBBtnsBeenReleased = false;
 //            }
-
-            if(gamepad2.y && hasFBBtnsBeenReleased) {
-                if(fourbar.FBCurrentPositionIndex != 3) {
-                    fourbar.lift(VoidLib.LIFT_POSITIONS[2], VoidLib.LIFT_TELEOP_SPEED);
-//                    fourbar.liftWaitForStop();
-                    asyncLiftThread = new Thread( () -> {
-                        sleep(1000);
-                        fourbar.FBReachCatalogical(1, 3);
-                    } );
-                    asyncLiftThread.start();
-                }
-            }
 
             // Claw
             if(gamepad2.right_trigger == 0){
