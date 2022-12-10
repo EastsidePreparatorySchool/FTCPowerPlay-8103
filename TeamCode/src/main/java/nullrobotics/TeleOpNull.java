@@ -1,8 +1,7 @@
 package nullrobotics;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -10,11 +9,7 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.VoidLib;
 // RR
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import nullrobotics.RR.drive.SampleMecanumDrive;
+
 
 @TeleOp(name="null robotics teleop", group="A")
 public class TeleOpNull extends LinearOpMode {
@@ -27,11 +22,9 @@ public class TeleOpNull extends LinearOpMode {
     private boolean hasClawBtnBeenReleased;
     private boolean hasLiftBtnsBeenReleased;
     private boolean hasDpadBeenReleased;
-//    public int FBCurrentPositionIndex;
     public int LiftCurrentPositionIndex;
 
-//    private VuforiaImplementation vuforia = new VuforiaImplementation("CameraB");
-
+    
     @Override
     public void runOpMode() {
 
@@ -53,6 +46,8 @@ public class TeleOpNull extends LinearOpMode {
         double multiplier;
 
         int liftPos = 0;
+
+        boolean activateLiftEncoderReset = false;
 
         Thread asyncLiftThread;
 
@@ -87,29 +82,13 @@ public class TeleOpNull extends LinearOpMode {
             if (gamepad1.dpad_up) drive = 1;
             if (gamepad1.dpad_down) drive = -1;
 
-            //dpad slides
-            /*if (gamepad2.dpad_up) {
-                LiftCurrentPositionIndex ++;
-                if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
-                    LiftCurrentPositionIndex = VoidLib.LIFT_POSITIONS.length -1;
-                }
-                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_SPEED);
-            }
-            if (gamepad2.dpad_down) {
-                LiftCurrentPositionIndex --;
-                if(LiftCurrentPositionIndex < 0){
-                    LiftCurrentPositionIndex = 0;
-                }
-                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_DESC_SPEED);
-            }*/
-
             // Process Inputs
             leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
             strafePower = Range.clip(strafe, -1.0, 1.0);
             rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
 
             // Slow Mode
-            if(gamepad1.right_bumper) {
+            if(gamepad1.right_trigger > 0.05) {
                 multiplier = VoidLib.SLOWMODE_MULTIPLIER;
             } else {
                 multiplier = 1;
@@ -126,30 +105,52 @@ public class TeleOpNull extends LinearOpMode {
                 hasLiftBtnsBeenReleased = true;
             }
 
+            //Up by one stage
             if((gamepad2.left_bumper || gamepad2.dpad_up) && hasLiftBtnsBeenReleased) {
+
+                //if the reset is activated, then do that.
+                if(activateLiftEncoderReset){
+                    telemetry.addData("Resetting lift encoders", activateLiftEncoderReset);
+                    fourbar.resetLiftEncoders();
+                    activateLiftEncoderReset = false;
+                }
+
                 LiftCurrentPositionIndex ++;
                 if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
                     LiftCurrentPositionIndex = VoidLib.LIFT_POSITIONS.length -1;
                 }
+                if (LiftCurrentPositionIndex == 1){
+                    LiftCurrentPositionIndex = 5;
+                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                }
                 fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
-            if(((gamepad2.left_trigger > 0 && gamepad2.left_trigger < 1) || gamepad2.dpad_down) && hasLiftBtnsBeenReleased) {
+
+            //Down by one stage
+            if(gamepad2.dpad_down && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex --;
                 if(LiftCurrentPositionIndex < 0){
                     LiftCurrentPositionIndex = 0;
                 }
 
+//                if(LiftCurrentPositionIndex == 0){
+//                    //dont brake, float
+//                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//                } else {
+//                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                }
+
                 fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_DESC_SPEED);
-                if(LiftCurrentPositionIndex == 0){
-                    fourbar.endLiftMovement();
-                }
+
                 hasLiftBtnsBeenReleased = false;
             }
 
-            if(gamepad2.left_trigger == 1) {
+            //Down all the way
+            if(gamepad2.left_trigger > 0.05 && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex = 0;
                 fourbar.lift(0, VoidLib.LIFT_TELEOP_SPEED);
+                hasLiftBtnsBeenReleased = false;
             }
 
             // Four Bar
@@ -157,7 +158,8 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = true;
             }
 
-            if(gamepad2.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 1 )) {
+            //toggle side
+            if(gamepad2.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 5 )) {
                 fourbar.FBToggleSide();
                 hasFBBtnsBeenReleased = false;
             }
@@ -214,6 +216,14 @@ public class TeleOpNull extends LinearOpMode {
             //Reset zero
             if(gamepad1.back || gamepad2.back) {
                 fourbar.resetLiftEncoders();
+            }
+
+            //if the lift position is zero, release the power
+            if(fourbar.getLiftLeftPosition() == 0 || fourbar.getLiftRightPosition() == 0){
+                telemetry.addData("Lift position was zero, releasing.", "");
+                fourbar.debug_SetLiftMotorPwr(0);
+
+                activateLiftEncoderReset = true;
             }
 
             // Telemetry

@@ -330,7 +330,6 @@ public class OnePlusThree extends LinearOpMode {
         fourbar.FBReachToIndex(0, 1);
         fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
 
-
         //relay telemetry
         Pose2d poseEstimate = mechdrive.getPoseEstimate();
         telemetry.addData("finalX", poseEstimate.getX());

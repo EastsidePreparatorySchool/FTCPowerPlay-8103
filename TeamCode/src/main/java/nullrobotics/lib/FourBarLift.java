@@ -2,14 +2,11 @@ package nullrobotics.lib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-
-import java.util.stream.IntStream;
 
 public class FourBarLift {
     // Motor and servo declarations
@@ -52,8 +49,12 @@ public class FourBarLift {
 
         DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
 
-        VoidLib.initMotor(LiftMotorL);
-        VoidLib.initMotor(LiftMotorR);
+        LiftMotorL.setPower(0.0);
+        LiftMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LiftMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LiftMotorR.setPower(0.0);
+        LiftMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Setup four bar servos
         FourBarServoL = map.servo.get("FourBarL");
@@ -164,6 +165,14 @@ public class FourBarLift {
         }
     }
 
+    public int getLiftLeftPosition(){
+        return LiftMotorL.getCurrentPosition();
+    }
+
+    public int getLiftRightPosition(){
+        return LiftMotorR.getCurrentPosition();
+    }
+
     //forward/backward already handled by the DCMotor.Direction
     private void encode(double speed, int ticks) {
         // Determine new target position, and pass to motor controller
@@ -229,6 +238,11 @@ public class FourBarLift {
                 LiftMotorL.getCurrent(CurrentUnit.AMPS),
                 LiftMotorR.getCurrent(CurrentUnit.AMPS)
         };
+    }
+
+    public void setLift0PowerBehavior(DcMotor.ZeroPowerBehavior zeroPwrBehavior) {
+        LiftMotorL.setZeroPowerBehavior(zeroPwrBehavior);
+        LiftMotorR.setZeroPowerBehavior(zeroPwrBehavior);
     }
 
     //Telemetry

@@ -61,7 +61,10 @@ public class NullHardware {
 
 
         for (DcMotor m : allMotors) {
-            VoidLib.initMotor(m);
+            m.setPower(0.0);
+            m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
     }

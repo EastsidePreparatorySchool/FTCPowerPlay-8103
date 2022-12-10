@@ -7,12 +7,12 @@ public class VoidLib {
     //Methods
 
 
-    public static void initMotor(DcMotor m) {
-        m.setPower(0.0);
-        m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //this is good for auto, but is it good for driver control?
-    }
+//    public static void initMotor(DcMotor m) {
+//        m.setPower(0.0);
+//        m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //this is good for auto, but is it good for driver control?
+//    }
 
     //Drive
     public static final double DEFAULT_DRIVE_SPEED = 0.4;
@@ -36,11 +36,14 @@ public class VoidLib {
 
     public static final int[] LIFT_POSITIONS = new int[]{
             0, //Ground
-            500, //Low pole
+            105, //2nd cone (stack)
+            155, //3rd cone (stack)
+            205, //4th cone (stack)
+            255, //5th cone (stack)
+            450, //Low pole
             800, //Medium pole
             1240 //High pole
     };
-
     //Four Bar
 
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
@@ -61,7 +64,7 @@ public class VoidLib {
 
     //Claw
     public static final double CLAW_OPEN_POS = 0.07;
-    public static final double CLAW_CLOSED_POS = 0.20;
+    public static final double CLAW_CLOSED_POS = 0.21; // 0.20
 
     //Vision
 //    public static final long APRIL_SCAN_TIMEOUT = 3500;
