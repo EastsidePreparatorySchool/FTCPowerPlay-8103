@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -15,6 +16,7 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import android.graphics.Color;
+
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
@@ -42,14 +44,16 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     Mat output = new Mat();
     Mat temp = new Mat();
     MatOfPoint2f point2f = new MatOfPoint2f();
-    static final int tol = 70;
-    final int width = 400;
-    final int height = 900;
+    static final int tol = 90;
+    public int width;
+    public int height;
     final org.opencv.core.Rect rectCrop = new org.opencv.core.Rect(0,490,width,height);
-    final Scalar tolmin = new Scalar(50,155,128-tol);
-    final Scalar tolmax = new Scalar(255,255,128+tol);
+    //final Scalar tolmin = new Scalar(50,155,128-tol);
+    //final Scalar tolmax = new Scalar(255,255,128+tol);
+    final Scalar tolmin = new Scalar(50,128-tol,0);
+    final Scalar tolmax = new Scalar(255,128+tol,80);
     final Scalar rectColor = new Scalar(0,255,0);
-    final Mat kernel = Mat.ones(5,5, CV_32F);
+    final Mat kernel = Mat.ones(10,10, CV_32F);
     ArrayList<org.opencv.core.Point> ptsArray = new ArrayList<>();
     org.opencv.core.Point pt0= new Point(-1,-1);
     org.opencv.core.Point pt1= new Point(-1,-1);
@@ -59,11 +63,21 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     int h;
     public org.opencv.core.Point points[] = {pt0, pt1, pt2, pt3};
     public boolean isEmpty = false;
-
+    float[] cameraArray = {1385.92f,0,951.982f,0,1385.92f,534.084f,0,0,1};
+    Mat cameraMat = new Mat(3,3,CV_32F);
+    double[] distArray = {0.117627, -0.248549, 0, 0, 0.107441};
+    Mat distCoeffs = new Mat(5,1, CV_32F);
+    Mat corrected = new Mat();
 
     @Override
     public Mat processFrame(Mat input){
         isEmpty = false;
+        cameraMat.put(0,0,cameraArray);
+        distCoeffs.put(0,0,distArray);
+        Calib3d.undistort(input,corrected,cameraMat,distCoeffs);
+        width = corrected.width();
+        height = corrected.height();
+
 //        Imgproc.cvtColor(input, trueColors, Imgproc.floodFill());
 //        Imgproc.boundingRect(trueColors);
 //        filledArea = Imgproc.floodFill(input)
@@ -85,10 +99,10 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         //Using Lab color space
         // L is brighness, a is red to green, b is blue to yellow
 //        input = input.submat(rectCrop);
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2Lab);
+        Imgproc.cvtColor(corrected, corrected, Imgproc.COLOR_RGB2Lab);
         //Core.inRange(input, new Scalar(0,40,-50), new Scalar(100,100,50), output);
         //Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2BGR);
-        Core.inRange(input, tolmin, tolmax, temp);
+        Core.inRange(corrected, tolmin, tolmax, temp);
 
         Imgproc.morphologyEx(temp, temp, Imgproc.MORPH_OPEN, kernel) ;
 
@@ -105,6 +119,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             isEmpty = true;
             return input;
         }
+        //Imgproc.findContours(temp,ptsArray);
 
         point2f.fromList(ptsArray);
         RotatedRect rect = Imgproc.minAreaRect(point2f);
@@ -129,11 +144,11 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             }
             points[3]=temp;
         }
-        Imgproc.cvtColor(input,input,Imgproc.COLOR_Lab2LRGB);
-//        Imgproc.line(input, new Point(0,height/2), new Point(width, height/2), rectColor,5);
+        Imgproc.cvtColor(corrected,corrected,Imgproc.COLOR_Lab2LRGB);
+        Imgproc.line(input, new Point(0,height/2), new Point(width, height/2), rectColor,5);
 //        Imgproc.line(input, new Point(width/2,0), new Point(width/2, height), rectColor,5);
         for (int i=0; i<4; i++) {
-            Imgproc.line(input, points[i], points[(1+i)%4], rectColor, 5);
+            Imgproc.line(corrected, points[i], points[(1+i)%4], rectColor, 5);
         }
         ptsArray.clear();
         //Binarize the image
@@ -148,7 +163,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 //        Imgproc.minAreaRect() Where do I get the mat of points from?
 
         //Calculate motion based on rectange angle
-        return input;
+        return corrected;
     }
 
     public Pose2d calcPose(double x, double y, double theta, Telemetry telemetry) {
