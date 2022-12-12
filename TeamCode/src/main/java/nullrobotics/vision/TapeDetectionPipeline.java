@@ -12,6 +12,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
@@ -48,10 +49,8 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     public int width;
     public int height;
     final org.opencv.core.Rect rectCrop = new org.opencv.core.Rect(0,490,width,height);
-    //final Scalar tolmin = new Scalar(50,155,128-tol);
-    //final Scalar tolmax = new Scalar(255,255,128+tol);
-    final Scalar tolmin = new Scalar(50,128-tol,0);
-    final Scalar tolmax = new Scalar(255,128+tol,80);
+    Scalar tolmin;
+    Scalar tolmax;
     final Scalar rectColor = new Scalar(0,255,0);
     final Mat kernel = Mat.ones(10,10, CV_32F);
     ArrayList<org.opencv.core.Point> ptsArray = new ArrayList<>();
@@ -68,9 +67,20 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     double[] distArray = {0.117627, -0.248549, 0, 0, 0.107441};
     Mat distCoeffs = new Mat(5,1, CV_32F);
     Mat corrected = new Mat();
+    ArrayList<MatOfPoint> matOfPointList = new ArrayList<>();
+    Mat hierarchy = new Mat();
+    ArrayList<Point> tempList = new ArrayList<>();
+    public boolean color;
 
     @Override
     public Mat processFrame(Mat input){
+        if (color) {
+            tolmin = new Scalar(50,155,128-tol);
+            tolmax = new Scalar(255,255,128+tol);
+        } else {
+            tolmin = new Scalar(50,128-tol,0);
+            tolmax = new Scalar(255,128+tol,80);
+        }
         isEmpty = false;
         cameraMat.put(0,0,cameraArray);
         distCoeffs.put(0,0,distArray);
@@ -105,10 +115,10 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         Core.inRange(corrected, tolmin, tolmax, temp);
 
         Imgproc.morphologyEx(temp, temp, Imgproc.MORPH_OPEN, kernel) ;
-
+        Imgproc.findContours(temp,matOfPointList, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         w = temp.width();
         h = temp.height();
-        for (int y = 0; y < h; y+=5) {
+        for (int y = 0; y < h; y+=20) {
             for (int x = 0; x < w; x+=5){
                 if (temp.get(y,x)[0] > 0) {
                     ptsArray.add(new org.opencv.core.Point((double) x, (double) y));
@@ -119,8 +129,11 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             isEmpty = true;
             return input;
         }
+        /*for (int i = 0; i < matOfPointList.size(); i++) {
+            tempList.addAll(matOfPointList.get(i).toList());
+            ptsArray.addAll(tempList);
+        }*/
         //Imgproc.findContours(temp,ptsArray);
-
         point2f.fromList(ptsArray);
         RotatedRect rect = Imgproc.minAreaRect(point2f);
         rect.points(points);
@@ -167,36 +180,59 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     }
 
     public Pose2d calcPose(double x, double y, double theta, Telemetry telemetry) {
-        double angleToHeading = Math.atan((points[0].y-points[1].y)/(points[0].x-points[1].x));
-        double distToBottomOfFrame = 0.34375+1.7501;
-        double centerOffset = 0;
-        double tapeWidth = Math.sqrt(Math.pow(points[3].x-points[0].x, 2)+Math.pow(points[3].y-points[0].y, 2));
-        double scale = /*1.875/tapeWidth*/ 0.00240885;
-        Point tapePos = new Point((points[0].x+points[3].x)/2, (points[0].y+points[3].y)/2);
-        double xCameraFrame = (/*1080-*/tapePos.x)*scale;
-        double yCameraFrame = /*-*/(tapePos.y-960-centerOffset)*scale;
-        double distToCenterOfCamera = Math.sqrt(Math.pow(xCameraFrame, 2)+Math.pow(yCameraFrame, 2));
-        double angleCameraToTape = -1*Math.atan(yCameraFrame/xCameraFrame);
-        double angle_d = (Math.PI/2)-Math.abs(angleCameraToTape)-Math.abs(angleToHeading);
-        double cameraPosxFieldFrame= -1*Math.sin(angle_d)*distToCenterOfCamera;
-        double cameraPosyFieldFrame= -1*Math.signum(angleCameraToTape)*Math.cos(angle_d)*distToCenterOfCamera;
-        double distToCenterx = -1*Math.cos(angleToHeading)*distToBottomOfFrame;
-        double distToCentery = -1*Math.sin(angleToHeading)*distToBottomOfFrame;
-        double robotPosxFieldFrame = cameraPosxFieldFrame+distToCenterx;
-        double robotPosyFieldFrame = cameraPosyFieldFrame+distToCentery;
-
-        Pose2d calculatedPosition = new Pose2d(x+robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
-        telemetry.addData("angle:", Math.toDegrees(angleToHeading));
-        telemetry.addData("tape width:", tapeWidth);
-        telemetry.addData("distance to center of camera:", distToCenterOfCamera);
-        telemetry.addData("x camera camera frame", xCameraFrame);
-        telemetry.addData("y camera camera frame", yCameraFrame);
-        telemetry.addData("angleCameraToTape:", Math.toDegrees(angleCameraToTape));
-        telemetry.addData("x camera field frame", cameraPosxFieldFrame);
-        telemetry.addData("y camera fieled frame", cameraPosyFieldFrame);
-        telemetry.addData("Calculated position", calculatedPosition);
-        telemetry.update();
-        return calculatedPosition;
+        double angleToHeading = 0;
+        double distToBottomOfFrame;
+        double centerOffset;
+        double tapeWidth = 0;
+        double scale;
+        Point tapePos;
+        double xCameraFrame;
+        double yCameraFrame;
+        double distToCenterOfCamera;
+        double angleCameraToTape;
+        double angle_d;
+        double cameraPosxFieldFrame;
+        double cameraPosyFieldFrame;
+        double distToCenterx;
+        double distToCentery;
+        double robotPosxFieldFrame = 0;
+        double robotPosyFieldFrame = 0;
+        while (tapeWidth > 800 || tapeWidth < 500) {
+            angleToHeading = (Math.atan((points[0].y - points[1].y) / (points[0].x - points[1].x)));
+            distToBottomOfFrame = 2.5 + 1.7501;
+            centerOffset = 0;
+            tapeWidth = Math.sqrt(Math.pow(points[1].x - points[2].x, 2) + Math.pow(points[1].y - points[2].y, 2));
+            scale = 2 / tapeWidth;
+            tapePos = new Point((points[1].x + points[2].x) / 2, (points[1].y + points[2].y) / 2);
+            xCameraFrame = (width - tapePos.x) * scale;
+            yCameraFrame = -(tapePos.y - (height / 2) - centerOffset) * scale;
+            distToCenterOfCamera = Math.sqrt(Math.pow(xCameraFrame, 2) + Math.pow(yCameraFrame, 2));
+            angleCameraToTape = Math.atan(yCameraFrame / xCameraFrame);
+            angle_d = (Math.PI / 2) - Math.abs(angleCameraToTape) - Math.abs(angleToHeading);
+            cameraPosxFieldFrame = Math.sin(angle_d) * distToCenterOfCamera;
+            cameraPosyFieldFrame = -1 * Math.signum(angleCameraToTape) * Math.cos(angle_d) * distToCenterOfCamera;
+            distToCenterx = Math.cos(angleToHeading) * distToBottomOfFrame;
+            distToCentery = Math.sin(angleToHeading) * distToBottomOfFrame;
+            robotPosxFieldFrame = cameraPosxFieldFrame + distToCenterx;
+            robotPosyFieldFrame = cameraPosyFieldFrame + distToCentery;
+            telemetry.addData("angle:", angleToHeading);
+            telemetry.addData("tape width:", tapeWidth);
+            telemetry.addData("distance to center of camera:", distToCenterOfCamera);
+            telemetry.addData("frame width x", width);
+            telemetry.addData("frame width y", height);
+            telemetry.addData("x camera camera frame", xCameraFrame);
+            telemetry.addData("y camera camera frame", yCameraFrame);
+            telemetry.addData("angleCameraToTape:", Math.toDegrees(angleCameraToTape));
+            telemetry.addData("x camera field frame", cameraPosxFieldFrame);
+            telemetry.addData("y camera fieled frame", cameraPosyFieldFrame);
+            telemetry.addData("x robot center offset:", distToCenterx);
+            telemetry.addData("y robot center offset:", distToCentery);
+            telemetry.addData("x robot field frame:", robotPosxFieldFrame);
+            telemetry.addData("y robot fieled frame:", robotPosyFieldFrame);
+            telemetry.addData("Calculated position", new Pose2d(x + robotPosxFieldFrame, y + robotPosyFieldFrame, theta + angleToHeading));
+            telemetry.update();
+        }
+        return new Pose2d(x+robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
     }
 
 }
