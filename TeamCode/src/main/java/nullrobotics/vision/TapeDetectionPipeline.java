@@ -34,6 +34,8 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.Collections;
 
+import nullrobotics.RR.drive.SampleMecanumDrive;
+
 
 public class TapeDetectionPipeline extends OpenCvPipeline {
 
@@ -179,7 +181,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         return corrected;
     }
 
-    public Pose2d calcPose(double x, double y, double theta, Telemetry telemetry) {
+    public Pose2d calcPose(double x, double y, double theta, SampleMecanumDrive mechDrive, Telemetry telemetry) {
         double angleToHeading = 0;
         double distToBottomOfFrame;
         double centerOffset;
@@ -197,7 +199,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         double distToCentery;
         double robotPosxFieldFrame = 0;
         double robotPosyFieldFrame = 0;
-        while (tapeWidth > 800 || tapeWidth < 500) {
+        while ((tapeWidth > 800 || tapeWidth < 500)&&(angleToHeading<mechDrive.getExternalHeading()-0.0872 || angleToHeading>mechDrive.getExternalHeading()+0.0872)) {
             angleToHeading = (Math.atan((points[0].y - points[1].y) / (points[0].x - points[1].x)));
             distToBottomOfFrame = 2.5 + 1.7501;
             centerOffset = 0;

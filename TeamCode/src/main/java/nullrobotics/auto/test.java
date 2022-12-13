@@ -87,15 +87,15 @@ public class test extends LinearOpMode {
         //Set internal known position
         //set positions we want to come back to
         start = new Pose2d(35.5, 62.125, Math.toRadians(90));
-        tallPolePose = new Pose2d(28.85, 7.75, Math.toRadians(45));
+        tallPolePose = new Pose2d(28.25, 7.25, Math.toRadians(45));
         tallPolePoseRad = Math.toRadians(-100);
-        midPoleStack = new Pose2d(52, 11.5, 0);
+        midPoleStack = new Pose2d(51, 11.5, 0);
         midPoleStackRad = Math.toRadians(0);
         stackPickup = new Pose2d(61.75, 11.75, Math.toRadians(0));
         stackPickupRadians = Math.toRadians(0);
-        tallPolePoseDrifted = new Pose2d(29.5 /*32*/, 7.60 /*6.5 6.25*/, Math.toRadians(45));
+        tallPolePoseDrifted = new Pose2d(28, 10 , Math.toRadians(45));
         tallPolePoseDriftedRad = Math.toRadians(-140);
-        tapeDrifted = new Pose2d(52,11.5,0);
+        tapeDrifted = new Pose2d(52,12,0);
         tapeDriftedRad = Math.toRadians(0);
 //       if(getCornerColor() == Label.REDCORNER) {
 //            //RED CORNER
@@ -283,7 +283,6 @@ public class test extends LinearOpMode {
         //Wait for start.
         waitForStart();
         tdp.color=true;
-
         fourbar.FBReachToIndex(1,3);
 
         //Begin actual motion
@@ -292,51 +291,53 @@ public class test extends LinearOpMode {
         //Go to pole and place cone
         mechdrive.followTrajectorySequence(trajHomeToPole);
         fourbar.liftWaitForStop();
-        sleep(1000);
+        sleep(250);
         fourbar.FBReachToIndex(1, 2);
-        sleep(1000);
+        sleep(500);
         fourbar.openClaw();
-        sleep(1000);
 
         //Go to stack and pick up cone
         mechdrive.followTrajectorySequence(trajPoleToTape);
         fourbar.lift(250, VoidLib.LIFT_TELEOP_DESC_SPEED);
-        mechdrive.setPoseEstimate(tdp.calcPose(45,11.5,0,telemetry));
+        mechdrive.setPoseEstimate(tdp.calcPose(45,11.5,0, mechdrive, telemetry));
         mechdrive.followTrajectorySequence(trajTapeToStack);
+        mechdrive.setPoseEstimate(new Pose2d(62.75, 11.75, Math.toRadians(0)));
         fourbar.liftWaitForStop();
-        sleep(1000);
         fourbar.closeClaw();
-        sleep(1000);
+        sleep(250);
 
         //Go back to the pole and place cone
 
         fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED);
         mechdrive.followTrajectorySequence(trajStackToPole);
-        sleep(1000);
+        sleep(500);
         fourbar.FBReachToIndex(1, 2);
         sleep(500);
         fourbar.openClaw();
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 3; i++) {
             //Go to stack and pick up cone
             mechdrive.followTrajectorySequence(trajPoleToTape2);
-            fourbar.lift(200, VoidLib.LIFT_TELEOP_DESC_SPEED);
-            mechdrive.setPoseEstimate(tdp.calcPose(45, 11.5, 0, telemetry));
+            fourbar.lift(190-(i*65), VoidLib.LIFT_TELEOP_DESC_SPEED);
+            mechdrive.setPoseEstimate(tdp.calcPose(43, 11.25, 0, mechdrive, telemetry));
             mechdrive.followTrajectorySequence(trajTapeToStack);
+            mechdrive.setPoseEstimate(new Pose2d(62.5, 11.75, Math.toRadians(0)));
             fourbar.liftWaitForStop();
-            sleep(1000);
+            sleep(100);
             fourbar.closeClaw();
-            sleep(1000);
+            sleep(250);
 
             //Go back to the pole and place cone
 
             fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED);
             mechdrive.followTrajectorySequence(trajStackToPole);
-            sleep(1000);
+            //sleep(250);
             fourbar.FBReachToIndex(1, 2);
             sleep(500);
             fourbar.openClaw();
         }
+        mechdrive.followTrajectorySequence(trajPoleToTape2);
+        fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
         /*
         //Park
         if(couldFindTag && getCornerColor() == Label.REDCORNER){

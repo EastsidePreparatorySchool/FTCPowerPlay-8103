@@ -98,7 +98,7 @@ public class TapeDetection extends LinearOpMode {
                 .build();
         waitForStart();
         sleep(5000);
-        Pose2d currentPose = tdp.calcPose(47,11.5,0,telemetry);
+        Pose2d currentPose = tdp.calcPose(47,11.5,0, mechdrive, telemetry);
         telemetry.addData("current Pose", currentPose.toString());
         sleep(2000);
         mechdrive.setPoseEstimate(currentPose);

@@ -28,12 +28,12 @@ public class TopdownStream extends LinearOpMode {
                         //Usually this is where you'll want to start streaming from the camera
                         camsys.TopDown.startStreaming(1920, 1080);
                         camsys.TopDown.setPipeline(tdp);
-
-                        while(true){
-                            Pose2d currentPose = tdp.calcPose(45, 10.5, 0.2, telemetry);
-//                            telemetry.addData("current pose", currentPose.toString());
-//                            telemetry.update();
-                        }
+//
+//                        while(true){
+//                            Pose2d currentPose = tdp.calcPose(45, 10.5, 0.2, mechdrive,telemetry);
+////                            telemetry.addData("current pose", currentPose.toString());
+////                            telemetry.update();
+//                        }
                     }
 
                     @Override
