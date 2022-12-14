@@ -2,12 +2,10 @@ package nullrobotics.auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.opencv.core.Point;
 import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.ArrayList;
 
@@ -19,12 +17,11 @@ import nullrobotics.lib.Label;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.VoidLib;
-import nullrobotics.vision.TapeDetectionPipeline;
 
 
 @Config
 //@Autonomous(name="NC One Plus Three <LG2>", group = "Auto")
-public class OnePlusThree extends LinearOpMode {
+public class OnePlusOne extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();

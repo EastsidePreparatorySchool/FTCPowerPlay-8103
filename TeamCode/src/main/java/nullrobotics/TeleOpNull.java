@@ -23,6 +23,7 @@ public class TeleOpNull extends LinearOpMode {
     private boolean hasLiftBtnsBeenReleased;
     private boolean hasDpadBeenReleased;
     public int LiftCurrentPositionIndex;
+    public int LiftMinPassthruIndex = 5;
 
     
     @Override
@@ -75,6 +76,16 @@ public class TeleOpNull extends LinearOpMode {
             double drive = -gamepad1.left_stick_y;
             double strafe = -gamepad1.left_stick_x;
             double turn  =  gamepad1.right_stick_x;
+
+            //Lock to positions
+            if(Math.abs(drive) < 0.1){
+                drive = 0;
+                telemetry.addData("Stick Notice", "Fwd/Back under threshold, setting to zero");
+            }
+            if(Math.abs(strafe) < 0.1){
+                strafe = 0;
+                telemetry.addData("Stick Notice", "Left/Right under threshold, setting to zero");
+            }
 
             // Dpad Drive
             if (gamepad1.dpad_right) strafe = -1;
@@ -167,7 +178,7 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             //toggle side
-            if(gamepad2.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= 5 )) {
+            if(gamepad2.b && hasFBBtnsBeenReleased && ( LiftCurrentPositionIndex >= LiftMinPassthruIndex )) {
                 fourbar.FBToggleSide();
                 hasFBBtnsBeenReleased = false;
             }
@@ -190,17 +201,19 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }
 
-//            if(gamepad2.y && hasFBBtnsBeenReleased) {
-//                if(fourbar.FBCurrentPositionIndex != 3) {
-//                    fourbar.lift(VoidLib.LIFT_POSITIONS[2], VoidLib.LIFT_TELEOP_SPEED);
-////                    fourbar.liftWaitForStop();
-//                    asyncLiftThread = new Thread( () -> {
-//                        sleep(1000);
-//                        fourbar.FBReachCatalogical(1, 3);
-//                    } );
-//                    asyncLiftThread.start();
-//                }
-//            }
+            if(gamepad2.y && hasFBBtnsBeenReleased) {
+                if(fourbar.FBCurrentPositionIndex != 3) {
+                    fourbar.lift(VoidLib.LIFT_POSITIONS[7], VoidLib.LIFT_TELEOP_SPEED);
+                    LiftCurrentPositionIndex = 7;
+                    asyncLiftThread = new Thread( () -> {
+                        while(fourbar.getLiftLeftPosition() < VoidLib.LIFT_POSITIONS[LiftMinPassthruIndex]){
+                            //do nothing
+                        }
+                        fourbar.FBReachCatalogical(1, 3);
+                    } );
+                    asyncLiftThread.start();
+                }
+            }
 
             // Claw
             if(gamepad2.right_trigger == 0){

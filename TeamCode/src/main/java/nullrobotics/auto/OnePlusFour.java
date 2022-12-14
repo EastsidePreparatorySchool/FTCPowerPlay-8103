@@ -1,6 +1,5 @@
 package nullrobotics.auto;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,7 +22,7 @@ import nullrobotics.vision.TapeDetectionPipeline;
 
 
 @Autonomous
-public class test extends LinearOpMode {
+public class OnePlusFour extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -138,20 +137,23 @@ public class test extends LinearOpMode {
         //Build first trajectory to the pole
         TrajectorySequence trajHomeToPole = mechdrive.trajectorySequenceBuilder(start)
                 .addTemporalMarker(0.01,() -> {
-                    //Scan for april tags
-                    /*ArrayList<AprilTagDetection> detections = apriltgsi.scan(1000);
-                    if(detections.size() != 0) {
-                        couldFindTag = true;
-                        this.primaryDetection = detections.get(0);
-                        apriltgsi.addDetectionToTelemetry(primaryDetection);
-                    } else {
-                        couldFindTag = false;
-                        //figure out what to do
-                    }
-                    fourbar.customClawPos(VoidLib.CLAW_CLOSED_POS + 0.1);
 //                    fourbar.reach(
 //                            VoidLib.FOUR_BAR_POSITIONS_NEO[1][1] - 0.05
-//                    );*/
+//                    );
+//                    Thread aprilscanner = new Thread( () -> {
+//                        //Scan for april tags
+//                        ArrayList<AprilTagDetection> detections = apriltgsi.scan(1000);
+//                        if(detections.size() != 0) {
+//                            couldFindTag = true;
+//                            this.primaryDetection = detections.get(0);
+//                            apriltgsi.addDetectionToTelemetry(primaryDetection);
+//                        } else {
+//                            couldFindTag = false;
+//                            //figure out what to do
+//                        }
+//                        fourbar.customClawPos(VoidLib.CLAW_CLOSED_POS + 0.1);
+//                    });
+//                    aprilscanner.start();
                 })
                 .addTemporalMarker(2, () -> fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED))
                 .addTemporalMarker(3, () -> fourbar.FBReachToIndex(1, 3))
