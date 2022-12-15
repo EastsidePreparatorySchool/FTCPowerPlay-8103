@@ -195,9 +195,32 @@ public class FourBarLift {
 
     //forward/backward already handled by the DCMotor.Direction
     private void encode(double speed, int ticks) {
+        //Set right offset so that maintain equalish current
+        int offset = -28;
+        int step = 150;
+        /*if (ticks <= 0) {
+            offset = 0;
+        } else if (ticks <= step) {
+            offset = 1;
+        } else if (ticks <= 2*step) {
+            offset = 2;
+        } else if (ticks <= 3*step) {
+            offset = 3;
+        } else if (ticks <= 4*step) {
+            offset = 4;
+        } else if (ticks <= 5*step) {
+            offset = 5;
+        } else if (ticks <= 6*step) {
+            offset = 6;
+        } else if (ticks <= 7*step) {
+            offset = 7;
+        } else {
+            offset = 8;
+        }*/
+
         // Determine new target position, and pass to motor controller
         LiftMotorL.setTargetPosition(ticks);
-        LiftMotorR.setTargetPosition(ticks);
+        LiftMotorR.setTargetPosition(ticks+offset);
 //        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Locked & loaded.", ":)");
