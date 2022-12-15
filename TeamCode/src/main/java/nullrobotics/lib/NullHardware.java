@@ -9,13 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class NullHardware {
     public DcMotorEx DriveMotorFL = null;
@@ -114,7 +109,7 @@ public class NullHardware {
         DriveMotorBR.setTargetPosition(newTargetBR);
 
         int initialPositionFL = DriveMotorFL.getCurrentPosition();
-        double accelPeriodLength = (newTargetFL - initialPositionFL) * VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT;
+        double accelPeriodLength = (newTargetFL - initialPositionFL) * NullDoc.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT;
 
         telemetry.addData("Locked & loaded.", "Waiting 5 seconds.");
         telemetry.addData("LF position", DriveMotorFL.getCurrentPosition());
@@ -175,7 +170,7 @@ public class NullHardware {
             if(distanceFromBegin <= accelPeriodLength && useAccelCurve){
                 //Accel
                 double accelPeriodPercent = distanceFromBegin / accelPeriodLength;
-                double curveMultiplier = (1-VoidLib.ENCODER_DRIVE_ACCEL_MIN_SPEED) * calculateAccelMultiplier(accelPeriodPercent, true) + VoidLib.ENCODER_DRIVE_ACCEL_MIN_SPEED;
+                double curveMultiplier = (1- NullDoc.ENCODER_DRIVE_ACCEL_MIN_SPEED) * calculateAccelMultiplier(accelPeriodPercent, true) + NullDoc.ENCODER_DRIVE_ACCEL_MIN_SPEED;
 
                 telemetry.addData("Curve Multiplier", curveMultiplier);
                 telemetry.addData("Distance from Beginning", distanceFromBegin);
@@ -191,7 +186,7 @@ public class NullHardware {
             } else if(distanceFromEnd <= accelPeriodLength && useAccelCurve){
                 //Decel
                 double decelPeriodPercent = distanceFromEnd / accelPeriodLength;
-                double curveMultiplier = (1-VoidLib.ENCODER_DRIVE_DECEL_MIN_SPEED) * calculateAccelMultiplier(decelPeriodPercent, false) + VoidLib.ENCODER_DRIVE_DECEL_MIN_SPEED;
+                double curveMultiplier = (1- NullDoc.ENCODER_DRIVE_DECEL_MIN_SPEED) * calculateAccelMultiplier(decelPeriodPercent, false) + NullDoc.ENCODER_DRIVE_DECEL_MIN_SPEED;
 
                 telemetry.addData("Curve Multiplier", curveMultiplier);
                 telemetry.addData("Distance from End", distanceFromEnd);
@@ -216,7 +211,7 @@ public class NullHardware {
             }
 
             //ACCELERATION CURVE
-//            if(beginningPositionDifference <= ticksFL * VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT){
+//            if(beginningPositionDifference <= ticksFL * NullDoc.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT){
 //                double speedMultiplier = depr_calculateAccelMultiplier(beginningPositionDifference, ticksFL);
 //
 //                DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
@@ -224,12 +219,12 @@ public class NullHardware {
 //                DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
 //                DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
 //
-//                telemetry.addData("Accel Threshold", VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT);
+//                telemetry.addData("Accel Threshold", NullDoc.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT);
 //                telemetry.addData("Speed Multiplier", speedMultiplier);
 //            }
 
             //DECELERATION CURVE
-//            if(endPositionDifference <= ticksFL * VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT){
+//            if(endPositionDifference <= ticksFL * NullDoc.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT){
 //                double speedMultiplier = depr_calculateAccelMultiplier( endPositionDifference, ticksFL);
 //
 //                DriveMotorFL.setPower(Math.abs(speed * speedMultiplier));
@@ -237,7 +232,7 @@ public class NullHardware {
 //                DriveMotorBL.setPower(Math.abs(speed * speedMultiplier));
 //                DriveMotorBR.setPower(Math.abs(speed * speedMultiplier));
 //
-//                telemetry.addData("Decel Threshold", VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT);
+//                telemetry.addData("Decel Threshold", NullDoc.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT);
 //                telemetry.addData("Speed Multiplier", speedMultiplier);
 //            }
 
@@ -276,82 +271,82 @@ public class NullHardware {
 
     //Drive
     public void drive(double speed, double in){
-        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+        int ticks = (int) ( in * NullDoc.TICKS_PER_IN );
         encode(speed, ticks, ticks, ticks, ticks);
     }
 
     public void drive(double in){
-        this.drive(VoidLib.DEFAULT_DRIVE_SPEED, in);
+        this.drive(NullDoc.DEFAULT_DRIVE_SPEED, in);
     }
 
     public void drive(double speed, double in, boolean useAccelCurve){
-        int ticks = (int) ( in * VoidLib.TICKS_PER_IN );
+        int ticks = (int) ( in * NullDoc.TICKS_PER_IN );
         encode(speed, ticks, ticks, ticks, ticks, useAccelCurve);
     }
 
     public void drive(double in, boolean useAccelCurve){
-        this.drive(VoidLib.DEFAULT_DRIVE_SPEED, in, useAccelCurve);
+        this.drive(NullDoc.DEFAULT_DRIVE_SPEED, in, useAccelCurve);
     }
 
     //Strafe
     public void strafe(double speed, double in_left){
-        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN_STRAFE );
+        int ticks = (int) ( in_left * NullDoc.TICKS_PER_IN_STRAFE );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
     public void strafe(double in_left){
-        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in_left);
+        this.strafe(NullDoc.DEFAULT_DRIVE_SPEED, in_left);
     }
 
     public void strafe(double speed, double in_left, boolean useAccelCurve){
-        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN_STRAFE );
+        int ticks = (int) ( in_left * NullDoc.TICKS_PER_IN_STRAFE );
         encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
     }
 
     public void strafe(double in_left, boolean useAccelCurve){
-        this.strafe(VoidLib.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
+        this.strafe(NullDoc.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
     }
 
     public void strafe_classic(double speed, double in_left){
-        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN );
+        int ticks = (int) ( in_left * NullDoc.TICKS_PER_IN );
         encode(speed, ticks, -ticks, -ticks, ticks);
     }
 
     public void strafe_classic(double in_left){
-        this.strafe_classic(VoidLib.DEFAULT_DRIVE_SPEED, in_left);
+        this.strafe_classic(NullDoc.DEFAULT_DRIVE_SPEED, in_left);
     }
 
     public void strafe_classic(double speed, double in_left, boolean useAccelCurve){
-        int ticks = (int) ( in_left * VoidLib.TICKS_PER_IN );
+        int ticks = (int) ( in_left * NullDoc.TICKS_PER_IN );
         encode(speed, ticks, -ticks, -ticks, ticks, useAccelCurve);
     }
 
     public void strafe_classic(double in_left, boolean useAccelCurve){
-        this.strafe_classic(VoidLib.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
+        this.strafe_classic(NullDoc.DEFAULT_DRIVE_SPEED, in_left, useAccelCurve);
     }
 
     //Turn
     public void turn(double speed, double deg){
-        int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
+        int ticks = (int) ( deg * NullDoc.TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks);
     }
 
     public void turn(double deg){
-        this.turn(VoidLib.DEFAULT_DRIVE_SPEED, deg);
+        this.turn(NullDoc.DEFAULT_DRIVE_SPEED, deg);
     }
 
     public void turn(double speed, double deg, boolean useAccelCurve){
-        int ticks = (int) ( deg * VoidLib.TICKS_PER_DEG );
+        int ticks = (int) ( deg * NullDoc.TICKS_PER_DEG );
         encode(speed, -ticks, ticks, -ticks, ticks, useAccelCurve);
     }
 
     public void turn(double deg, boolean useAccelCurve){
-        this.turn(VoidLib.DEFAULT_DRIVE_SPEED, deg, useAccelCurve);
+        this.turn(NullDoc.DEFAULT_DRIVE_SPEED, deg, useAccelCurve);
     }
 
 //    private double depr_calculateAccelMultiplier(double positionDifference, double totalDistance){
 //        double speedMultiplier = 0.5 * Math.sin(
-//                -1 * Math.PI * ((positionDifference / (VoidLib.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT * totalDistance)) + 0.5)
+//                -1 * Math.PI * ((positionDifference / (NullDoc.ENCODER_DRIVE_ACCEL_PERIOD_PERCENT * totalDistance)) + 0.5)
 //        ) + 0.5;
 //        return speedMultiplier;
 //    }

@@ -3,7 +3,9 @@ package nullrobotics.lib;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -13,8 +15,8 @@ public class FourBarLift {
     public DcMotorEx LiftMotorL = null;
     private DcMotorEx LiftMotorR = null;
 
-    private Servo FourBarServoL = null;
-    private Servo FourBarServoR = null;
+    private ServoImplEx FourBarServoL = null;
+    private ServoImplEx FourBarServoR = null;
 
     private Servo ClawServo = null;
 
@@ -57,8 +59,18 @@ public class FourBarLift {
         LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Setup four bar servos
-        FourBarServoL = map.servo.get("FourBarL");
-        FourBarServoR = map.servo.get("FourBarR");
+//        FourBarServoL = map.servo.get("FourBarL");
+//        FourBarServoR = map.servo.get("FourBarR"); NOT GOOD FOR NEW SERVOS
+
+        FourBarServoL = map.get(ServoImplEx.class, "FourBarL");
+        FourBarServoR = map.get(ServoImplEx.class, "FourBarR");
+
+        //set extended range for the new fancy servos
+        FourBarServoL.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        FourBarServoR.setPwmRange(new PwmControl.PwmRange(500, 2500));
+
+        FourBarServoL.setPwmEnable();
+        FourBarServoR.setPwmEnable();
 
         FourBarServoL.setDirection(Servo.Direction.FORWARD);
         FourBarServoR.setDirection(Servo.Direction.REVERSE);
@@ -74,12 +86,12 @@ public class FourBarLift {
     //Claw
 
     public void openClaw(){
-        ClawServo.setPosition(VoidLib.CLAW_OPEN_POS);
+        ClawServo.setPosition(NullDoc.CLAW_OPEN_POS);
         isClawOpen = true;
     }
 
     public void closeClaw(){
-        ClawServo.setPosition(VoidLib.CLAW_CLOSED_POS);
+        ClawServo.setPosition(NullDoc.CLAW_CLOSED_POS);
         isClawOpen = false;
     }
 
@@ -91,19 +103,19 @@ public class FourBarLift {
         }
     }
 
-    public void customClawPos(double clawPos) {
+    public void gotoCustomClawPos(double clawPos) {
         ClawServo.setPosition(clawPos);
     }
 
     //Four Bar Mechanism
     public void reach(double pos) {
-        FourBarServoL.setPosition(pos + 0.00);
-        FourBarServoR.setPosition(pos + 0.00);
+        FourBarServoL.setPosition(pos + NullDoc.FOUR_BAR_LEFT_OFFSET);
+        FourBarServoR.setPosition(pos + NullDoc.FOUR_BAR_RIGHT_OFFSET);
     }
 
     public void FBReachToIndex(int side, int index) {
         this.reach(
-                VoidLib.FOUR_BAR_POSITIONS_NEO[side][index]
+                NullDoc.FOUR_BAR_POSITIONS_NEO[side][index]
                 );
     }
 
@@ -116,12 +128,12 @@ public class FourBarLift {
             //what the fuck happened
         }
 //        FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
-        this.reach(VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]);
+        this.reach(NullDoc.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]);
     }
 
 //    public void FBReachNextPos() {
 //        this.FBCurrentPositionIndex ++;
-//        if(this.FBCurrentPositionIndex > VoidLib.FOUR_BAR_POSITIONS[this.FBCurrentSideIndex].length - 1){
+//        if(this.FBCurrentPositionIndex > NullDoc.FOUR_BAR_POSITIONS[this.FBCurrentSideIndex].length - 1){
 //            this.FBCurrentPositionIndex = 0;
 //        }
 //        this.FBReachToIndex(this.FBCurrentSideIndex, this.FBCurrentPositionIndex);
@@ -130,7 +142,7 @@ public class FourBarLift {
     public void FBReachCatalogical(int index) {
 //        this.FBCurrentPositionIndex = index;
 //        this.reach(
-//                VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
+//                NullDoc.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
 //        );
         this.FBReachCatalogical(this.FBCurrentSideIndex, index);
     }
@@ -139,17 +151,17 @@ public class FourBarLift {
         this.FBCurrentPositionIndex = index;
         this.FBCurrentSideIndex = side;
 
-        for (int i = 0; i < 5; i++) {
-            double currentPos = this.FourBarServoL.getPosition();
-            double targetPos = VoidLib.FOUR_BAR_POSITIONS_NEO[side][index];
-            double middlePos = (currentPos + targetPos) / 2;
-            this.reach(middlePos);
-        }
+//        for (int i = 0; i < 5; i++) {
+//            double currentPos = this.FourBarServoL.getPosition();
+//            double targetPos = NullDoc.FOUR_BAR_POSITIONS_NEO[side][index];
+//            double middlePos = (currentPos + targetPos) / 2;
+//            this.reach(middlePos);
+//        }
 
-        this.tsleep(200);
+//        this.tsleep(200);
 
         this.reach(
-                VoidLib.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
+                NullDoc.FOUR_BAR_POSITIONS_NEO[this.FBCurrentSideIndex][this.FBCurrentPositionIndex]
         );
     }
     
@@ -172,6 +184,14 @@ public class FourBarLift {
     public int getLiftRightPosition(){
         return LiftMotorR.getCurrentPosition();
     }
+
+    public double getFBLeftPosition() { return FourBarServoL.getPosition(); }
+
+    public double getFBRightPosition() { return FourBarServoR.getPosition(); }
+
+    public double getFBLeftPositionAdjusted() { return FourBarServoL.getPosition() - NullDoc.FOUR_BAR_LEFT_OFFSET; }
+
+    public double getFBRightPositionAdjusted() { return FourBarServoR.getPosition() - NullDoc.FOUR_BAR_RIGHT_OFFSET; }
 
     //forward/backward already handled by the DCMotor.Direction
     private void encode(double speed, int ticks) {

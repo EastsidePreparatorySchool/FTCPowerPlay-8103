@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.lib.NullHardware;
 
 /**
@@ -23,7 +23,7 @@ public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         chassis.init(hardwareMap, telemetry);
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

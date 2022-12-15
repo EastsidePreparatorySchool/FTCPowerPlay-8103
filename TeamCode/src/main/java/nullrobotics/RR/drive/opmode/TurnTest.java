@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
@@ -26,8 +26,8 @@ public class TurnTest extends LinearOpMode {
         fourbar.init(hardwareMap, telemetry);
 
         // RR
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
-        SampleMecanumDrive mechdrive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive mechdrive = new NullMecanumDrive(chassis, hardwareMap);
 
         waitForStart();
 

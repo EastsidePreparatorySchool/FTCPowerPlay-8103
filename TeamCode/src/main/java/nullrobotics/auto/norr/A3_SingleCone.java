@@ -12,8 +12,8 @@ import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
+import nullrobotics.lib.NullDoc;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
 
 //@Autonomous(name="[3T] Cone Cycle", group="Auto")
 public class A3_SingleCone extends LinearOpMode {
@@ -60,7 +60,7 @@ public class A3_SingleCone extends LinearOpMode {
 
         //3rd. Lift the slides and strafe in
 
-        fourbar.lift(1200, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(1200, NullDoc.LIFT_TELEOP_SPEED);
         fourbar.liftWaitForStop();
 
         chassis.tsleep(1000);
@@ -99,7 +99,7 @@ public class A3_SingleCone extends LinearOpMode {
         } else if (signalDirection == Label.BLUECORNER){
             chassis.strafe(-12, true);
         }
-        fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+        fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
         fourbar.liftWaitForStop();
 
         //6th. Go to the right zone

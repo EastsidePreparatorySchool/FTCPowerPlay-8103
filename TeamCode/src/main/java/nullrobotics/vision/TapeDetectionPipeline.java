@@ -1,40 +1,28 @@
 package nullrobotics.vision;
 
 import static org.opencv.core.CvType.CV_32F;
-import static org.opencv.core.CvType.CV_32S;
-
-import android.graphics.Color;
-import android.graphics.Rect;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
-import android.graphics.Color;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Vector;
-import java.util.Collections;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 
 
 public class TapeDetectionPipeline extends OpenCvPipeline {
@@ -181,7 +169,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         return corrected;
     }
 
-    public Pose2d calcPose(double x, double y, double theta, SampleMecanumDrive mechDrive, Telemetry telemetry) {
+    public Pose2d calcPose(double x, double y, double theta, NullMecanumDrive mechDrive, Telemetry telemetry) {
         double angleToHeading = 0;
         double distToBottomOfFrame;
         double centerOffset;

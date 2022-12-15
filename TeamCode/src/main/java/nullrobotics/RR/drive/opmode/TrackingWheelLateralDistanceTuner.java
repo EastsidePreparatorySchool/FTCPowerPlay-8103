@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.RR.drive.StandardTrackingWheelLocalizer;
 import nullrobotics.lib.NullHardware;
 
@@ -73,12 +73,12 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         chassis.init(hardwareMap, telemetry);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
                     + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
-                    + "(hardwareMap));\" is called in SampleMecanumDrive.java");
+                    + "(hardwareMap));\" is called in NullMecanumDrive.java");
         }
 
         telemetry.addLine("Prior to beginning the routine, please read the directions "

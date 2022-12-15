@@ -8,7 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import nullrobotics.RR.drive.SampleMecanumDrive;
+
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.lib.NullHardware;
 
 /**
@@ -54,7 +55,7 @@ public class MotorDirectionDebugger extends LinearOpMode {
 
         chassis.init(hardwareMap, telemetry);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
 
         telemetryDash.addLine("Press play to begin the debugging opmode");
         telemetryDash.update();

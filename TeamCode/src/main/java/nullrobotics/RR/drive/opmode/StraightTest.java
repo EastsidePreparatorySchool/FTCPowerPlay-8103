@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
@@ -32,7 +32,7 @@ public class StraightTest extends LinearOpMode {
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 

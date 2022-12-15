@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
 
 @Autonomous(name="[T8] Center", group="Test")
 public class T8_Center extends LinearOpMode {

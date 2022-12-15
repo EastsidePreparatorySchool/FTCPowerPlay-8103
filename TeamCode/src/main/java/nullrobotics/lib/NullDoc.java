@@ -1,8 +1,6 @@
 package nullrobotics.lib;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-public class VoidLib {
+public class NullDoc {
 
     //Methods
 
@@ -47,19 +45,34 @@ public class VoidLib {
     //Four Bar
 
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
-            new double[]{ // High = Top
-                    0.69, //0.66, //Capstone
-                    0.695, //Intake 0.69
-                    0.85, //Place
-                    0.92 //Top
+//            new double[]{ // High = Top
+//                    0.69, //0.66, //Capstone
+//                    0.695, //Intake 0.69
+//                    0.85, //Place
+//                    0.92 //Top
+//            },
+//            new double[]{ // Low = Top
+//                    0.15, //0.31, //Capstone
+//                    0.295, //Intake 0.30
+//                    0.15, //Place
+//                    0.08 //Top
+//            }
+            new double[]{ // Front (High = Top)
+                    1, // Legacy
+                    0.74, // Intake
+                    0.74, // Placing NEED
+                    0.74 // Top NEED
             },
-            new double[]{ // Low = Top
-                    0.15, //0.31, //Capstone
-                    0.295, //Intake 0.30
-                    0.15, //Place
-                    0.08 //Top
+            new double[]{ //Back (Low = Top)
+                    0, // Legacy
+                    0.27,
+                    0.09,
+                    0.05
             }
     };
+
+    public static double FOUR_BAR_LEFT_OFFSET = -0.03 ;
+    public static double FOUR_BAR_RIGHT_OFFSET = -0.02 ;
 
 
     //Claw

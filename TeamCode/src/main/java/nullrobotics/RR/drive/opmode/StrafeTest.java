@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
@@ -28,7 +28,7 @@ public class StrafeTest extends LinearOpMode {
         Telemetry telemetryDash = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         chassis.init(hardwareMap, telemetry);
         fourbar.init(hardwareMap, telemetry);
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
 
         Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())
                 .strafeRight(DISTANCE)

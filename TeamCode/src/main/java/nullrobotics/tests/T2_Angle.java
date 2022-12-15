@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
+import nullrobotics.lib.NullDoc;
 
 @Autonomous(name="[T2] Angle 180 Deg", group="Test")
 public class T2_Angle extends LinearOpMode {
@@ -27,7 +27,7 @@ public class T2_Angle extends LinearOpMode {
 
         waitForStart();
 
-        chassis.turn(VoidLib.DEFAULT_DRIVE_SPEED, 180);
+        chassis.turn(NullDoc.DEFAULT_DRIVE_SPEED, 180);
     }
 
 

@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullHardware;
 
@@ -23,8 +23,8 @@ public class RR_Straight_Test extends LinearOpMode {
         fourbar.init(hardwareMap, telemetry);
 
         // RR
-        SampleMecanumDrive drive = new SampleMecanumDrive(chassis, hardwareMap);
-        SampleMecanumDrive mechdrive = new SampleMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive drive = new NullMecanumDrive(chassis, hardwareMap);
+        NullMecanumDrive mechdrive = new NullMecanumDrive(chassis, hardwareMap);
         Trajectory trajectory = mechdrive.trajectoryBuilder(new Pose2d())
                 .forward(72)
                 .build();

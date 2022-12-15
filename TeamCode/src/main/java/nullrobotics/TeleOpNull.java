@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullDoc;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
 // RR
 
 
@@ -35,6 +35,7 @@ public class TeleOpNull extends LinearOpMode {
 
         fourbar.FBReachToIndex(0, 1);
         fourbar.FBCurrentPositionIndex = 1;
+        fourbar.openClaw();
 
         // Wait for start
         waitForStart();
@@ -100,7 +101,7 @@ public class TeleOpNull extends LinearOpMode {
 
             // Slow Mode
             if(gamepad1.right_trigger > 0.05) {
-                multiplier = VoidLib.SLOWMODE_MULTIPLIER;
+                multiplier = NullDoc.SLOWMODE_MULTIPLIER;
             } else {
                 multiplier = 1;
             }
@@ -126,49 +127,35 @@ public class TeleOpNull extends LinearOpMode {
 
             //Up by one stage
             if((gamepad2.left_bumper || gamepad2.dpad_up) && hasLiftBtnsBeenReleased) {
-
-                //if the reset is activated, then do that.
-//                if(activateLiftEncoderReset){
-//                    telemetry.addData("Resetting lift encoders", activateLiftEncoderReset);
-//                    fourbar.resetLiftEncoders();
-//                    activateLiftEncoderReset = false;
-//                }
-
                 LiftCurrentPositionIndex ++;
-                if(LiftCurrentPositionIndex > VoidLib.LIFT_POSITIONS.length - 1){
-                    LiftCurrentPositionIndex = VoidLib.LIFT_POSITIONS.length -1;
+                //Make sure the LiftCurrentPositionIndex doesn't exceed the array length
+                if(LiftCurrentPositionIndex > NullDoc.LIFT_POSITIONS.length - 1){
+                    LiftCurrentPositionIndex = NullDoc.LIFT_POSITIONS.length -1;
                 }
+                // Skip the stack positions on the way up
                 if (LiftCurrentPositionIndex == 1){
                     LiftCurrentPositionIndex = 5;
-                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 }
-                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_SPEED);
+                fourbar.lift(NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex], NullDoc.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
 
             //Down by one stage
             if(gamepad2.dpad_down && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex --;
+                //Make sure the LiftCurrentPositionIndex doesn't go below zero
                 if(LiftCurrentPositionIndex < 0){
                     LiftCurrentPositionIndex = 0;
                 }
-
-//                if(LiftCurrentPositionIndex == 0){
-//                    //dont brake, float
-//                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//                } else {
-//                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                }
-
-                fourbar.lift(VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex], VoidLib.LIFT_TELEOP_DESC_SPEED);
-
+                fourbar.lift(NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex], NullDoc.LIFT_TELEOP_DESC_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
 
             //Down all the way
             if(gamepad2.left_trigger > 0.05 && hasLiftBtnsBeenReleased) {
                 LiftCurrentPositionIndex = 0;
-                fourbar.lift(VoidLib.LIFT_POSITIONS[0], VoidLib.LIFT_TELEOP_SPEED);
+                fourbar.lift(NullDoc.LIFT_POSITIONS[0], NullDoc.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
 
@@ -203,10 +190,10 @@ public class TeleOpNull extends LinearOpMode {
 
             if(gamepad2.y && hasFBBtnsBeenReleased) {
                 if(fourbar.FBCurrentPositionIndex != 3) {
-                    fourbar.lift(VoidLib.LIFT_POSITIONS[7], VoidLib.LIFT_TELEOP_SPEED);
+                    fourbar.lift(NullDoc.LIFT_POSITIONS[7], NullDoc.LIFT_TELEOP_SPEED);
                     LiftCurrentPositionIndex = 7;
                     asyncLiftThread = new Thread( () -> {
-                        while(fourbar.getLiftLeftPosition() < VoidLib.LIFT_POSITIONS[LiftMinPassthruIndex]){
+                        while(fourbar.getLiftLeftPosition() < NullDoc.LIFT_POSITIONS[LiftMinPassthruIndex]){
                             //do nothing
                         }
                         fourbar.FBReachCatalogical(1, 3);
@@ -238,7 +225,7 @@ public class TeleOpNull extends LinearOpMode {
             double[] liftMotorData = fourbar.getLiftMotorData();
             telemetry.addData("Lift Encoder Positions", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
             telemetry.addData("Lift Encoder Targets", "Left: " + liftMotorData[2] + ", Right: " + liftMotorData[3]);
-            telemetry.addData("Lift Position Ideal Height", VoidLib.LIFT_POSITIONS[LiftCurrentPositionIndex]);
+            telemetry.addData("Lift Position Ideal Height", NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
 

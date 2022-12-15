@@ -8,16 +8,14 @@ import org.opencv.core.Point;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 
-import java.util.ArrayList;
-
-import nullrobotics.RR.drive.SampleMecanumDrive;
+import nullrobotics.RR.drive.NullMecanumDrive;
 import nullrobotics.RR.trajectorysequence.TrajectorySequence;
 import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
+import nullrobotics.lib.NullDoc;
 import nullrobotics.lib.NullHardware;
 import nullrobotics.lib.CameraSystem;
-import nullrobotics.lib.VoidLib;
 import nullrobotics.vision.TapeDetectionPipeline;
 
 
@@ -30,7 +28,7 @@ public class OnePlusFour extends LinearOpMode {
     AprilTagImplementation apriltgsi = new AprilTagImplementation();
     CameraSystem camsys = new CameraSystem();
     TapeDetectionPipeline tdp = new TapeDetectionPipeline();
-    SampleMecanumDrive mechdrive;
+    NullMecanumDrive mechdrive;
     Point[] linePts = new Point[4];
 
     Label cornerColor;
@@ -68,7 +66,7 @@ public class OnePlusFour extends LinearOpMode {
                 }
         );
 
-        mechdrive = new SampleMecanumDrive(chassis, hardwareMap);
+        mechdrive = new NullMecanumDrive(chassis, hardwareMap);
 
         //make variables
         Pose2d start;
@@ -138,7 +136,7 @@ public class OnePlusFour extends LinearOpMode {
         TrajectorySequence trajHomeToPole = mechdrive.trajectorySequenceBuilder(start)
                 .addTemporalMarker(0.01,() -> {
 //                    fourbar.reach(
-//                            VoidLib.FOUR_BAR_POSITIONS_NEO[1][1] - 0.05
+//                            NullDoc.FOUR_BAR_POSITIONS_NEO[1][1] - 0.05
 //                    );
 //                    Thread aprilscanner = new Thread( () -> {
 //                        //Scan for april tags
@@ -151,11 +149,11 @@ public class OnePlusFour extends LinearOpMode {
 //                            couldFindTag = false;
 //                            //figure out what to do
 //                        }
-//                        fourbar.customClawPos(VoidLib.CLAW_CLOSED_POS + 0.1);
+//                        fourbar.customClawPos(NullDoc.CLAW_CLOSED_POS + 0.1);
 //                    });
 //                    aprilscanner.start();
                 })
-                .addTemporalMarker(2, () -> fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED))
+                .addTemporalMarker(2, () -> fourbar.lift(1250, NullDoc.LIFT_TELEOP_SPEED))
                 .addTemporalMarker(3, () -> fourbar.FBReachToIndex(1, 3))
                 .setReversed(true)
                 .splineToLinearHeading(tallPolePose, tallPolePoseRad)
@@ -201,7 +199,7 @@ public class OnePlusFour extends LinearOpMode {
                 .addTemporalMarker(1, () -> {
                     fourbar.closeClaw();
 //                    fourbar.FBReachToIndex(0, 1);
-//                    fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+//                    fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
                 })
                 .build();
         TrajectorySequence trajParkZn2Red = mechdrive.trajectorySequenceBuilder(trajStackToPole.end())
@@ -213,7 +211,7 @@ public class OnePlusFour extends LinearOpMode {
                 .addTemporalMarker(1, () -> {
                     fourbar.closeClaw();
 //                    fourbar.FBReachToIndex(0, 1);
-//                    fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+//                    fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
                 })
                 .build();
         TrajectorySequence trajParkZn3Red = mechdrive.trajectorySequenceBuilder(trajStackToPole.end())
@@ -226,7 +224,7 @@ public class OnePlusFour extends LinearOpMode {
                 .addTemporalMarker(1, () -> {
                     fourbar.closeClaw();
 //                    fourbar.FBReachToIndex(0, 1);
-//                    fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+//                    fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
                 })
                 .build();
 
@@ -241,7 +239,7 @@ public class OnePlusFour extends LinearOpMode {
                 .addTemporalMarker(1, () -> {
                     fourbar.closeClaw();
 //                    fourbar.FBReachToIndex(0, 1);
-//                    fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+//                    fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
                 })
                 .build();
         TrajectorySequence trajParkZn2Blue = mechdrive.trajectorySequenceBuilder(trajStackToPole.end())
@@ -253,7 +251,7 @@ public class OnePlusFour extends LinearOpMode {
                 .addTemporalMarker(1, () -> {
                     fourbar.closeClaw();
 //                    fourbar.FBReachToIndex(0, 1);
-//                    fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+//                    fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
                 })
                 .build();
         TrajectorySequence trajParkZn1Blue = mechdrive.trajectorySequenceBuilder(trajStackToPole.end())
@@ -266,7 +264,7 @@ public class OnePlusFour extends LinearOpMode {
                 .addTemporalMarker(1, () -> {
                     fourbar.closeClaw();
 //                    fourbar.FBReachToIndex(0, 1);
-//                    fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+//                    fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
                 })
                 .build();
 
@@ -300,7 +298,7 @@ public class OnePlusFour extends LinearOpMode {
 
         //Go to stack and pick up cone
         mechdrive.followTrajectorySequence(trajPoleToTape);
-        fourbar.lift(250, VoidLib.LIFT_TELEOP_DESC_SPEED);
+        fourbar.lift(250, NullDoc.LIFT_TELEOP_DESC_SPEED);
         mechdrive.setPoseEstimate(tdp.calcPose(45,11.5,0, mechdrive, telemetry));
         mechdrive.followTrajectorySequence(trajTapeToStack);
         mechdrive.setPoseEstimate(new Pose2d(62.75, 11.75, Math.toRadians(0)));
@@ -310,7 +308,7 @@ public class OnePlusFour extends LinearOpMode {
 
         //Go back to the pole and place cone
 
-        fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(1250, NullDoc.LIFT_TELEOP_SPEED);
         mechdrive.followTrajectorySequence(trajStackToPole);
         sleep(500);
         fourbar.FBReachToIndex(1, 2);
@@ -320,7 +318,7 @@ public class OnePlusFour extends LinearOpMode {
         for (int i = 0; i < 3; i++) {
             //Go to stack and pick up cone
             mechdrive.followTrajectorySequence(trajPoleToTape2);
-            fourbar.lift(190-(i*65), VoidLib.LIFT_TELEOP_DESC_SPEED);
+            fourbar.lift(190-(i*65), NullDoc.LIFT_TELEOP_DESC_SPEED);
             mechdrive.setPoseEstimate(tdp.calcPose(43, 11.25, 0, mechdrive, telemetry));
             mechdrive.followTrajectorySequence(trajTapeToStack);
             mechdrive.setPoseEstimate(new Pose2d(62.5, 11.75, Math.toRadians(0)));
@@ -331,7 +329,7 @@ public class OnePlusFour extends LinearOpMode {
 
             //Go back to the pole and place cone
 
-            fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED);
+            fourbar.lift(1250, NullDoc.LIFT_TELEOP_SPEED);
             mechdrive.followTrajectorySequence(trajStackToPole);
             //sleep(250);
             fourbar.FBReachToIndex(1, 2);
@@ -339,7 +337,7 @@ public class OnePlusFour extends LinearOpMode {
             fourbar.openClaw();
         }
         mechdrive.followTrajectorySequence(trajPoleToTape2);
-        fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+        fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
         /*
         //Park
         if(couldFindTag && getCornerColor() == Label.REDCORNER){
@@ -371,7 +369,7 @@ public class OnePlusFour extends LinearOpMode {
             telemetry.update();
         }
         fourbar.FBReachToIndex(0, 1);
-        fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+        fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
         */
         //relay telemetry
         Pose2d poseEstimate = mechdrive.getPoseEstimate();

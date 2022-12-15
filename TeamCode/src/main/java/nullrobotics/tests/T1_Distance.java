@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import nullrobotics.lib.FourBarLift;
+import nullrobotics.lib.NullDoc;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
 
 @Autonomous(name="[T1] Distance", group="Test")
 public class T1_Distance extends LinearOpMode {
@@ -27,7 +27,7 @@ public class T1_Distance extends LinearOpMode {
 
         waitForStart();
 
-        chassis.drive(VoidLib.DEFAULT_DRIVE_SPEED, 96);
+        chassis.drive(NullDoc.DEFAULT_DRIVE_SPEED, 96);
 
         chassis.tsleep(10000000);
     }

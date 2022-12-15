@@ -12,8 +12,8 @@ import nullrobotics.lib.AprilTagImplementation;
 import nullrobotics.lib.CameraSystem;
 import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.Label;
+import nullrobotics.lib.NullDoc;
 import nullrobotics.lib.NullHardware;
-import nullrobotics.lib.VoidLib;
 
 //@Autonomous(name="[4 Testing] Dual Cone", group="Auto")
 public class A4_DualCone extends LinearOpMode {
@@ -61,7 +61,7 @@ public class A4_DualCone extends LinearOpMode {
 
         //3rd. Lift the slides and strafe in
 
-        fourbar.lift(1200, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(1200, NullDoc.LIFT_TELEOP_SPEED);
         fourbar.liftWaitForStop();
 
         chassis.rest1();
@@ -88,7 +88,7 @@ public class A4_DualCone extends LinearOpMode {
 //        this.place();
 
         // (the rest of the program)
-        fourbar.lift(0, VoidLib.LIFT_TELEOP_DESC_SPEED);
+        fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
         fourbar.liftWaitForStop();
 
         //6th. Go to the right zone
@@ -139,7 +139,7 @@ public class A4_DualCone extends LinearOpMode {
         fourbar.FBReachToIndex(0, 1);
         fourbar.openClaw();
 
-        fourbar.lift(htTicks, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(htTicks, NullDoc.LIFT_TELEOP_SPEED);
         fourbar.liftWaitForStop();
 
         chassis.rest1();
@@ -152,7 +152,7 @@ public class A4_DualCone extends LinearOpMode {
 
         chassis.rest1();
 
-        fourbar.lift(htTicks+200, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(htTicks+200, NullDoc.LIFT_TELEOP_SPEED);
         fourbar.liftWaitForStop();
 
         chassis.rest1();
@@ -168,7 +168,7 @@ public class A4_DualCone extends LinearOpMode {
 
         fourbar.FBReachToIndex(0, 3);
 
-        fourbar.lift(1250, VoidLib.LIFT_TELEOP_SPEED);
+        fourbar.lift(1250, NullDoc.LIFT_TELEOP_SPEED);
         fourbar.liftWaitForStop();
 
         if(this.signalDirection == Label.BLUECORNER) {
