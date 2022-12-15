@@ -1,8 +1,16 @@
 package nullrobotics.lib;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.arcrobotics.ftclib.controller.PController;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -12,8 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class FourBarLift {
     // Motor and servo declarations
-    public DcMotorEx LiftMotorL = null;
-    private DcMotorEx LiftMotorR = null;
+    public MotorEx LiftMotorL = null;
+    private MotorEx LiftMotorR = null;
 
     private ServoImplEx FourBarServoL = null;
     private ServoImplEx FourBarServoR = null;
@@ -40,23 +48,21 @@ public class FourBarLift {
         // Initialize everything.
 
         // Setup lift motors
-        LiftMotorL = map.get(DcMotorEx.class, "LiftL");
-        LiftMotorR = map.get(DcMotorEx.class, "LiftR");
+        LiftMotorL = new MotorEx(hardwareMap, "LiftL");
+        LiftMotorR = new MotorEx(hardwareMap, "LiftR");
 
         DcMotor.Direction dirR = DcMotor.Direction.FORWARD;
         DcMotor.Direction dirF = DcMotor.Direction.REVERSE;
 
-        LiftMotorL.setDirection(dirR);
-        LiftMotorR.setDirection(dirR);
+        LiftMotorL.setInverted(false);
+        LiftMotorR.setInverted(true);
 
-        DcMotor[] LiftMotors = new DcMotor[]{ LiftMotorL, LiftMotorR };
+        Motor[] LiftMotors = new Motor[]{ LiftMotorL, LiftMotorR };
 
-        LiftMotorL.setPower(0.0);
-        LiftMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LiftMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LiftMotorR.setPower(0.0);
-        LiftMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LiftMotorL.set(0.0);
+        LiftMotorL.setRunMode(Motor.RunMode.VelocityControl);
+        LiftMotorR.set(0.0);
+        LiftMotorR.setRunMode(Motor.RunMode.VelocityControl);
 
         // Setup four bar servos
 //        FourBarServoL = map.servo.get("FourBarL");
@@ -166,15 +172,15 @@ public class FourBarLift {
     }
     
     //Lift
-    public void lift(int ticks, double speed) {
+    public void lift(double ticks, double speed) {
 //        this.endLiftMovement();
         this.encode(speed, ticks);
     }
 
     public void liftWaitForStop() {
-        while (LiftMotorL.isBusy() && LiftMotorR.isBusy()) {
+        /*while (LiftMotorL.getCurrentPosition() && LiftMotorR.isBusy()) {
             //do absolutely nothing
-        }
+        }*/
     }
 
     public int getLiftLeftPosition(){
@@ -194,26 +200,47 @@ public class FourBarLift {
     public double getFBRightPositionAdjusted() { return FourBarServoR.getPosition() - NullDoc.FOUR_BAR_RIGHT_OFFSET; }
 
     //forward/backward already handled by the DCMotor.Direction
-    private void encode(double speed, int ticks) {
-        // Determine new target position, and pass to motor controller
-        LiftMotorL.setTargetPosition(ticks);
-        LiftMotorR.setTargetPosition(ticks);
-//        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    private void encode(double speed, double ticks) {
+        double kp = 0;
+        double ki = 0;
+        double kd = 0;
+        double kf = 0;
+        PIDFController pidf = new PIDFController(kp,ki,kd,kf);
+        double output = pidf.calculate(LiftMotorL.getCurrentPosition());
+        PController pController = new PController(kp);
 
-        telemetry.addData("Locked & loaded.", ":)");
-        telemetry.addData("L position", LiftMotorL.getCurrentPosition());
-        telemetry.addData("L target (should be " + ticks + ")", LiftMotorL.getTargetPosition());
-        telemetry.addData("R position", LiftMotorR.getCurrentPosition());
-        telemetry.addData("R target (should be " + ticks + ")", LiftMotorR.getTargetPosition());
-        telemetry.addData("Speed", speed);
-        telemetry.update();
+        pController.setSetPoint(ticks);
 
-        // Turn On RUN_TO_POSITION
-        LiftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LiftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (!pController.atSetPoint()) {
+            output = pController.calculate(LiftMotorL.getCurrentPosition());
+            LiftMotorL.setRunMode(Motor.RunMode.VelocityControl);
+            LiftMotorL.setVelocity(output);
+            LiftMotorR.setVelocity(output);
+        }
+        LiftMotorL.stopMotor();
 
-        LiftMotorL.setPower(Math.abs(speed));
-        LiftMotorR.setPower(Math.abs(speed));
+
+
+//        // Determine new target position, and pass to motor controller
+//        LiftMotorL.setTargetPosition(ticks+10);
+//        LiftMotorR.setTargetPosition(ticks);
+////        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        telemetry.addData("Locked & loaded.", ":)");
+//        telemetry.addData("L position", LiftMotorL.getCurrentPosition());
+//        telemetry.addData("L target (should be " + ticks + ")", LiftMotorL.getTargetPosition());
+//        telemetry.addData("R position", LiftMotorR.getCurrentPosition());
+//        telemetry.addData("R target (should be " + ticks + ")", LiftMotorR.getTargetPosition());
+//        telemetry.addData("Speed", speed);
+//        telemetry.update();
+//
+//        // Turn On RUN_TO_POSITION
+//        LiftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        LiftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//
+//        LiftMotorL.setPower(Math.abs(speed));
+//        LiftMotorR.setPower(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -241,28 +268,28 @@ public class FourBarLift {
 
     public void endLiftMovement() {
         // Stop all motion;
-        LiftMotorL.setPower(0);
-        LiftMotorR.setPower(0);
+        LiftMotorL.set(0);
+        LiftMotorR.set(0);
 
         // Turn off RUN_TO_POSITION
-        LiftMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*LiftMotorL.set(DcMotor.RunMode.RUN_USING_ENCODER);
+        LiftMotorR.set(DcMotor.RunMode.RUN_USING_ENCODER);*/
     }
 
     public double[] getLiftMotorData() {
         return new double[]{
                 (double) LiftMotorL.getCurrentPosition(),
-                (double) LiftMotorR.getCurrentPosition(),
+                (double) LiftMotorR.getCurrentPosition()/*,
                 (double) LiftMotorL.getTargetPosition(),
                 (double) LiftMotorR.getTargetPosition(),
                 LiftMotorL.getCurrent(CurrentUnit.AMPS),
-                LiftMotorR.getCurrent(CurrentUnit.AMPS)
+                LiftMotorR.getCurrent(CurrentUnit.AMPS)*/
         };
     }
 
     public void setLift0PowerBehavior(DcMotor.ZeroPowerBehavior zeroPwrBehavior) {
-        LiftMotorL.setZeroPowerBehavior(zeroPwrBehavior);
-        LiftMotorR.setZeroPowerBehavior(zeroPwrBehavior);
+        LiftMotorL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        LiftMotorR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
     }
 
     //Telemetry
@@ -285,17 +312,17 @@ public class FourBarLift {
 
     // Debug
     public void debug_SetLiftMotorPwr(double pwr){
-        LiftMotorL.setPower(pwr);
-        LiftMotorR.setPower(pwr);
+        LiftMotorL.set(pwr);
+        LiftMotorR.set(pwr);
     }
 
     //Reset lift zeroes
     public void resetLiftEncoders(){
-        LiftMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LiftMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        LiftMotorL.setRunMode(Motor.RunMode.VelocityControl);
+        LiftMotorR.setRunMode(Motor.RunMode.VelocityControl);
+        /*
         LiftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LiftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LiftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);*/
     }
 
     //Macros

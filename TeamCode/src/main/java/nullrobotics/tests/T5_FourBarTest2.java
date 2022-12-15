@@ -2,6 +2,7 @@ package nullrobotics.tests;
 
 //Terminator, Destroyer of All, Bane of Android Studio
 
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -19,7 +20,7 @@ public class T5_FourBarTest2 extends LinearOpMode {
 
         //telemetry
         waitForStart();
-        fourbar.LiftMotorL.setPower(0.1);
+        fourbar.LiftMotorL.set(0.1);
         fourbar.tsleep(1000);
 
     }

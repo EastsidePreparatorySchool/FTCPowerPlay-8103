@@ -37,6 +37,7 @@ dependencies {
 
     // RR
     implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'org.ftclib.ftclib:core:2.0.1'
 
     implementation 'com.acmerobotics.roadrunner:core:0.5.5'
 
