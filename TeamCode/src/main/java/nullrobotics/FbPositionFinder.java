@@ -41,8 +41,8 @@ public class FbPositionFinder extends LinearOpMode {
             if((gamepad2.dpad_up) && hasLiftBtnsBeenReleased) {
 
                 LiftCurrentPositionIndex ++;
-                if(LiftCurrentPositionIndex > NullDoc.LIFT_POSITIONS.length - 1){
-                    LiftCurrentPositionIndex = NullDoc.LIFT_POSITIONS.length -1;
+                if(LiftCurrentPositionIndex > NullDoc.LIFT_POSITIONS_LEN - 1){
+                    LiftCurrentPositionIndex = NullDoc.LIFT_POSITIONS_LEN -1;
                 }
 
                 //skip the stack positions when going upward
@@ -50,7 +50,7 @@ public class FbPositionFinder extends LinearOpMode {
                     LiftCurrentPositionIndex = 5;
 //                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 }
-                fourbar.lift(NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex], NullDoc.LIFT_TELEOP_SPEED);
+                fourbar.lift(LiftCurrentPositionIndex, NullDoc.LIFT_TELEOP_SPEED);
                 hasLiftBtnsBeenReleased = false;
             }
 
@@ -61,7 +61,7 @@ public class FbPositionFinder extends LinearOpMode {
                     LiftCurrentPositionIndex = 0;
                 }
 
-                fourbar.lift(NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex], NullDoc.LIFT_TELEOP_DESC_SPEED);
+                fourbar.lift(LiftCurrentPositionIndex, NullDoc.LIFT_TELEOP_DESC_SPEED);
 
                 hasLiftBtnsBeenReleased = false;
             }
@@ -118,7 +118,7 @@ public class FbPositionFinder extends LinearOpMode {
             double[] liftMotorData = fourbar.getLiftMotorData();
             telemetry.addData("Lift Encoder Positions", "Left: " + liftMotorData[0] + ", Right: " + liftMotorData[1]);
             telemetry.addData("Lift Encoder Targets", "Left: " + liftMotorData[2] + ", Right: " + liftMotorData[3]);
-            telemetry.addData("Lift Position Ideal Height", NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex]);
+//            telemetry.addData("Lift Position Ideal Height", NullDoc.LIFT_POSITIONS[LiftCurrentPositionIndex]);
             telemetry.addData("Lift Current (Amps)", "Left:" + liftMotorData[4] + ", Right:" + liftMotorData[5]);
             telemetry.addData("Lift Position Index", LiftCurrentPositionIndex);
             telemetry.update();

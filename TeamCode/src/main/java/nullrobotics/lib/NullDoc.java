@@ -31,9 +31,11 @@ public class NullDoc {
     public static final double LIFT_TELEOP_DESC_SPEED = LIFT_TELEOP_SPEED/*0.55*/;
     public static final long LIFT_TIMEOUT = 5000; //Milliseconds
 
+//    public static final int LIFT_LEFT_OFFSET = 0;
+//    public static final int LIFT_RIGHT_OFFSET = -27;
 
-    public static final int[] LIFT_POSITIONS = new int[]{
-            -5, //Ground
+    public static final int[] LIFT_POSITIONS_LEFT = new int[]{
+            0, //Ground
             105, //2nd cone (stack)
             155, //3rd cone (stack)
             205, //4th cone (stack)
@@ -42,8 +44,22 @@ public class NullDoc {
             800, //Medium pole
             1240 //High pole
     };
-    //Four Bar
 
+    public static final int[] LIFT_POSITIONS_RIGHT = new int[]{
+            LIFT_POSITIONS_LEFT[0], //Ground
+            LIFT_POSITIONS_LEFT[1], //2nd cone (stack)
+            LIFT_POSITIONS_LEFT[2], //3rd cone (stack)
+            LIFT_POSITIONS_LEFT[3], //4th cone (stack)
+            LIFT_POSITIONS_LEFT[4], //5th cone (stack)
+            350 - 10, //Low pole
+            800 - 14, //Medium pole
+            1240 - 40 //27 //High pole
+    };
+
+    public static final int LIFT_POSITIONS_LEN = LIFT_POSITIONS_LEFT.length;
+
+
+    //Four Bar
     public static final double[][] FOUR_BAR_POSITIONS_NEO = new double[][]{
 //            new double[]{ // High = Top
 //                    0.69, //0.66, //Capstone
@@ -81,4 +97,10 @@ public class NullDoc {
 
     //Vision
 //    public static final long APRIL_SCAN_TIMEOUT = 3500;
+
+    //useful functions
+
+    public static double roundToDecimal(double value, int numOfDecimalPlaces){
+        return Math.round(value * Math.pow(10, numOfDecimalPlaces)) / Math.pow(10, numOfDecimalPlaces);
+    }
 }

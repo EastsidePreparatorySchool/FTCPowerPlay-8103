@@ -27,7 +27,7 @@ public class TapeDetection extends LinearOpMode {
         chassis.init(hardwareMap, telemetry);
         cams.init(hardwareMap);
         fourbar.init(hardwareMap, telemetry);
-        tdp.color=true;
+        tdp.isTapeRed = true;
 
         NullMecanumDrive mechdrive = new NullMecanumDrive(chassis, hardwareMap);
 

@@ -166,9 +166,12 @@ public class FourBarLift {
     }
     
     //Lift
-    public void lift(int ticks, double speed) {
-//        this.endLiftMovement();
-        this.encode(speed, ticks);
+    public void lift(int ticks, double speed){
+        this.encode(speed, ticks, ticks);
+    }
+
+    public void liftToPos(int pos, double speed){
+        this.encode(speed, NullDoc.LIFT_POSITIONS_LEFT[pos], NullDoc.LIFT_POSITIONS_RIGHT[pos]);
     }
 
     public void liftWaitForStop() {
@@ -194,10 +197,8 @@ public class FourBarLift {
     public double getFBRightPositionAdjusted() { return FourBarServoR.getPosition() - NullDoc.FOUR_BAR_RIGHT_OFFSET; }
 
     //forward/backward already handled by the DCMotor.Direction
-    private void encode(double speed, int ticks) {
+    private void encode(double speed, int ticksL, int ticksR) {
         //Set right offset so that maintain equalish current
-        int offset = -28;
-        int step = 150;
         /*if (ticks <= 0) {
             offset = 0;
         } else if (ticks <= step) {
@@ -219,17 +220,17 @@ public class FourBarLift {
         }*/
 
         // Determine new target position, and pass to motor controller
-        LiftMotorL.setTargetPosition(ticks);
-        LiftMotorR.setTargetPosition(ticks+offset);
+        LiftMotorL.setTargetPosition(ticksL);
+        LiftMotorR.setTargetPosition(ticksR);
 //        LiftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("Locked & loaded.", ":)");
-        telemetry.addData("L position", LiftMotorL.getCurrentPosition());
-        telemetry.addData("L target (should be " + ticks + ")", LiftMotorL.getTargetPosition());
-        telemetry.addData("R position", LiftMotorR.getCurrentPosition());
-        telemetry.addData("R target (should be " + ticks + ")", LiftMotorR.getTargetPosition());
-        telemetry.addData("Speed", speed);
-        telemetry.update();
+//        telemetry.addData("Locked & loaded.", ":)");
+//        telemetry.addData("L position", LiftMotorL.getCurrentPosition());
+//        telemetry.addData("L target (should be " + ticksL + ")", LiftMotorL.getTargetPosition());
+//        telemetry.addData("R position", LiftMotorR.getCurrentPosition());
+//        telemetry.addData("R target (should be " + ticksR + ")", LiftMotorR.getTargetPosition());
+//        telemetry.addData("Speed", speed);
+//        telemetry.update();
 
         // Turn On RUN_TO_POSITION
         LiftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);

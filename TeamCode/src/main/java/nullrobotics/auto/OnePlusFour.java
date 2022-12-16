@@ -282,7 +282,7 @@ public class OnePlusFour extends LinearOpMode {
 
         //Wait for start.
         waitForStart();
-        tdp.color=true;
+        tdp.isTapeRed =true;
         fourbar.FBReachToIndex(1,3);
 
         //Begin actual motion

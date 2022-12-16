@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import nullrobotics.RR.drive.NullMecanumDrive;
+import nullrobotics.lib.Label;
 
 
 public class TapeDetectionPipeline extends OpenCvPipeline {
@@ -31,6 +32,9 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     static Scalar blue = new Scalar(0, 255, 0, 0);
     static Scalar redUpper = new Scalar(255, 70, 70);
     static Scalar redLower = new Scalar(100,0, 0);
+
+    Label alliance;
+    Label side;
 
     Mat output = new Mat();
     Mat temp = new Mat();
@@ -60,11 +64,12 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     ArrayList<MatOfPoint> matOfPointList = new ArrayList<>();
     Mat hierarchy = new Mat();
     ArrayList<Point> tempList = new ArrayList<>();
-    public boolean color;
+    public boolean isTapeRed;
+    public boolean isAllianceRed;
 
     @Override
     public Mat processFrame(Mat input){
-        if (color) {
+        if (isTapeRed) {
             tolmin = new Scalar(50,155,128-tol);
             tolmax = new Scalar(255,255,128+tol);
         } else {
@@ -189,7 +194,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         double robotPosyFieldFrame = 0;
         while ((tapeWidth > 800 || tapeWidth < 500)&&(angleToHeading<mechDrive.getExternalHeading()-0.0872 || angleToHeading>mechDrive.getExternalHeading()+0.0872)) {
             angleToHeading = (Math.atan((points[0].y - points[1].y) / (points[0].x - points[1].x)));
-            distToBottomOfFrame = 2.5 + 1.7501;
+            distToBottomOfFrame = 2.125;
             centerOffset = 0;
             tapeWidth = Math.sqrt(Math.pow(points[1].x - points[2].x, 2) + Math.pow(points[1].y - points[2].y, 2));
             scale = 2 / tapeWidth;
