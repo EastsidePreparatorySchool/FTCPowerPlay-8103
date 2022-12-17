@@ -42,7 +42,7 @@ public class NullDoc {
             255, //5th cone (stack)
             350, //Low pole
             800, //Medium pole
-            1240 //High pole
+            1270 //High pole
     };
 
     public static final int[] LIFT_POSITIONS_RIGHT = new int[]{

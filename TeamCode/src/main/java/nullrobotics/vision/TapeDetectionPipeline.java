@@ -66,6 +66,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     ArrayList<Point> tempList = new ArrayList<>();
     public boolean isTapeRed;
     public boolean isAllianceRed;
+    double CameraOffset = 125;
 
     @Override
     public Mat processFrame(Mat input){
@@ -113,8 +114,8 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         Imgproc.findContours(temp,matOfPointList, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         w = temp.width();
         h = temp.height();
-        for (int y = 0; y < h; y+=20) {
-            for (int x = 0; x < w; x+=5){
+        for (int y = 0; y < h; y+=2) {
+            for (int x = 0; x < w; x+=20){
                 if (temp.get(y,x)[0] > 0) {
                     ptsArray.add(new org.opencv.core.Point((double) x, (double) y));
                 }
@@ -153,8 +154,8 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             points[3]=temp;
         }
         Imgproc.cvtColor(corrected,corrected,Imgproc.COLOR_Lab2LRGB);
-        Imgproc.line(input, new Point(0,height/2), new Point(width, height/2), rectColor,5);
-//        Imgproc.line(input, new Point(width/2,0), new Point(width/2, height), rectColor,5);
+        Imgproc.line(corrected, new Point(0,((float)height/2)+CameraOffset), new Point(width, ((float)height/2)+CameraOffset), rectColor,5);
+        //Imgproc.line(corrected, new Point((width/2)+centerOffset,0), new Point((width/2)+centerOffset, height), rectColor,5);
         for (int i=0; i<4; i++) {
             Imgproc.line(corrected, points[i], points[(1+i)%4], rectColor, 5);
         }
@@ -174,7 +175,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         return corrected;
     }
 
-    public Pose2d calcPose(double x, double y, double theta, NullMecanumDrive mechDrive, Telemetry telemetry) {
+    public Pose2d calcPose(double x, double y, double theta, Telemetry telemetry) {
         double angleToHeading = 0;
         double distToBottomOfFrame;
         double centerOffset;
@@ -192,15 +193,15 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         double distToCentery;
         double robotPosxFieldFrame = 0;
         double robotPosyFieldFrame = 0;
-        while ((tapeWidth > 800 || tapeWidth < 500)&&(angleToHeading<mechDrive.getExternalHeading()-0.0872 || angleToHeading>mechDrive.getExternalHeading()+0.0872)) {
+        while (tapeWidth > 800 || tapeWidth < 500) {
             angleToHeading = (Math.atan((points[0].y - points[1].y) / (points[0].x - points[1].x)));
-            distToBottomOfFrame = 2.125;
-            centerOffset = 0;
+            distToBottomOfFrame = 2.125-1.5;
+            centerOffset = 125;
+            scale = 0.00253906;
             tapeWidth = Math.sqrt(Math.pow(points[1].x - points[2].x, 2) + Math.pow(points[1].y - points[2].y, 2));
-            scale = 2 / tapeWidth;
             tapePos = new Point((points[1].x + points[2].x) / 2, (points[1].y + points[2].y) / 2);
             xCameraFrame = (width - tapePos.x) * scale;
-            yCameraFrame = -(tapePos.y - (height / 2) - centerOffset) * scale;
+            yCameraFrame = -(tapePos.y - ((float)height / 2) - centerOffset) * scale;
             distToCenterOfCamera = Math.sqrt(Math.pow(xCameraFrame, 2) + Math.pow(yCameraFrame, 2));
             angleCameraToTape = Math.atan(yCameraFrame / xCameraFrame);
             angle_d = (Math.PI / 2) - Math.abs(angleCameraToTape) - Math.abs(angleToHeading);
@@ -210,6 +211,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             distToCentery = Math.sin(angleToHeading) * distToBottomOfFrame;
             robotPosxFieldFrame = cameraPosxFieldFrame + distToCenterx;
             robotPosyFieldFrame = cameraPosyFieldFrame + distToCentery;
+            telemetry.addData("scale: ", scale);
             telemetry.addData("angle:", angleToHeading);
             telemetry.addData("tape width:", tapeWidth);
             telemetry.addData("distance to center of camera:", distToCenterOfCamera);
@@ -227,7 +229,17 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             telemetry.addData("Calculated position", new Pose2d(x + robotPosxFieldFrame, y + robotPosyFieldFrame, theta + angleToHeading));
             telemetry.update();
         }
-        return new Pose2d(x+robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
+        if (x>0) {
+            return new Pose2d(x+robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
+        } else {
+            return new Pose2d(x-robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
+        }
+    }
+    public void warmUpCamera(Telemetry telemetry) {
+        telemetry.addData("Point 1: ", points[0]);
+        telemetry.addData("Point 1: ", points[1]);
+        telemetry.addData("Point 1: ", points[2]);
+        telemetry.addData("Point 1: ", points[3]);
     }
 
 }
