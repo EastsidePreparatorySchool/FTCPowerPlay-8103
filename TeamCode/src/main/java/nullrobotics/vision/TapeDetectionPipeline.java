@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import nullrobotics.RR.drive.NullMecanumDrive;
-import nullrobotics.lib.Label;
-
 
 public class TapeDetectionPipeline extends OpenCvPipeline {
 
@@ -33,13 +30,11 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     static Scalar redUpper = new Scalar(255, 70, 70);
     static Scalar redLower = new Scalar(100,0, 0);
 
-    Label alliance;
-    Label side;
-
     Mat output = new Mat();
     Mat temp = new Mat();
     MatOfPoint2f point2f = new MatOfPoint2f();
-    static final int tol = 90;
+    static final int tolRed = 90;
+    static final int tolBlue = 120;
     public int width;
     public int height;
     final org.opencv.core.Rect rectCrop = new org.opencv.core.Rect(0,490,width,height);
@@ -47,6 +42,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     Scalar tolmax;
     final Scalar rectColor = new Scalar(0,255,0);
     final Mat kernel = Mat.ones(10,10, CV_32F);
+//    final Mat kernel = Mat.ones(15, 15, CV_32F);
     ArrayList<org.opencv.core.Point> ptsArray = new ArrayList<>();
     org.opencv.core.Point pt0= new Point(-1,-1);
     org.opencv.core.Point pt1= new Point(-1,-1);
@@ -65,17 +61,16 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     Mat hierarchy = new Mat();
     ArrayList<Point> tempList = new ArrayList<>();
     public boolean isTapeRed;
-    public boolean isAllianceRed;
     double CameraOffset = 125;
 
     @Override
     public Mat processFrame(Mat input){
         if (isTapeRed) {
-            tolmin = new Scalar(50,155,128-tol);
-            tolmax = new Scalar(255,255,128+tol);
+            tolmin = new Scalar(50,155,128- tolRed);
+            tolmax = new Scalar(255,255,128+ tolRed);
         } else {
-            tolmin = new Scalar(50,128-tol,0);
-            tolmax = new Scalar(255,128+tol,80);
+            tolmin = new Scalar(/*50*/0,128- tolBlue,0);
+            tolmax = new Scalar(255,128+ tolBlue,100);
         }
         isEmpty = false;
         cameraMat.put(0,0,cameraArray);
@@ -176,6 +171,9 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
     }
 
     public Pose2d calcPose(double x, double y, double theta, Telemetry telemetry) {
+        telemetry.addData("calcPose", "was called");
+        telemetry.update();
+
         double angleToHeading = 0;
         double distToBottomOfFrame;
         double centerOffset;
@@ -193,6 +191,8 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         double distToCentery;
         double robotPosxFieldFrame = 0;
         double robotPosyFieldFrame = 0;
+        telemetry.addData("Starting tapewidth loop", "");
+        telemetry.update();
         while (tapeWidth > 800 || tapeWidth < 500) {
             angleToHeading = (Math.atan((points[0].y - points[1].y) / (points[0].x - points[1].x)));
             distToBottomOfFrame = 2.125-1.5;
@@ -229,17 +229,19 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             telemetry.addData("Calculated position", new Pose2d(x + robotPosxFieldFrame, y + robotPosyFieldFrame, theta + angleToHeading));
             telemetry.update();
         }
+        telemetry.addData("finished loop", "about to return stuff");
+        telemetry.update();
         if (x>0) {
             return new Pose2d(x+robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
         } else {
-            return new Pose2d(x-robotPosxFieldFrame, y+robotPosyFieldFrame, theta+angleToHeading);
+            return new Pose2d(x-robotPosxFieldFrame, y-robotPosyFieldFrame, theta+angleToHeading);
         }
     }
-    public void warmUpCamera(Telemetry telemetry) {
-        telemetry.addData("Point 1: ", points[0]);
-        telemetry.addData("Point 1: ", points[1]);
-        telemetry.addData("Point 1: ", points[2]);
-        telemetry.addData("Point 1: ", points[3]);
-    }
+//    public void warmUpCamera(Telemetry telemetry) {
+//        telemetry.addData("Point 1: ", points[0]);
+//        telemetry.addData("Point 1: ", points[1]);
+//        telemetry.addData("Point 1: ", points[2]);
+//        telemetry.addData("Point 1: ", points[3]);
+//    }
 
 }

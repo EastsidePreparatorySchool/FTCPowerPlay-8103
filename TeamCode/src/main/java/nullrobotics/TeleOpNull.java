@@ -133,7 +133,7 @@ public class TeleOpNull extends LinearOpMode {
                     LiftCurrentPositionIndex = NullDoc.LIFT_POSITIONS_LEN -1;
                 }
                 // Skip the stack positions on the way up
-                if (LiftCurrentPositionIndex == 1){
+                if (1 <= LiftCurrentPositionIndex && LiftCurrentPositionIndex < 5){
                     LiftCurrentPositionIndex = 5;
 //                    fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 }
