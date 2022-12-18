@@ -11,7 +11,7 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.lib.NullDoc;
 import nullrobotics.lib.NullHardware;
 
-@TeleOp(name="Fourbar position finder", group="B")
+@TeleOp(name="Fourbar position finder", group="Calibration")
 public class FbPositionFinder extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();

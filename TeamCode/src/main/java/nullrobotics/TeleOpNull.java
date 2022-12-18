@@ -189,7 +189,7 @@ public class TeleOpNull extends LinearOpMode {
             }
 
             if(gamepad2.y && hasFBBtnsBeenReleased) {
-                if(fourbar.FBCurrentPositionIndex != 3) {
+                if(fourbar.FBCurrentPositionIndex != 3) { // Y up
                     fourbar.liftToPos(7, NullDoc.LIFT_TELEOP_SPEED);
                     LiftCurrentPositionIndex = 7;
                     asyncLiftThread = new Thread( () -> {
@@ -199,7 +199,11 @@ public class TeleOpNull extends LinearOpMode {
                         fourbar.FBReachCatalogical(1, 3);
                     } );
                     asyncLiftThread.start();
+                } else if (fourbar.FBCurrentPositionIndex == 3) { // Y down (Anti-Y)
+                    fourbar.FBReachCatalogical(0, 1);
+                    fourbar.liftToPos(5, NullDoc.LIFT_TELEOP_SPEED); //low pole
                 }
+                hasFBBtnsBeenReleased = false;
             }
 
             // Claw

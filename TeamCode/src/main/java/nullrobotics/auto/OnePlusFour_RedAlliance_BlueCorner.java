@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import nullrobotics.lib.Label;
 
-@Autonomous(name = "1+4 (Red alliance, Blue corner)",group = "Aauto")
+@Autonomous(name = "1+4 (Red alliance, Blue corner)",group = "Auto")
 public class OnePlusFour_RedAlliance_BlueCorner extends OnePlusFour {
     @Override
     public Label getCornerColor() {return Label.BLUECORNER;}

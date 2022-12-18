@@ -76,14 +76,14 @@ public class NullDoc {
             new double[]{ // Front (High = Top)
                     1, // Legacy
                     0.74, // Intake
-                    0.74, // Placing NEED
-                    0.74 // Top NEED
+                    0.90, // Placing
+                    0.95 // Top
             },
             new double[]{ //Back (Low = Top)
                     0, // Legacy
-                    0.27,
-                    0.09,
-                    0.05
+                    0.27, // Intake
+                    0.10, // Placing
+                    0.05 //Top
             }
     };
 

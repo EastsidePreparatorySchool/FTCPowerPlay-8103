@@ -14,7 +14,7 @@ import nullrobotics.lib.FourBarLift;
 import nullrobotics.RR.trajectorysequence.TrajectorySequence;
 import nullrobotics.lib.NullHardware;
 
-@Autonomous
+@Autonomous(name = "Tape Detection", group="Calibration")
 public class TapeDetection extends LinearOpMode {
     CameraSystem cams = new CameraSystem();
     FourBarLift fourbar = new FourBarLift();

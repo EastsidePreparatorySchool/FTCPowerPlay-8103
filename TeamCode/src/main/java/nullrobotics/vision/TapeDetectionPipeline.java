@@ -13,6 +13,7 @@ import org.opencv.core.RotatedRect;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -21,7 +22,6 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-
 
 public class TapeDetectionPipeline extends OpenCvPipeline {
 

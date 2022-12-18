@@ -127,15 +127,15 @@ public class OnePlusFour extends LinearOpMode {
         } else if (cornerColor == Label.BLUECORNER) {
             //BLUE CORNER
             start = new Pose2d(-35.5, 62.125, Math.toRadians(90));
-            tallPolePose = new Pose2d(-32.75, 7.75, Math.toRadians(135));
+            tallPolePose = new Pose2d(/*-32.75*/-31.5, 7.75, Math.toRadians(135));
             tallPolePoseRad = Math.toRadians(-62); //-70
-            tapeFirstPose = new Pose2d(-53, 11.75, Math.toRadians(180));
+            tapeFirstPose = new Pose2d(-53, 12 /*11.75*/, Math.toRadians(180));
             tapeFirstPoseRad = Math.toRadians(185);
             stackPickup = new Pose2d(-61.75, 11.75 , Math.toRadians(180));
             stackPickupRadians = Math.toRadians(0);
             tallPolePoseDrifted = new Pose2d(/*-31*/ -32, /*4*/6, Math.toRadians(135));
             tallPolePoseDriftedRad = Math.toRadians(-20);
-            tapeDrifted = new Pose2d(-51.5,11 /*11*/,Math.toRadians(180));
+            tapeDrifted = new Pose2d(-51.5,12 /*11*/,Math.toRadians(180));
             tapeDriftedRad = Math.toRadians(185);
             inputx = -45;
             inputy = 11.5;
@@ -333,7 +333,7 @@ public class OnePlusFour extends LinearOpMode {
 
         //Go to stack and pick up cone
         mechdrive.followTrajectorySequence(trajPoleToTape);
-        fourbar.lift(265, NullDoc.LIFT_TELEOP_DESC_SPEED);
+        fourbar.lift(255, NullDoc.LIFT_TELEOP_DESC_SPEED);
         mechdrive.setPoseEstimate(tdp.calcPose(inputx,inputy,inputTheta, telemetry));
         mechdrive.followTrajectorySequence(trajTapeToStack);
         mechdrive.setPoseEstimate(stackPosRedef);
@@ -355,7 +355,7 @@ public class OnePlusFour extends LinearOpMode {
             telemetry.update();
             //Go to stack and pick up cone
             mechdrive.followTrajectorySequence(trajPoleToTape2);
-            fourbar.lift(195 /*200*/-(i*70), NullDoc.LIFT_TELEOP_DESC_SPEED);
+            fourbar.lift(190 /*200*/-(i*70), NullDoc.LIFT_TELEOP_DESC_SPEED);
 //            fourbar.liftToPos(4-i, NullDoc.LIFT_TELEOP_SPEED );
             mechdrive.setPoseEstimate(tdp.calcPose(inputx, inputy, inputTheta, telemetry));
             mechdrive.followTrajectorySequence(trajTapeToStack);
@@ -414,9 +414,16 @@ public class OnePlusFour extends LinearOpMode {
                     mechdrive.followTrajectorySequence(trajParkZn3Blue);
                     break;
             }
-        }else {
-            telemetry.addData("Couldn't find april tag", "Will not park.");
+        }else if(!couldFindTag && cornerColor == Label.REDCORNER){
+            telemetry.addData("Couldn't find april tag", "parking zone two");
             telemetry.update();
+            //park zone two
+            mechdrive.followTrajectorySequence(trajParkZn2Red);
+        }else if(!couldFindTag && cornerColor == Label.BLUECORNER){
+            telemetry.addData("Couldn't find april tag", "parking zone two");
+            telemetry.update();
+            //park zone two
+            mechdrive.followTrajectorySequence(trajParkZn2Blue);
         }
         fourbar.FBReachToIndex(0, 1);
         fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);

@@ -8,7 +8,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 
 import nullrobotics.lib.CameraSystem;
 
-@Autonomous
+@Autonomous(group = "Calibration")
 public class cameraCaliration extends LinearOpMode{
     CameraSystem cams = new CameraSystem();
     calibrationPipeline cp = new calibrationPipeline();
