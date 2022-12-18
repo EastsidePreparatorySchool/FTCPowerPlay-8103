@@ -38,9 +38,9 @@ public class TapeDetection extends LinearOpMode {
                         //Usually this is where you'll want to start streaming from the camera
                         cams.TopDown.startStreaming(1920, 1080);
                         cams.TopDown.setPipeline(tdp);
-                        while (true) {
+                        /*while (true) {
                             tdp.calcPose(-49.75, 11.875, Math.toRadians(180), telemetry);
-                        }
+                        }*/
                     }
 
                     @Override
@@ -56,10 +56,14 @@ public class TapeDetection extends LinearOpMode {
                 .build();
         waitForStart();
         //sleep(5000);
-        Pose2d currentPose = tdp.calcPose(-49.75,11.875,Math.toRadians(180), telemetry);
+        Pose2d currentPose;
+        do {
+            currentPose = tdp.calcPose(-49.75,11.875,Math.toRadians(180), telemetry);
+        } while (tdp.tapeWidth > 800 || tdp.tapeWidth < 600);
         mechdrive.setPoseEstimate(currentPose);
         telemetry.addData("current Pose", currentPose.toString());
-        //sleep(2000);
+        telemetry.update();
+        sleep(15000);
         mechdrive.followTrajectorySequence(traj);
     }
 }

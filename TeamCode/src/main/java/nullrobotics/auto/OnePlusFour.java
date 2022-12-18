@@ -129,16 +129,16 @@ public class OnePlusFour extends LinearOpMode {
             start = new Pose2d(-35.5, 62.125, Math.toRadians(90));
             tallPolePose = new Pose2d(-32.75, 7.75, Math.toRadians(135));
             tallPolePoseRad = Math.toRadians(-62); //-70
-            tapeFirstPose = new Pose2d(-45, 11.75, Math.toRadians(180));
+            tapeFirstPose = new Pose2d(-52, 11.75, Math.toRadians(180));
             tapeFirstPoseRad = Math.toRadians(185);
             stackPickup = new Pose2d(-61.75, 11.75 , Math.toRadians(180));
-            stackPickupRadians = Math.toRadians(180);
+            stackPickupRadians = Math.toRadians(0);
             tallPolePoseDrifted = new Pose2d(/*-31*/ -32, /*4*/6, Math.toRadians(135));
             tallPolePoseDriftedRad = Math.toRadians(-20);
             tapeDrifted = new Pose2d(-51.5,11 /*11*/,Math.toRadians(180));
             tapeDriftedRad = Math.toRadians(185);
-            inputx = -49.75;
-            inputy = 11.875;
+            inputx = -45;
+            inputy = 11.5;
             inputTheta = Math.toRadians(180);
             stackPosRedef = new Pose2d(-62.75, 11.75, Math.toRadians(180));
             estimatedPoseAtTape = new Pose2d(-49.75,11.875,Math.toRadians(180));
@@ -336,10 +336,15 @@ public class OnePlusFour extends LinearOpMode {
         //Go to stack and pick up cone
         mechdrive.followTrajectorySequence(trajPoleToTape);
         fourbar.lift(265, NullDoc.LIFT_TELEOP_DESC_SPEED);
-        mechdrive.setPoseEstimate(tdp.calcPose(inputx,inputy,inputTheta, telemetry));
-        telemetry.addData("calculated pose: ", mechdrive.getPoseEstimate().toString());
+        Pose2d currentPose;
+        do {
+            currentPose = tdp.calcPose(-49.75,11.875,Math.toRadians(180), telemetry);
+        } while (tdp.tapeWidth > 800 || tdp.tapeWidth < 600);
+        mechdrive.setPoseEstimate(currentPose);
+        telemetry.addData("current Pose", currentPose.toString());
         telemetry.update();
         sleep(15000);
+        mechdrive.setPoseEstimate(currentPose);
         mechdrive.followTrajectorySequence(trajTapeToStack);
         mechdrive.setPoseEstimate(stackPosRedef);
         fourbar.liftWaitForStop();
