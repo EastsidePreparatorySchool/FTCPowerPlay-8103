@@ -21,7 +21,7 @@ import nullrobotics.vision.TapeDetectionPipeline;
 
 
 //@Autonomous
-public class OnePlusFour extends LinearOpMode {
+public class OnePlusThree extends LinearOpMode {
 
     //Declare OpMode members
     NullHardware chassis = new NullHardware();
@@ -39,7 +39,7 @@ public class OnePlusFour extends LinearOpMode {
 
     boolean couldFindTag;
 
-    int numStackCycles = 4;
+    int numStackCycles = 3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -54,6 +54,7 @@ public class OnePlusFour extends LinearOpMode {
 
         cornerColor = this.getCornerColor();
         allianceColor = this.getAllianceColor();
+
         //Set camera pipeline
         camsys.TopDown.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
@@ -91,7 +92,6 @@ public class OnePlusFour extends LinearOpMode {
         double inputy;
         double inputTheta;
         Pose2d stackPosRedef;
-        Pose2d estimatedPoseAtTape;
 
         //Set internal known position
         //set positions we want to come back to
@@ -106,42 +106,40 @@ public class OnePlusFour extends LinearOpMode {
 //        tallPolePoseDriftedRad = Math.toRadians(-140);
 //        tapeDrifted = new Pose2d(51.5,9,0);
 //        tapeDriftedRad = Math.toRadians(0);
-        if(cornerColor == Label.REDCORNER) {
+       if(cornerColor == Label.REDCORNER) {
             //RED CORNER
-            start = new Pose2d(35.5, 62.125, Math.toRadians(90));
-            tallPolePose = new Pose2d(31.75, /*6.75*/7.75, Math.toRadians(45));
-            tallPolePoseRad = Math.toRadians(-100);
-            tapeFirstPose = new Pose2d(/*52*/51.5, 11, 0);
-            tapeFirstPoseRad = Math.toRadians(0);
-            stackPickup = new Pose2d(61.75, 11.75, Math.toRadians(0));
-            stackPickupRadians = Math.toRadians(0);
-            tallPolePoseDrifted = new Pose2d(31, 5.5 , Math.toRadians(45));
-            tallPolePoseDriftedRad = Math.toRadians(-140);
-            tapeDrifted = new Pose2d(51.5,9,0);
-            tapeDriftedRad = Math.toRadians(0);
-            inputx = 49.75;
-            inputy = 11.875;
-            inputTheta = Math.toRadians(0);
-            stackPosRedef = new Pose2d(62.75, 11.75, Math.toRadians(0));
-            estimatedPoseAtTape = new Pose2d(49.75,11.875,Math.toRadians(0));
+           start = new Pose2d(35.5, 62.125, Math.toRadians(90));
+           tallPolePose = new Pose2d(31.75, /*6.75*/7.75, Math.toRadians(45));
+           tallPolePoseRad = Math.toRadians(-100);
+           tapeFirstPose = new Pose2d(/*52*/51.5, 11, 0);
+           tapeFirstPoseRad = Math.toRadians(0);
+           stackPickup = new Pose2d(61.75, 11.75, Math.toRadians(0));
+           stackPickupRadians = Math.toRadians(0);
+           tallPolePoseDrifted = new Pose2d(31, 5.5 , Math.toRadians(45));
+           tallPolePoseDriftedRad = Math.toRadians(-140);
+           tapeDrifted = new Pose2d(51.5,9,0);
+           tapeDriftedRad = Math.toRadians(0);
+           inputx = 45;
+           inputy = 11.5;
+           inputTheta = Math.toRadians(0);
+           stackPosRedef = new Pose2d(62.75, 11.75, Math.toRadians(0));
         } else if (cornerColor == Label.BLUECORNER) {
             //BLUE CORNER
             start = new Pose2d(-35.5, 62.125, Math.toRadians(90));
             tallPolePose = new Pose2d(-32.75, 7.75, Math.toRadians(135));
             tallPolePoseRad = Math.toRadians(-62); //-70
-            tapeFirstPose = new Pose2d(-45, 11.75, Math.toRadians(180));
+            tapeFirstPose = new Pose2d(-53, 11.75, Math.toRadians(180));
             tapeFirstPoseRad = Math.toRadians(185);
             stackPickup = new Pose2d(-61.75, 11.75 , Math.toRadians(180));
-            stackPickupRadians = Math.toRadians(180);
+            stackPickupRadians = Math.toRadians(0);
             tallPolePoseDrifted = new Pose2d(/*-31*/ -32, /*4*/6, Math.toRadians(135));
             tallPolePoseDriftedRad = Math.toRadians(-20);
             tapeDrifted = new Pose2d(-51.5,11 /*11*/,Math.toRadians(180));
             tapeDriftedRad = Math.toRadians(185);
-            inputx = -49.75;
-            inputy = 11.875;
+            inputx = -45;
+            inputy = 11.5;
             inputTheta = Math.toRadians(180);
             stackPosRedef = new Pose2d(-62.75, 11.75, Math.toRadians(180));
-            estimatedPoseAtTape = new Pose2d(-49.75,11.875,Math.toRadians(180));
         } else {
             //WTF
             start = new Pose2d(0, 0, Math.toRadians(0));
@@ -159,7 +157,6 @@ public class OnePlusFour extends LinearOpMode {
             inputy = 0;
             inputTheta = 0;
             stackPosRedef = new Pose2d(0, 0, 0);
-            estimatedPoseAtTape = new Pose2d(0,0,0);
         }
 
         telemetry.addData("Calculating trajectories...", "");
@@ -200,7 +197,7 @@ public class OnePlusFour extends LinearOpMode {
                 .splineToLinearHeading(tapeFirstPose,tapeFirstPoseRad)
                 .build();
         //Build second trajectory to the stack
-        TrajectorySequence trajTapeToStack = mechdrive.trajectorySequenceBuilder(estimatedPoseAtTape)
+        TrajectorySequence trajTapeToStack = mechdrive.trajectorySequenceBuilder(trajPoleToTape.end())
                 .setReversed(false)
                 .splineToLinearHeading(stackPickup, stackPickupRadians) //to the wall
                 .build();
@@ -337,9 +334,6 @@ public class OnePlusFour extends LinearOpMode {
         mechdrive.followTrajectorySequence(trajPoleToTape);
         fourbar.lift(265, NullDoc.LIFT_TELEOP_DESC_SPEED);
         mechdrive.setPoseEstimate(tdp.calcPose(inputx,inputy,inputTheta, telemetry));
-        telemetry.addData("calculated pose: ", mechdrive.getPoseEstimate().toString());
-        telemetry.update();
-        sleep(15000);
         mechdrive.followTrajectorySequence(trajTapeToStack);
         mechdrive.setPoseEstimate(stackPosRedef);
         fourbar.liftWaitForStop();
@@ -363,7 +357,6 @@ public class OnePlusFour extends LinearOpMode {
             fourbar.lift(195 /*200*/-(i*70), NullDoc.LIFT_TELEOP_DESC_SPEED);
 //            fourbar.liftToPos(4-i, NullDoc.LIFT_TELEOP_SPEED );
             mechdrive.setPoseEstimate(tdp.calcPose(inputx, inputy, inputTheta, telemetry));
-            sleep(500);
             mechdrive.followTrajectorySequence(trajTapeToStack);
             mechdrive.setPoseEstimate(stackPosRedef);
             fourbar.liftWaitForStop();

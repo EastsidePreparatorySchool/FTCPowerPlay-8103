@@ -38,9 +38,9 @@ public class TapeDetection extends LinearOpMode {
                         //Usually this is where you'll want to start streaming from the camera
                         cams.TopDown.startStreaming(1920, 1080);
                         cams.TopDown.setPipeline(tdp);
-                        /*while (true) {
-                            tdp.calcPose(50.125, 11.875, 0, telemetry);
-                        }*/
+                        while (true) {
+                            tdp.calcPose(-49.75, 11.875, Math.toRadians(180), telemetry);
+                        }
                     }
 
                     @Override
@@ -50,16 +50,16 @@ public class TapeDetection extends LinearOpMode {
                 }
         );
         
-        TrajectorySequence traj = mechdrive.trajectorySequenceBuilder(new Pose2d(49.75,11.875,Math.toRadians(0)))
+        TrajectorySequence traj = mechdrive.trajectorySequenceBuilder(new Pose2d(-49.75,11.875,Math.toRadians(180)))
                 //.splineToLinearHeading(new Pose2d(55.625, 11.875, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(61.625, 11.875, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-61.625, 11.875, Math.toRadians(180)), Math.toRadians(180))
                 .build();
         waitForStart();
-        sleep(5000);
-        Pose2d currentPose = tdp.calcPose(49.75,11.875,0, telemetry);
+        //sleep(5000);
+        Pose2d currentPose = tdp.calcPose(-49.75,11.875,Math.toRadians(180), telemetry);
         mechdrive.setPoseEstimate(currentPose);
         telemetry.addData("current Pose", currentPose.toString());
-        sleep(2000);
+        //sleep(2000);
         mechdrive.followTrajectorySequence(traj);
     }
 }

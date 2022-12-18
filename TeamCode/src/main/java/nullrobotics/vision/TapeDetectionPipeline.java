@@ -65,6 +65,9 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input){
+        for (int i = 0; i < points.length; i++) {
+            points[i] = new Point(-1,-1);
+        }
         if (isTapeRed) {
             tolmin = new Scalar(50,155,128- tolRed);
             tolmax = new Scalar(255,255,128+ tolRed);
@@ -109,7 +112,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         Imgproc.findContours(temp,matOfPointList, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         w = temp.width();
         h = temp.height();
-        for (int y = 0; y < h; y+=2) {
+        for (int y = 0; y < h; y+=5) {
             for (int x = 0; x < w; x+=20){
                 if (temp.get(y,x)[0] > 0) {
                     ptsArray.add(new org.opencv.core.Point((double) x, (double) y));
@@ -193,9 +196,10 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
         double robotPosyFieldFrame = 0;
         telemetry.addData("Starting tapewidth loop", "");
         telemetry.update();
-        while (tapeWidth > 800 || tapeWidth < 500) {
+//        for (int i = 0; tapeWidth > 800 || tapeWidth < 600 || i <5; i++) {
+        do {
             angleToHeading = (Math.atan((points[0].y - points[1].y) / (points[0].x - points[1].x)));
-            distToBottomOfFrame = 2.125-1.5;
+            distToBottomOfFrame = 2.125-2.5;
             centerOffset = 125;
             scale = 0.00253906;
             tapeWidth = Math.sqrt(Math.pow(points[1].x - points[2].x, 2) + Math.pow(points[1].y - points[2].y, 2));
@@ -228,7 +232,7 @@ public class TapeDetectionPipeline extends OpenCvPipeline {
             telemetry.addData("y robot fieled frame:", robotPosyFieldFrame);
             telemetry.addData("Calculated position", new Pose2d(x + robotPosxFieldFrame, y + robotPosyFieldFrame, theta + angleToHeading));
             telemetry.update();
-        }
+        } while ((tapeWidth > 800.0) || (tapeWidth < 600.0));
         telemetry.addData("finished loop", "about to return stuff");
         telemetry.update();
         if (x>0) {
