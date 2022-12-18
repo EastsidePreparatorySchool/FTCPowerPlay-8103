@@ -118,7 +118,7 @@ public class OnePlusFour extends LinearOpMode {
            stackPickupRadians = Math.toRadians(0);
            tallPolePoseDrifted = new Pose2d(31, 5.5 , Math.toRadians(45));
            tallPolePoseDriftedRad = Math.toRadians(-140);
-           tapeDrifted = new Pose2d(51.5,9,0);
+           tapeDrifted = new Pose2d(51.5,/*9*/10,0);
            tapeDriftedRad = Math.toRadians(0);
            inputx = 45;
            inputy = 11.5;
