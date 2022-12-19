@@ -127,15 +127,15 @@ public class OnePlusFour extends LinearOpMode {
         } else if (cornerColor == Label.BLUECORNER) {
             //BLUE CORNER
             start = new Pose2d(-35.5, 62.125, Math.toRadians(90));
-            tallPolePose = new Pose2d(/*-32.75*/-31.5, 7.75, Math.toRadians(135));
+            tallPolePose = new Pose2d(/*-32.75*/-31.5, 7, Math.toRadians(135));
             tallPolePoseRad = Math.toRadians(-62); //-70
             tapeFirstPose = new Pose2d(-53, 12 /*11.75*/, Math.toRadians(180));
             tapeFirstPoseRad = Math.toRadians(185);
             stackPickup = new Pose2d(-61.75, 11.75 , Math.toRadians(180));
             stackPickupRadians = Math.toRadians(0);
-            tallPolePoseDrifted = new Pose2d(/*-31*/ -32, /*4*/6, Math.toRadians(135));
+            tallPolePoseDrifted = new Pose2d(/*-31*/ -32, /*4*/4, Math.toRadians(135));
             tallPolePoseDriftedRad = Math.toRadians(-20);
-            tapeDrifted = new Pose2d(-51.5,12 /*11*/,Math.toRadians(180));
+            tapeDrifted = new Pose2d(-51.5, 11 /*11*/,Math.toRadians(180));
             tapeDriftedRad = Math.toRadians(185);
             inputx = -45;
             inputy = 11.5;
@@ -217,6 +217,8 @@ public class OnePlusFour extends LinearOpMode {
                 })
                 .splineToLinearHeading(tapeDrifted,tapeDriftedRad)
                 .build();
+
+
         TrajectorySequence trajParkZn1Red = mechdrive.trajectorySequenceBuilder(trajStackToPole.end())
 //                .setReversed(false)
 //                .splineToLinearHeading(new Pose2d(60,12,Math.toRadians(90)), Math.toRadians(0))
@@ -374,8 +376,6 @@ public class OnePlusFour extends LinearOpMode {
             sleep(500);
             fourbar.openClaw();
         }
-//        mechdrive.followTrajectorySequence(trajPoleToTape2);
-//        fourbar.lift(0, NullDoc.LIFT_TELEOP_DESC_SPEED);
 
         //Park
         if(couldFindTag && cornerColor == Label.REDCORNER){

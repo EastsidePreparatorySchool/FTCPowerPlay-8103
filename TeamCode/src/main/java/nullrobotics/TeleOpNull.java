@@ -188,23 +188,23 @@ public class TeleOpNull extends LinearOpMode {
                 hasFBBtnsBeenReleased = false;
             }
 
-            if(gamepad2.y && hasFBBtnsBeenReleased) {
-                if(fourbar.FBCurrentPositionIndex != 3) { // Y up
-                    fourbar.liftToPos(7, NullDoc.LIFT_TELEOP_SPEED);
-                    LiftCurrentPositionIndex = 7;
-                    asyncLiftThread = new Thread( () -> {
-                        while(fourbar.getLiftLeftPosition() < NullDoc.LIFT_POSITIONS_LEFT[LiftMinPassthruIndex]){
-                            //do nothing
-                        }
-                        fourbar.FBReachCatalogical(1, 3);
-                    } );
-                    asyncLiftThread.start();
-                } else if (fourbar.FBCurrentPositionIndex == 3) { // Y down (Anti-Y)
-                    fourbar.FBReachCatalogical(0, 1);
-                    fourbar.liftToPos(5, NullDoc.LIFT_TELEOP_SPEED); //low pole
-                }
-                hasFBBtnsBeenReleased = false;
-            }
+//            if(gamepad2.y && hasFBBtnsBeenReleased) {
+//                if(fourbar.FBCurrentPositionIndex == 1) { // Y up
+//                    fourbar.liftToPos(7, NullDoc.LIFT_TELEOP_SPEED);
+//                    LiftCurrentPositionIndex = 7;
+//                    asyncLiftThread = new Thread( () -> {
+//                        while(fourbar.getLiftLeftPosition() < NullDoc.LIFT_POSITIONS_LEFT[LiftMinPassthruIndex]){
+//                            //do nothing
+//                        }
+//                        fourbar.FBReachCatalogical(1, 3);
+//                    } );
+//                    asyncLiftThread.start();
+//                } else if (fourbar.FBCurrentPositionIndex == 3 || fourbar.FBCurrentPositionIndex == 2) { // Y down (Anti-Y)
+//                    fourbar.FBReachCatalogical(0, 1);
+//                    fourbar.liftToPos(5, NullDoc.LIFT_TELEOP_SPEED); //low pole
+//                }
+//                hasFBBtnsBeenReleased = false;
+//            }
 
             // Claw
             if(gamepad2.right_trigger == 0){
@@ -216,9 +216,14 @@ public class TeleOpNull extends LinearOpMode {
                 hasClawBtnBeenReleased = false;
             }
 
-            //Reset zero
+            //go down and reset zero
             if(gamepad1.back || gamepad2.back) {
+                fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                fourbar.lift(-20, NullDoc.LIFT_TELEOP_SPEED);
+                LiftCurrentPositionIndex = 0;
+                fourbar.tsleep(200);
                 fourbar.resetLiftEncoders();
+                fourbar.setLift0PowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             // Telemetry

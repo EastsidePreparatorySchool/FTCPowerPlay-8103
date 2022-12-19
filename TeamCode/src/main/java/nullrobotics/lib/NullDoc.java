@@ -34,27 +34,34 @@ public class NullDoc {
 //    public static final int LIFT_LEFT_OFFSET = 0;
 //    public static final int LIFT_RIGHT_OFFSET = -27;
 
+    private static final int POLE_MODIFIER = 40;
+
     public static final int[] LIFT_POSITIONS_LEFT = new int[]{
             0, //Ground
             105, //2nd cone (stack)
             155, //3rd cone (stack)
             205, //4th cone (stack)
             255, //5th cone (stack)
-            350, //Low pole
-            800, //Medium pole
-            1270 //High pole
+            350 + POLE_MODIFIER, //Low pole
+            800 + POLE_MODIFIER, //Medium pole
+            1270 + POLE_MODIFIER//High pole
     };
 
-    public static final int[] LIFT_POSITIONS_RIGHT = new int[]{
-            LIFT_POSITIONS_LEFT[0], //Ground
-            LIFT_POSITIONS_LEFT[1], //2nd cone (stack)
-            LIFT_POSITIONS_LEFT[2], //3rd cone (stack)
-            LIFT_POSITIONS_LEFT[3], //4th cone (stack)
-            LIFT_POSITIONS_LEFT[4], //5th cone (stack)
-            350 - 10, //Low pole
-            800 - 14, //Medium pole
-            1240 - 40 //27 //High pole
-    };
+    public static final int[] LIFT_POSITIONS_RIGHT = LIFT_POSITIONS_LEFT;
+
+//    public static final int[] LIFT_POSITIONS_RIGHT = new int[]{
+//            LIFT_POSITIONS_LEFT[0], //Ground
+//            LIFT_POSITIONS_LEFT[1], //2nd cone (stack)
+//            LIFT_POSITIONS_LEFT[2], //3rd cone (stack)
+//            LIFT_POSITIONS_LEFT[3], //4th cone (stack)
+//            LIFT_POSITIONS_LEFT[4], //5th cone (stack)
+////            350 - 10 + POLE_MODIFIER, //Low pole
+////            800 - 14 + POLE_MODIFIER, //Medium pole
+////            1240 - 40 + POLE_MODIFIER//27 //High pole
+//            350 + 30 + POLE_MODIFIER,
+//            800 + 30 + POLE_MODIFIER,
+//            1240 + 30 + POLE_MODIFIER,
+//    };
 
     public static final int LIFT_POSITIONS_LEN = LIFT_POSITIONS_LEFT.length;
 
@@ -76,13 +83,13 @@ public class NullDoc {
             new double[]{ // Front (High = Top)
                     1, // Legacy
                     0.74, // Intake
-                    0.90, // Placing
+                    0.88, // Placing
                     0.95 // Top
             },
             new double[]{ //Back (Low = Top)
                     0, // Legacy
                     0.27, // Intake
-                    0.10, // Placing
+                    0.12, // Placing
                     0.05 //Top
             }
     };

@@ -11,7 +11,7 @@ import java.security.cert.TrustAnchor;
 import nullrobotics.lib.CameraSystem;
 import nullrobotics.vision.TapeDetectionPipeline;
 
-@Autonomous(name="Tape Detector pipeline")
+@Autonomous(name="Stream the topdown camera", group="Calibration")
 public class TopdownStream extends LinearOpMode {
     @Override
     public void runOpMode(){
